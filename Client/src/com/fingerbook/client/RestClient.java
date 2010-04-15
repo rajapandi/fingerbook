@@ -51,7 +51,6 @@ public class RestClient {
 		File f = new File("get.xml");
 
 		try {
-			int iGetResultCode = client.executeMethod(get);
 			responseBody = get.getResponseBodyAsString();
 			System.out.println(responseBody);
 		} catch (Exception ex) {
