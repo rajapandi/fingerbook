@@ -6,11 +6,13 @@
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<!--
-		the application context definition for the fingerbookREST
+		the application context definition for the fingerbook
 		DispatcherServlet
 	-->
 
-	<bean id="productManager" class="fingerbookREST.service.SimpleProductManager">
+	<bean name="/hello.htm" class="fibgerbook.web.HelloController"/>
+
+	<bean id="productManager" class="fingerbook.service.SimpleProductManager">
 		<property name="products">
 			<list>
 				<ref bean="product1" />
@@ -20,17 +22,17 @@
 		</property>
 	</bean>
 
-	<bean id="product1" class="fingerbookREST.domain.Product">
+	<bean id="product1" class="fingerbook.domain.Product">
 		<property name="description" value="Lamp" />
 		<property name="price" value="5.75" />
 	</bean>
 
-	<bean id="product2" class="fingerbookREST.domain.Product">
+	<bean id="product2" class="fingerbook.domain.Product">
 		<property name="description" value="Table" />
 		<property name="price" value="75.25" />
 	</bean>
 
-	<bean id="product3" class="fingerbookREST.domain.Product">
+	<bean id="product3" class="fingerbook.domain.Product">
 		<property name="description" value="Chair" />
 		<property name="price" value="22.79" />
 	</bean>
@@ -40,16 +42,12 @@
 		<property name="basename" value="messages" />
 	</bean>
 
-	<bean name="/hello.htm" class="fingerbookREST.web.InventoryController">
-		<property name="productManager" ref="productManager" />
-	</bean>
-
-	<bean name="/priceincrease.htm" class="fingerbookREST.web.PriceIncreaseFormController">
+	<bean name="/priceincrease.htm" class="fingerbook.web.PriceIncreaseFormController">
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="priceIncrease" />
-		<property name="commandClass" value="fingerbookREST.service.PriceIncrease" />
+		<property name="commandClass" value="fingerbook.service.PriceIncrease" />
 		<property name="validator">
-			<bean class="fingerbookREST.service.PriceIncreaseValidator" />
+			<bean class="fingerbook.service.PriceIncreaseValidator" />
 		</property>
 		<property name="formView" value="priceincrease" />
 		<property name="successView" value="hello.htm" />
