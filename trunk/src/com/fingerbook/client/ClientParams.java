@@ -1,4 +1,4 @@
-package com.fingerbook;
+package com.fingerbook.client;
 
 import java.lang.reflect.Field;
 
