@@ -1,9 +1,6 @@
 package com.fingerbook.client;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import com.fingerbook.client.FileHashCalculator.Method;
 
