@@ -13,6 +13,6 @@
 		DispatcherServlet
 	-->
 
-	<bean name="/fingerprints.htm" class="fingerbook.web.FingerprintsController"/>	
+	<bean name="/fingerprints.jsp" class="fingerbook.web.FingerprintsController"/>	
 
 </beans>
