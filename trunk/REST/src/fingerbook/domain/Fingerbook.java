@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 public class Fingerbook implements Serializable {
 
-	private Long fingerbookId;
-	private Fingerprints fingerPrints;
-	private UserInfo userInfo;
+	protected Long fingerbookId;
+	protected Fingerprints fingerPrints;
+	protected UserInfo userInfo;
+	protected long stamp;
 	
 	public Long getFingerbookId() {
 		return fingerbookId;
@@ -25,6 +26,12 @@ public class Fingerbook implements Serializable {
 	}
 	public void setUserInfo(UserInfo userInfo) {
 		this.userInfo = userInfo;
+	}
+	public long getStamp() {
+		return stamp;
+	}
+	public void setStamp(long stamp) {
+		this.stamp = stamp;
 	}
 	
 	
