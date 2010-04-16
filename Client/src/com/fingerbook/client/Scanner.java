@@ -19,13 +19,14 @@ public class Scanner {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-
+		File f;
+		
 		params = new ClientParams(args);
 		System.out.println(params.toString());
 
 		FileHashCalculator fhc = new FileHashCalculator(Method.SHA1);
 
-		scanDirectory(params.dir, fhc);
+		f = scanDirectory(params.dir, fhc);
 		/*
 		 * URL url = new URL("http://..."); HttpURLConnection con =
 		 * (HttpURLConnection) url.openConnection();
@@ -39,15 +40,17 @@ public class Scanner {
 		 * wr.writeBytes (urlParameters); wr.flush (); wr.close ();
 		 */
 		
-		// RestClient rc = new RestClient();
-		//
-		// File f = rc.getXML("http://www.wergehthin.de/xml/User/");
-		// rc.postXML(f, "http://www.wergehthin.de/xml/User/");
-		// System.out.println(f.toString());
-
+		 RestClient rc = new RestClient();
+		
+		 //File f = rc.getXML("http://www.wergehthin.de/xml/User/");
+		 rc.postXML(f, "http://www.wergehthin.de/xml/User/");
+		 System.out.println(f.toString());
+		 
+		 //Delete the file before leaving
+		 //f.delete();
 	}
 
-	public static void scanDirectory(String dir, FileHashCalculator fhc)
+	public static File scanDirectory(String dir, FileHashCalculator fhc)
 			throws Exception {
 		File actual = new File(dir);
 		List<File> fileList = new ArrayList<File>();
@@ -65,5 +68,6 @@ public class Scanner {
 		
 		File result = new File("data.xml");
 		serializer.write(data, result);
+		return result;
 	}
 }
