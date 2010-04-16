@@ -37,6 +37,7 @@ public class FileHashCalculator {
 			
 		}
 		
+		@SuppressWarnings("static-access")
 		public String getFileHash(File f) {
 			
 			InputStream is;
