@@ -4,13 +4,20 @@ import java.io.Serializable;
 
 public class Fingerbook implements Serializable {
 
-	private FingerprintsTest fingerPrints;
+	private Long fingerbookId;
+	private Fingerprints fingerPrints;
 	private UserInfo userInfo;
 	
-	public FingerprintsTest getFingerPrints() {
+	public Long getFingerbookId() {
+		return fingerbookId;
+	}
+	public void setFingerbookId(Long fingerbookId) {
+		this.fingerbookId = fingerbookId;
+	}
+	public Fingerprints getFingerPrints() {
 		return fingerPrints;
 	}
-	public void setFingerPrints(FingerprintsTest fingerPrints) {
+	public void setFingerPrints(Fingerprints fingerPrints) {
 		this.fingerPrints = fingerPrints;
 	}
 	public UserInfo getUserInfo() {

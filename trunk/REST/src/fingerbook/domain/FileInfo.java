@@ -4,10 +4,17 @@ import java.io.Serializable;
 
 public class FileInfo implements Serializable {
 
+	private Long fileInfoId;
 	private String name;
 	private String shaHash;
 	private Integer sizeInBytes;
 	
+	public Long getFileInfoId() {
+		return fileInfoId;
+	}
+	public void setFileInfoId(Long fileInfoId) {
+		this.fileInfoId = fileInfoId;
+	}
 	public String getName() {
 		return name;
 	}
