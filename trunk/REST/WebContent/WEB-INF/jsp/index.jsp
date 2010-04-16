@@ -8,6 +8,5 @@
 </head>
 <body>
 <h1>Example - Fingerbook RESTful Services</h1>
-<p>This the setFingerprint RESTful method</p>
 </body>
 </html>
