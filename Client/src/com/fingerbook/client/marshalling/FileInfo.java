@@ -2,31 +2,31 @@ package com.fingerbook.client.marshalling;
 
 import org.simpleframework.xml.Element;
 
-class FileInfo {
+public class FileInfo {
 	@Element
 	private String name;
-	
+
 	@Element
-	private String hash;
-	
+	private String shaHash;
+
 	@Element
-	private Long size;
-	
+	private Long sizeInBytes;
+
 	public FileInfo(String name, String hash, Long size) {
 		this.name = name;
-		this.hash = hash;
-		this.size = size;
+		this.shaHash = hash;
+		this.sizeInBytes = size;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getHash() {
-		return hash;
+		return shaHash;
 	}
 	
 	public Long getSize() {
-		return size;
+		return sizeInBytes;
 	}
 }

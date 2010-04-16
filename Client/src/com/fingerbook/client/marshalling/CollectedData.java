@@ -1,10 +1,15 @@
 package com.fingerbook.client.marshalling;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+
+import com.fingerbook.client.FileHashCalculator;
+import com.fingerbook.client.FileHashCalculator.Method;
 
 @Root(name = "fingerbook")
 public class CollectedData {
@@ -19,19 +24,31 @@ public class CollectedData {
 		CollectedData.mail = mail;
 	}
 
-	@Element
-	private Fingerprints fingerprints;
+	@ElementList
+	private List<FileInfo> fingerprints;
 	
 	@Element
 	private UserInfo userInfo;
 
 	public CollectedData(List<File> fileList) {
-		fingerprints = new Fingerprints(fileList);
+		FileHashCalculator fhc = new FileHashCalculator(Method.SHA1);
+		String name;
+		String hash;
+		Long size;
+		
+		fingerprints = new ArrayList<FileInfo>();
+		
+		System.out.println("\nFiles Found:");
+		for (File f : fileList) {
+			name = f.getName();
+			hash = fhc.getFileHash(f);
+			size = f.length();
+			fingerprints.add(new FileInfo(name, hash, size));
+			
+			System.out.println("Filename: " + f.getName()
+					+ "--------- Hash: " + fhc.getFileHash(f));
+		}
 		userInfo = new UserInfo(user, mail);
-	}
-	
-	public Fingerprints getFingerprints(List<File> fileList) {
-		return fingerprints;
 	}
 	
 	public UserInfo getUserInfo() {
