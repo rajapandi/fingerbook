@@ -5,61 +5,14 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
+  	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> 
+  	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /> 
+
 	<!--
 		the application context definition for the fingerbook
 		DispatcherServlet
 	-->
 
-	<bean name="/hello.htm" class="fibgerbook.web.HelloController"/>
-
-	<bean id="productManager" class="fingerbook.service.SimpleProductManager">
-		<property name="products">
-			<list>
-				<ref bean="product1" />
-				<ref bean="product2" />
-				<ref bean="product3" />
-			</list>
-		</property>
-	</bean>
-
-	<bean id="product1" class="fingerbook.domain.Product">
-		<property name="description" value="Lamp" />
-		<property name="price" value="5.75" />
-	</bean>
-
-	<bean id="product2" class="fingerbook.domain.Product">
-		<property name="description" value="Table" />
-		<property name="price" value="75.25" />
-	</bean>
-
-	<bean id="product3" class="fingerbook.domain.Product">
-		<property name="description" value="Chair" />
-		<property name="price" value="22.79" />
-	</bean>
-
-	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basename" value="messages" />
-	</bean>
-
-	<bean name="/priceincrease.htm" class="fingerbook.web.PriceIncreaseFormController">
-		<property name="sessionForm" value="true" />
-		<property name="commandName" value="priceIncrease" />
-		<property name="commandClass" value="fingerbook.service.PriceIncrease" />
-		<property name="validator">
-			<bean class="fingerbook.service.PriceIncreaseValidator" />
-		</property>
-		<property name="formView" value="priceincrease" />
-		<property name="successView" value="hello.htm" />
-		<property name="productManager" ref="productManager" />
-	</bean>
-
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/WEB-INF/jsp/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
+	<bean name="/fingerprints.htm" class="fingerbook.web.FingerprintsController"/>	
 
 </beans>
