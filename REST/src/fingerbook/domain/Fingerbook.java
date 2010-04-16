@@ -1,6 +1,8 @@
 package fingerbook.domain;
 
-public class Fingerbook {
+import java.io.Serializable;
+
+public class Fingerbook implements Serializable {
 
 	private FingerprintsTest fingerPrints;
 	private UserInfo userInfo;
