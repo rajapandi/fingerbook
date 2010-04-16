@@ -4,9 +4,16 @@ import java.io.Serializable;
 
 public class UserInfo implements Serializable {
 
+	private Long userInfoId;
 	private String user;
 	private String mail;
 	
+	public Long getUserInfoId() {
+		return userInfoId;
+	}
+	public void setUserInfoId(Long userInfoId) {
+		this.userInfoId = userInfoId;
+	}
 	public String getUser() {
 		return user;
 	}
