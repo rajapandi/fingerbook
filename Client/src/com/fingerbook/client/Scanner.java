@@ -64,7 +64,6 @@ public class Scanner {
 		CollectedData data = new CollectedData(fileList);
 		
 		File result = new File("data.xml");
-
 		serializer.write(data, result);
 	}
 }
