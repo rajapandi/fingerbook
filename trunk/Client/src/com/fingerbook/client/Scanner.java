@@ -52,7 +52,6 @@ public class Scanner {
 		File actual = new File(dir);
 		List<File> fileList = new ArrayList<File>();
 
-		System.out.println("\nFiles Found:");
 		for (File f : actual.listFiles()) {
 			if (f.isFile())
 				fileList.add(f);
