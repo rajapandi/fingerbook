@@ -7,16 +7,5 @@
 
   	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> 
   	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /> 
-  	
-  	<bean id="FingerbookServices" class="fingerbook.service.FingerbookServices" />
-  	<bean id="FingerbooksController" class="fingerbook.web.FingerbooksController">
-  		<property name="FingerbookServices" ref="FingerbookServices" />
-  	</bean>
-  	
-  	<bean name="/fingerbooks" class="fingerbook.web.FingerbooksController">
-	</bean>
-	
-	<bean name="/*" class="fingerbook.web.ErrorController">
-	</bean>
 
 </beans>

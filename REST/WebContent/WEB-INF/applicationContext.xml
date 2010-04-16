@@ -35,6 +35,14 @@
 		</property>
 	</bean>
 
+<!-- 
+  	<bean id="FingerbookServices" class="fingerbook.service.FingerbookServices" />
+  	<bean id="FingerbooksController" class="fingerbook.web.FingerbooksController">
+  		<property name="fingerbookService"><ref bean="FingerbookServices"/></property>
+  	</bean>
+ -->
+
+  	
 	<!-- Should be defined last! -->
 	<mvc:annotation-driven />
 

@@ -1,5 +1,7 @@
 package fingerbook.web;
 
+import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ui.Model;
@@ -7,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.stereotype.*;
 
 import fingerbook.domain.ErrorResponse;
@@ -15,15 +16,24 @@ import fingerbook.domain.Fingerbook;
 import fingerbook.service.FingerbookServices;
 
 @Controller
+@RequestMapping("/fingerbooks")
 public class FingerbooksController {
 
     protected final Log logger = LogFactory.getLog(getClass());
     
-    FingerbookServices fingerbookService = new FingerbookServices();
+    // TODO: Do it with IoC
+    private FingerbookServices fingerbookService = new FingerbookServices();
     
-    @RequestMapping(value="/fingerbooks/{fingerbookId}", method=RequestMethod.GET)
+    /** 
+     * Returns de Fingerbook with the given fingerbookId when method is GET
+     * @param fingerbookId
+     * @param model
+     * @return A Fingerbook
+     */
+    @RequestMapping(value="/{fingerbookId}", method=RequestMethod.GET)
     @ResponseBody
-    public Fingerbook getFingerbook(@PathVariable("fingerbookId") Long fingerbookId, Model model) {    	
+    public Fingerbook getFingerbook(@PathVariable("fingerbookId") Long fingerbookId, Model model) {    
+    	//TODO: If I call /fingerbooks/asdsa it fails
     	Fingerbook fingerbook = fingerbookService.getFingerbook(fingerbookId);
     	model.addAttribute("fingerbook", fingerbook);
     	
@@ -32,15 +42,27 @@ public class FingerbooksController {
     	return fingerbook;
     }
     
+    /**
+     * Catches erroneous mappings for GET requests
+     * @return An ErrorResponse XML object with an error code and description
+     */
     @RequestMapping("/*")
     @ResponseBody
 	public ErrorResponse catchAll() {
-    	//TODO: write error codes and descs correctly
+    	// TODO: Place Error codes and descs in some file
     	ErrorResponse error = new ErrorResponse(new Integer(1), "Fingerbooks: Missing arguments");
     	
     	logger.info("Fingerbooks: Missing arguments. Returning error response");
     	
     	return error;
+	}
+
+	public FingerbookServices getFingerbookService() {
+		return fingerbookService;
+	}
+
+	public void setFingerbookService(FingerbookServices fingerbookService) {
+		this.fingerbookService = fingerbookService;
 	}
     
     /*
@@ -52,4 +74,6 @@ public class FingerbooksController {
 
         return new ModelAndView("setFingerprint.jsp");
     }*/
+    
+    
 }
