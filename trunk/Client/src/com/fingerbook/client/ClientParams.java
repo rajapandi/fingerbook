@@ -6,6 +6,8 @@ public class ClientParams {
 
 	// Default param values if not passed by command line:
 	public String dir = new String(".");
+	public String user = new String("");
+	public String mail = new String("");
 
 	ClientParams(String[] args) throws NumberFormatException,
 			IllegalArgumentException, IllegalAccessException {
