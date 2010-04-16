@@ -1,11 +1,12 @@
 package com.fingerbook.client;
 
-import java.util.List;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+import org.springframework.web.client.RestTemplate;
 
 import com.fingerbook.client.FileHashCalculator.Method;
 import com.fingerbook.client.marshalling.CollectedData;
@@ -43,8 +44,11 @@ public class Scanner {
 		 RestClient rc = new RestClient();
 		
 		 //File f = rc.getXML("http://www.wergehthin.de/xml/User/");
-		 rc.postXML(f, "http://www.wergehthin.de/xml/User/");
-		 System.out.println(f.toString());
+		 //rc.postXML(f, "http://www.wergehthin.de/xml/User/");
+		 //System.out.println(f.toString());
+		 RestTemplate rt = new RestTemplate();
+		 String result = rt.getForObject("http://www.wergehthin.de/xml/User/", String.class);
+		 System.out.println(result);
 		 
 		 //Delete the file before leaving
 		 //f.delete();
