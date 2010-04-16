@@ -1,6 +1,8 @@
 package fingerbook.domain;
 
-public class FileInfo {
+import java.io.Serializable;
+
+public class FileInfo implements Serializable {
 
 	private String name;
 	private String shaHash;
