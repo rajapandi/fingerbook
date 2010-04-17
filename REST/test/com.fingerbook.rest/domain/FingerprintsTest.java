@@ -1,4 +1,4 @@
-package fingerbook.domain;
+package com.fingerbook.rest.domain;
 
 import junit.framework.TestCase;
 

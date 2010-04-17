@@ -1,4 +1,4 @@
-package fingerbook.web;
+package com.fingerbook.rest.web;
 
 import java.io.IOException;
 
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.*;
 
-import fingerbook.domain.ErrorResponse;
-import fingerbook.domain.Fingerbook;
-import fingerbook.service.FingerbookServices;
+import com.fingerbook.rest.domain.ErrorResponse;
+import com.fingerbook.rest.domain.Fingerbook;
+import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller
 @RequestMapping("/fingerbooks")

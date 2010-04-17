@@ -1,4 +1,4 @@
-package fingerbook.service;
+package com.fingerbook.rest.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fingerbook.domain.FileInfo;
-import fingerbook.domain.Fingerbook;
-import fingerbook.domain.Fingerprints;
-import fingerbook.domain.UserInfo;
+import com.fingerbook.rest.domain.FileInfo;
+import com.fingerbook.rest.domain.Fingerbook;
+import com.fingerbook.rest.domain.Fingerprints;
+import com.fingerbook.rest.domain.UserInfo;
 
 public class FingerbookServices {
 

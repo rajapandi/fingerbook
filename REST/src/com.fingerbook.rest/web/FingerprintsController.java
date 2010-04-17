@@ -1,4 +1,4 @@
-package fingerbook.web;
+package com.fingerbook.rest.web;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import fingerbook.domain.ErrorResponse;
-import fingerbook.domain.Fingerprints;
-import fingerbook.service.FingerbookServices;
+import com.fingerbook.rest.domain.ErrorResponse;
+import com.fingerbook.rest.domain.Fingerprints;
+import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller
 @RequestMapping("/fingerprints")
