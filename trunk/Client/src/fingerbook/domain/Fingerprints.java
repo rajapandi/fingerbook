@@ -10,7 +10,7 @@ import com.fingerbook.client.FileHashCalculator.Method;
 import fingerbook.domain.FileInfo;
 
 public class Fingerprints implements Serializable {
-
+	private static final long serialVersionUID = -6294557277922170935L;
 	private Long fingerprintsId;
 	private List<FileInfo> files;
 	
