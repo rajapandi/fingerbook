@@ -39,9 +39,9 @@ public class FingerbookClient {
 	}
 	
 	@SuppressWarnings( "unchecked" )
-	public List<Fingerprints> getGroups(com.fingerbook.client.marshalling.FileInfo fi)
+	public List<Fingerprints> getGroups(String hash)
 	{
-		return restTemplate.getForObject( baseUrl + "fingerprints/" + fi.getHash(), List.class );
+		return restTemplate.getForObject( baseUrl + "fingerprints/" + hash, List.class );
 	}
 	
 	public void postHashes(Fingerbook fb) {
