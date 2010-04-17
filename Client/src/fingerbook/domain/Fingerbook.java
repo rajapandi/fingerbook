@@ -3,7 +3,7 @@ package fingerbook.domain;
 import java.io.Serializable;
 
 public class Fingerbook implements Serializable {
-
+	private static final long serialVersionUID = 8096848791291469268L;
 	protected Long fingerbookId;
 	protected Fingerprints fingerPrints;
 	protected UserInfo userInfo;

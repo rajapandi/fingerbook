@@ -3,7 +3,7 @@ package fingerbook.domain;
 import java.io.Serializable;
 
 public class UserInfo implements Serializable {
-
+	private static final long serialVersionUID = 6747532322707458976L;
 	private Long userInfoId;
 	private String user;
 	private String mail;
