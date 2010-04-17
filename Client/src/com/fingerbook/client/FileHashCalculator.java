@@ -44,7 +44,7 @@ public class FileHashCalculator {
 			try {
 				is = new FileInputStream(f);
 			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+				//e1.printStackTrace();
 				return null;
 			}				
 			String output = null;
