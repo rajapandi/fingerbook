@@ -26,7 +26,7 @@ public class Scanner {
 		fiClient.setBaseUrl("http://localhost:8080/REST/");
 		FileInfo fi = new FileInfo("data.xml",
 				"53870f83687822d7c768e6162cb32cf5e87567da", 1000L);
-		List<fingerbook.domain.Fingerprints> list = fiClient.getGroups(fi);
+		List<fingerbook.domain.Fingerprints> list = fiClient.getGroups("53870f83687822d7c768e6162cb32cf5e87567da");
 		for (fingerbook.domain.Fingerprints fingerprints : list) {
 			for (fingerbook.domain.FileInfo file : fingerprints.getFiles()) {
 				System.out.println(file.getName() + "--------------------"
