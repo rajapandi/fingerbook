@@ -6,8 +6,9 @@ public class ClientParams {
 
 	// Default param values if not passed by command line:
 	public String dir = new String(".");
-	public String user = new String("");
-	public String mail = new String("");
+	public String user = new String("gimi");
+	public String mail = new String("ggross@gmail.com");
+	public String gui = new String("yes");
 
 	ClientParams(String[] args) throws NumberFormatException,
 			IllegalArgumentException, IllegalAccessException {
@@ -33,6 +34,6 @@ public class ClientParams {
 
 	@Override
 	public String toString() {
-		return String.format("Scan Directory = " + "\"" + "%s" + "\"", dir);
+		return String.format("Scan Directory = " + "\"" + "%s" + "\"" + "\n" + "Username = " + "\"" + "%s" + "\"" + "\n" + "E-Mail = " + "\"" + "%s" + "\"" + "\n" + "GUI = " + "\"" + "%s" + "\"", dir, user, mail, gui);
 	}
 }

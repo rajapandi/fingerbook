@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import fingerbook.domain.FileInfo;
 import fingerbook.domain.Fingerbook;
 import fingerbook.domain.Fingerprints;
 
