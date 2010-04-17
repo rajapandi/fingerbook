@@ -1,4 +1,4 @@
-package fingerbook.domain;
+package com.fingerbook.rest.domain;
 
 import java.io.Serializable;
 import java.util.List;

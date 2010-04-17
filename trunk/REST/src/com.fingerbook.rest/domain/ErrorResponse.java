@@ -1,4 +1,4 @@
-package fingerbook.domain;
+package com.fingerbook.rest.domain;
 
 public class ErrorResponse {
 
