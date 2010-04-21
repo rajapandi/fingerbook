@@ -13,6 +13,7 @@ import org.springframework.stereotype.*;
 
 import com.fingerbook.models.ErrorResponse;
 import com.fingerbook.models.Fingerbook;
+import com.fingerbook.models.Response;
 import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller
@@ -48,9 +49,9 @@ public class FingerbooksController {
      */
     @RequestMapping("/*")
     @ResponseBody
-	public ErrorResponse catchAll() {
+	public Response catchAll() {
     	// TODO: Place Error codes and descs in some file
-    	ErrorResponse error = new ErrorResponse(new Integer(1), "Fingerbooks: Missing arguments");
+    	Response error = new Response(new Integer(1), "Fingerbooks: Missing arguments");
     	
     	logger.info("Fingerbooks: Missing arguments. Returning error response");
     	

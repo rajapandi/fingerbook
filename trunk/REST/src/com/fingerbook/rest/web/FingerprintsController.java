@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fingerbook.models.ErrorResponse;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
+import com.fingerbook.models.Response;
 import com.fingerbook.models.SuccessResponse;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
@@ -46,7 +47,7 @@ public class FingerprintsController {
      */
     @RequestMapping(value="/new", method=RequestMethod.POST)
     @ResponseBody
-    public void fileHashExists(@RequestBody Fingerbook fingerbook) {    
+    public Response fileHashExists(@RequestBody Fingerbook fingerbook) {    
     	
     	logger.info("Received fingerbook xml with: " + fingerbook.toString());
     	logger.info("Sending fingerbook to HBASE");
@@ -56,11 +57,11 @@ public class FingerprintsController {
     	//fingerbook.setFingerbookId(pf.saveMe());
     	
     	//TODO send response
-    	SuccessResponse response = new SuccessResponse("Fingerprints succesfully added to Fingerbook with ID: " 
+    	Response response = new Response(null, "Fingerprints succesfully added to Fingerbook with ID: " 
     			+ fingerbook.getFingerbookId());
     	
     	
-    	return;
+    	return response;
     }
 
     /**
@@ -69,9 +70,9 @@ public class FingerprintsController {
      */
     @RequestMapping("/*")
     @ResponseBody
-	public ErrorResponse catchAll() {
+	public Response catchAll() {
     	// TODO: Place Error codes and descs in some file
-    	ErrorResponse error = new ErrorResponse(new Integer(2), "Fingerprints: Missing arguments");
+    	Response error = new Response(new Integer(2), "Fingerprints: Missing arguments");
     	
     	logger.info("Fingerbooks: Missing arguments. Returning error response");
     	
