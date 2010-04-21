@@ -12,12 +12,14 @@ public class Client {
 
 	static ClientParams params;
 	static Scanner scanner;
+	public static ApplicationContext applicationContext;
 
 	/**
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 		params = new ClientParams(args);
 		System.out.println(params.toString());
 		
@@ -26,10 +28,10 @@ public class Client {
 		userInfo.setMail(params.mail);
 		
 		
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+		
 		FingerbookClient fiClient = applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
-		fiClient.setBaseUrl("http://10.6.0.37/fingerbookREST/");
-		scanner = new Scanner(params.dir, fiClient, userInfo);
+		fiClient.setBaseUrl(params.url);
+		scanner = new Scanner(params.dir, userInfo);
 		
 		if (params.gui.equals("yes")) {
 			initGUI();

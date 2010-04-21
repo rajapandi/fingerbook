@@ -40,4 +40,10 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="fingerbookClient" class="com.fingerbook.client.FingerbookClient">
+		<property name="restTemplate"><ref bean="restTemplate"/></property>
+		<property name="baseUrl"><value>http://localhost:8080/fingerbookREST/</value></property>
+	</bean>
+	
 </beans>
