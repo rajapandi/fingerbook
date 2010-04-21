@@ -7,12 +7,14 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fingerbook.rest.domain.ErrorResponse;
 import com.fingerbook.rest.domain.Fingerprints;
+import com.fingerbook.rest.domain.SuccessResponse;
 import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller
@@ -34,6 +36,22 @@ public class FingerprintsController {
     	
     	return fingerprints;
     }
+    
+    /**
+     * Receives a new Fingerprints and adds it to HBASE
+     * @return A SuccessREsponse XML object with if the Fingerprints was succesfully
+     * added to HBASE, an ErrorResponse with and error code and description if not
+     */
+    @RequestMapping(value="/new", method=RequestMethod.POST)
+    @ResponseBody
+    public SuccessResponse fileHashExists(@RequestBody Fingerprints fingerprints) {    
+    	
+    	// TODO: Add it to HBASE. if succesfull return this message
+    	SuccessResponse response = new SuccessResponse("Fingerprints succesfully added");
+    	logger.info("Received fingerprints xml with: " + fingerprints.toString());
+    	
+    	return response;
+    }
 
     /**
      * Catches erroneous mappings for GET requests
@@ -49,6 +67,12 @@ public class FingerprintsController {
     	
     	return error;
 	}
+    
+    /*
+    @ExceptionHandler(Exception.class)
+    public void handle() {
+        System.out.println("exception");
+    }*/
 
 	public FingerbookServices getFingerbookService() {
 		return fingerbookService;
