@@ -7,7 +7,7 @@ public class FileInfo implements Serializable {
 	private Long fileInfoId;
 	private String name;
 	private String shaHash;
-	private Integer sizeInBytes;
+	private Long sizeInBytes;
 	
 	public Long getFileInfoId() {
 		return fileInfoId;
@@ -27,10 +27,10 @@ public class FileInfo implements Serializable {
 	public void setShaHash(String shaHash) {
 		this.shaHash = shaHash;
 	}
-	public Integer getSizeInBytes() {
+	public Long getSizeInBytes() {
 		return sizeInBytes;
 	}
-	public void setSizeInBytes(Integer sizeInBytes) {
+	public void setSizeInBytes(Long sizeInBytes) {
 		this.sizeInBytes = sizeInBytes;
 	}
 	
