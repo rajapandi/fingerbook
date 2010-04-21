@@ -30,3 +30,10 @@ class InitScan implements ActionListener {
 
 	}
 }
+
+// Menu ActionListeners
+class Pepe implements ActionListener {
+	public void actionPerformed(ActionEvent e) {
+		System.out.println("pepe");
+	}
+}
