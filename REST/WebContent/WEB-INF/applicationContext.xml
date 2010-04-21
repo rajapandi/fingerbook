@@ -16,10 +16,28 @@
 	-->
 	<bean id="oxmMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller" />
 
+	<bean id="configuredMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+		<property name="aliases">
+			<props>
+				<prop key="Fingerprints">com.fingerbook.rest.domain.Fingerprints</prop>
+				<prop key="Fingerbook">com.fingerbook.rest.domain.Fingerbook</prop>
+				<prop key="FileInfo">com.fingerbook.rest.domain.FileInfo</prop>
+				<prop key="UserInfo">com.fingerbook.rest.domain.UserInfo</prop>
+			</props>
+		</property>
+		<!--  
+		<property name="converters">
+			<list>
+				<bean class="org.sensatic.jqr.jobs.ParamsConverter" />
+			</list>
+		</property>
+		-->
+	</bean>
+	
 	<bean id="marshallingHttpMessageConverter"
 		class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
-		<property name="marshaller" ref="oxmMarshaller" />
-		<property name="unmarshaller" ref="oxmMarshaller" />
+		<property name="marshaller" ref="configuredMarshaller" />
+		<property name="unmarshaller" ref="configuredMarshaller" />
 	</bean>
 
 	<!--
