@@ -46,9 +46,14 @@ public class Scanner {
 		// System.out.println(result);
 	}
 
-	public Fingerbook scanDirectory()
+	public Fingerbook scanDirectory(String scanDir)
 			throws Exception {
-		File actual = new File(dir);
+		File actual = null;
+		try {
+		actual = new File(scanDir);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		List<File> fileList = new ArrayList<File>();
 
 		for (File f : actual.listFiles()) {

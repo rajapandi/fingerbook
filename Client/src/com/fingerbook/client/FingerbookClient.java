@@ -45,7 +45,7 @@ public class FingerbookClient {
 	}
 	
 	public void postHashes(Fingerbook fb) {
-		restTemplate.postForObject(this.baseUrl + "newfingerprints/", fb, Fingerbook.class);
+		restTemplate.postForObject(this.baseUrl + "fingerprints/new", fb, Fingerbook.class);
 	}
 
 //	public FileInfo getFileInfo(String hash) {
