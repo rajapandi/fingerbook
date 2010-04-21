@@ -66,6 +66,9 @@ public class Query extends JFrame {
 
 	public void setFDir(String path) {
 		this.tFile.setText(path);
-		this.repaint();
+	}
+	
+	public String getFDir() {
+		return this.tFile.getText();
 	}
 }
