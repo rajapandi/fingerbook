@@ -48,4 +48,8 @@
 		<property name="baseUrl"><value>http://localhost:8080/fingerbookREST/</value></property>
 	</bean>
 	
+	<bean id="fileHashCalculator" class="com.fingerbook.client.FileHashCalculator">
+		<constructor-arg><value>Method.SHA1</value></constructor-arg>
+	</bean> 
+	
 </beans>

@@ -14,12 +14,10 @@ import com.fingerbook.models.UserInfo;
 
 
 public class Scanner {
-	private FileHashCalculator fhc;
 	private UserInfo userInfo;
 
 	public Scanner(String dir, UserInfo userInfo) throws Exception {
 		
-		this.fhc = new FileHashCalculator(Method.SHA1);
 		this.userInfo = userInfo;
 		//Fingerprints fis = scanDirectory(dir, fhc);
 
@@ -60,7 +58,7 @@ public class Scanner {
 		}
 
 		List<FileInfo> files = new ArrayList<FileInfo>();
-		
+		FileHashCalculator fhc = Client.applicationContext.getBean("fileHashCalculator", FileHashCalculator.class);
 		for (File f : fileList) {
 			files.add(new FileInfo(f.getName(), fhc.getFileHash(f), f.length()));
 		}

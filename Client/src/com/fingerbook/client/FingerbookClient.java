@@ -43,6 +43,7 @@ public class FingerbookClient {
 	@SuppressWarnings( "unchecked" )
 	public List<Fingerprints> getGroups(String hash)
 	{
+		System.out.println("----------------HASH: " + hash);
 		return restTemplate.getForObject( baseUrl + "fingerprints/" + hash, List.class );
 	}
 	
