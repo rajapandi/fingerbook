@@ -10,6 +10,10 @@ public class FileInfo implements Serializable {
 	private String shaHash;
 	private Long sizeInBytes;
 	
+	public FileInfo() {
+		
+	}
+	
 	public FileInfo(String name, String hash, Long size) {
 		this.name = name;
 		this.shaHash = hash;
