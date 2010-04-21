@@ -2,12 +2,20 @@ package com.fingerbook.models;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class FileInfo implements Serializable {
 
 	private Long fileInfoId;
 	private String name;
 	private String shaHash;
-	private Integer sizeInBytes;
+	private Long sizeInBytes;
+	
+	public FileInfo(String name, String hash, Long size) {
+		this.name = name;
+		this.shaHash = hash;
+		this.sizeInBytes = size;
+	}
+	
 	
 	public Long getFileInfoId() {
 		return fileInfoId;
@@ -27,10 +35,10 @@ public class FileInfo implements Serializable {
 	public void setShaHash(String shaHash) {
 		this.shaHash = shaHash;
 	}
-	public Integer getSizeInBytes() {
+	public Long getSizeInBytes() {
 		return sizeInBytes;
 	}
-	public void setSizeInBytes(Integer sizeInBytes) {
+	public void setSizeInBytes(Long sizeInBytes) {
 		this.sizeInBytes = sizeInBytes;
 	}
 	
