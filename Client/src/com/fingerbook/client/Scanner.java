@@ -15,13 +15,11 @@ import com.fingerbook.models.UserInfo;
 
 public class Scanner {
 	private FileHashCalculator fhc;
-	private FingerbookClient fiClient;
 	private String dir;
 	private UserInfo userInfo;
 
-	public Scanner(String dir, FingerbookClient fiClient, UserInfo userInfo) throws Exception {
+	public Scanner(String dir, UserInfo userInfo) throws Exception {
 		
-		this.fiClient = fiClient;
 		this.dir = dir;
 		this.fhc = new FileHashCalculator(Method.SHA1);
 		this.userInfo = userInfo;
@@ -76,6 +74,7 @@ public class Scanner {
 		fb.setUserInfo(this.userInfo);
 		fb.setFingerPrints(data);
 		fb.setStamp(new GregorianCalendar().getTimeInMillis());
+		FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
 		fiClient.postHashes(fb);
 		// Serializer serializer = new Persister();
 		// File result = new File("data.xml");
