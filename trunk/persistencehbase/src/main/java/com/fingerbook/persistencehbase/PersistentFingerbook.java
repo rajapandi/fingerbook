@@ -35,6 +35,13 @@ public class PersistentFingerbook extends Fingerbook{
 
 	public long saveMe() {
 		
+		try {
+			this.fingerbookId = getNextGroupId();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return -1;
+		}
 		byte[] groupIdB = Bytes.toBytes(fingerbookId);
 		byte[] stampB = Bytes.toBytes(stamp);
 		
@@ -50,6 +57,7 @@ public class PersistentFingerbook extends Fingerbook{
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return -1;
 			}
 		}
 		return fingerbookId;
