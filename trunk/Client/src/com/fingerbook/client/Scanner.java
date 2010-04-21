@@ -6,10 +6,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import com.fingerbook.client.FileHashCalculator.Method;
+import com.fingerbook.models.FileInfo;
+import com.fingerbook.models.Fingerbook;
+import com.fingerbook.models.Fingerprints;
+import com.fingerbook.models.UserInfo;
 
-import fingerbook.domain.Fingerbook;
-import fingerbook.domain.Fingerprints;
-import fingerbook.domain.UserInfo;
+
 
 public class Scanner {
 	private FileHashCalculator fhc;
@@ -61,7 +63,14 @@ public class Scanner {
 				fileList.add(f);
 		}
 
-		Fingerprints data = new Fingerprints(fileList);
+		List<FileInfo> files = new ArrayList<FileInfo>();
+		
+		for (File f : fileList) {
+			files.add(new FileInfo(f.getName(), fhc.getFileHash(f), f.length()));
+		}
+
+		Fingerprints data = new Fingerprints();
+		data.setFiles(files);
 		
 		Fingerbook fb = new Fingerbook();
 		fb.setUserInfo(this.userInfo);

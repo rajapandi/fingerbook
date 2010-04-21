@@ -5,8 +5,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fingerbook.client.gui.Front;
 import com.fingerbook.client.marshalling.CollectedData;
+import com.fingerbook.models.UserInfo;
 
-import fingerbook.domain.UserInfo;
 
 public class Client {
 
@@ -28,7 +28,7 @@ public class Client {
 		
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 		FingerbookClient fiClient = applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
-		fiClient.setBaseUrl("http://localhost/fingerbookREST/");
+		fiClient.setBaseUrl("http://10.6.0.37/fingerbookREST/");
 		scanner = new Scanner(params.dir, fiClient, userInfo);
 		
 		if (params.gui.equals("yes")) {
