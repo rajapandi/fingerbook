@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fingerbook.models.ErrorResponse;
-import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.Fingerprints;
-import com.fingerbook.models.Response;
-import com.fingerbook.models.SuccessResponse;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
+import com.fingerbook.rest.domain.Fingerbook;
+import com.fingerbook.rest.domain.Fingerprints;
+import com.fingerbook.rest.domain.Response;
 import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller

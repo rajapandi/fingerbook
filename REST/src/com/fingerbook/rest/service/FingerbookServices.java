@@ -6,10 +6,10 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fingerbook.models.FileInfo;
-import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.Fingerprints;
-import com.fingerbook.models.UserInfo;
+import com.fingerbook.rest.domain.FileInfo;
+import com.fingerbook.rest.domain.Fingerbook;
+import com.fingerbook.rest.domain.Fingerprints;
+import com.fingerbook.rest.domain.UserInfo;
 
 
 public class FingerbookServices {
