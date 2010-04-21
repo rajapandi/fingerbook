@@ -37,6 +37,23 @@ public class FileHashCalculator {
 			
 		}
 		
+		public FileHashCalculator(String method) {
+			if(method.equals("SHA1")) {
+				try {
+					this.md = MessageDigest.getInstance("SHA1");
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}				
+			} else {
+				try {
+					this.md = MessageDigest.getInstance("MD5");
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}	
+			}
+			
+		}
+		
 		@SuppressWarnings("static-access")
 		public String getFileHash(File f) {
 			

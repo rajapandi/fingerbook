@@ -3,6 +3,8 @@ package com.fingerbook.client.gui;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -10,6 +12,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.fingerbook.client.Client;
+import com.fingerbook.client.FileHashCalculator;
+import com.fingerbook.client.FingerbookClient;
+import com.fingerbook.models.Fingerprints;
 import com.l2fprod.common.swing.JDirectoryChooser;
 
 class JDirPopUp implements ActionListener {
@@ -47,12 +52,13 @@ class InitScan implements ActionListener {
 class InitQuery implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		try {
-			//ACA VA EL GET
+			File f = new File(((Query)(SwingUtilities.getRoot((JButton)e.getSource()))).getFDir());
+			FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
+			FileHashCalculator fhc = Client.applicationContext.getBean("fileHashCalculator", FileHashCalculator.class);
+			List<Fingerprints> list = fiClient.getGroups(fhc.getFileHash(f));
 			
-			/*-------------------------*/
 			
-			//ACA VA EL toString DEL OBJETO QUE DEVUELVE EL GET
-			new NotePad("hola");
+			new NotePad(list.toString());
 		} catch (Exception ex) {ex.printStackTrace();}
 	}
 }
