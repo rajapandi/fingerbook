@@ -4,8 +4,10 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.fingerbook.client.Client;
 import com.l2fprod.common.swing.JDirectoryChooser;
@@ -16,7 +18,7 @@ class JDirPopUp implements ActionListener {
 		chooser.setShowingCreateDirectory(false);
 		int choice = chooser.showOpenDialog((Component) e.getSource());
 		if (choice == JDirectoryChooser.APPROVE_OPTION) {
-			Front.tDir.setText(chooser.getSelectedFile().getAbsolutePath());
+			((Front)(SwingUtilities.getRoot((JButton)e.getSource()))).setDir(chooser.getSelectedFile().getAbsolutePath());
 		}
 	}
 }
@@ -25,30 +27,33 @@ class JFilePopUp implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JFileChooser chooser = new JFileChooser(".");
 		chooser.showOpenDialog(null);
-	    System.out.println(chooser.getSelectedFile().getAbsolutePath().toString());
-//		Front.tDir.setText(chooser.getSelectedFile().getAbsolutePath());
+		if(chooser.getSelectedFile() != null){
+			((Query)(SwingUtilities.getRoot((JButton)e.getSource()))).setFDir(chooser.getSelectedFile().getAbsolutePath());
+			((Query)(SwingUtilities.getRoot((JButton)e.getSource()))).setOKEnabled();
+		}
 	}
 }
 
 class InitScan implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		try {
-			Client.getScanner().scanDirectory(Front.tDir.getText());
-		} catch (Exception ex) {ex.printStackTrace();}
+			Client.getScanner().scanDirectory(((Front)(SwingUtilities.getRoot((JButton)e.getSource()))).getDir());
+		} catch (Exception ex) { ex.printStackTrace(); }
 
 		JOptionPane.showMessageDialog((Component) e.getSource(), "Success!");
-
 	}
 }
 
 class InitQuery implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		try {
-			Client.getScanner().scanDirectory(Front.tDir.getText());
+			//ACA VA EL GET
+			
+			/*-------------------------*/
+			
+			//ACA VA EL toString DEL OBJETO QUE DEVUELVE EL GET
+			new NotePad("hola");
 		} catch (Exception ex) {ex.printStackTrace();}
-
-		JOptionPane.showMessageDialog((Component) e.getSource(), "Success!");
-
 	}
 }
 
