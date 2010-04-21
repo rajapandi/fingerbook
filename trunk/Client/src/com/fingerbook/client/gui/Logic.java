@@ -23,8 +23,8 @@ class JDirPopUp implements ActionListener {
 class InitScan implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		try {
-			Client.getScanner().scanDirectory();
-		} catch (Exception ex) {}
+			Client.getScanner().scanDirectory(Front.tDir.getText());
+		} catch (Exception ex) {ex.printStackTrace();}
 
 		JOptionPane.showMessageDialog((Component) e.getSource(), "Success!");
 
