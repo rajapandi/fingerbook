@@ -18,6 +18,10 @@ public class Client {
 		params = new ClientParams(args);
 		System.out.println(params.toString());
 		
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+		FingerbookClient fiClient = applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
+		fiClient.setBaseUrl("http://localhost:8080/REST/");
+		
 		if (params.gui.equals("yes")) {
 			initGUI();
 			return;
@@ -26,9 +30,6 @@ public class Client {
 		CollectedData.setUser(params.user);
 		CollectedData.setMail(params.mail);
 		
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-		FingerbookClient fiClient = applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
-		fiClient.setBaseUrl("http://localhost:8080/REST/");
 		new Scanner(params.dir);
 	}
 	

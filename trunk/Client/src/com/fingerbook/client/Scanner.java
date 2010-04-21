@@ -4,11 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import com.fingerbook.client.FileHashCalculator.Method;
-import com.fingerbook.client.marshalling.FileInfo;
 
 import fingerbook.domain.Fingerprints;
 
@@ -28,7 +24,7 @@ public class Scanner {
 //						+ file.getShaHash());
 //			}
 //		}
-//		// RestClient rc = new RestClient();
+		// RestClient rc = new RestClient();
 		//		
 		// File f = rc.getXML("http://www.wergehthin.de/xml/User/");
 		// rc.postXML(f, "http://www.wergehthin.de/xml/User/");

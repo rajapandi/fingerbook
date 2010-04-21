@@ -1,12 +1,16 @@
 package com.fingerbook.client.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -21,6 +25,8 @@ public class Front extends JFrame {
 	public static JTextField tDir;
 
 	public Front() {
+		
+		Container contentPane = this.getContentPane();
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -32,6 +38,46 @@ public class Front extends JFrame {
 		this.setLayout(new BorderLayout());
 	
 		JPanel panel = new JPanel();
+		
+		
+		JMenuBar menuBar = new JMenuBar();
+	    this.setJMenuBar(menuBar);
+	    JMenu menu = new JMenu("File");
+	    menuBar.add(menu);
+	    
+	    JMenuItem objJMenuItem;
+
+
+
+	    objJMenuItem = new JMenuItem("New");        //New
+	    objJMenuItem.addActionListener( new Pepe() );
+	    menu.add( objJMenuItem );
+	  
+	    objJMenuItem = new JMenuItem("Open");    //Open...
+	    objJMenuItem.addActionListener( new Pepe() );
+	    menu.add( objJMenuItem );
+	  
+	    objJMenuItem = new JMenuItem("Save");       //Save
+	    objJMenuItem.addActionListener( new Pepe() );
+	    menu.add( objJMenuItem );
+	  
+	    objJMenuItem = new JMenuItem("Save As"); //Save As...
+	    objJMenuItem.addActionListener( new Pepe() );
+	    menu.add( objJMenuItem );
+	  
+	    menu.addSeparator();           //add a horizontal separator line
+	  
+	    objJMenuItem = new JMenuItem("Quit");       //Quit
+	    objJMenuItem.addActionListener( new Pepe() );
+	    menu.add( objJMenuItem );
+
+
+
+	    
+	    
+	    
+		
+		
 		
 		tDir = new JTextField();
 		tDir.setColumns(50);
@@ -45,8 +91,9 @@ public class Front extends JFrame {
 		
 		panel.add(tDir);
 		panel.add(bBrowse, BorderLayout.SOUTH);
-		this.getContentPane().add(panel);
-		this.getContentPane().add(bIni, BorderLayout.SOUTH);
+		
+		contentPane.add(panel);
+		contentPane.add(bIni, BorderLayout.SOUTH);
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();
