@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
+import com.fingerbook.models.Response;
 
 
 
@@ -43,12 +44,11 @@ public class FingerbookClient {
 	@SuppressWarnings( "unchecked" )
 	public List<Fingerprints> getGroups(String hash)
 	{
-		System.out.println("----------------HASH: " + hash);
 		return restTemplate.getForObject( baseUrl + "fingerprints/" + hash, List.class );
 	}
 	
-	public void postHashes(Fingerbook fb) {
-		restTemplate.postForObject(this.baseUrl + "fingerprints/new", fb, Fingerbook.class);
+	public Response postHashes(Fingerbook fb) {
+		return restTemplate.postForObject(this.baseUrl + "fingerprints/new", fb, Response.class);
 	}
 
 //	public FileInfo getFileInfo(String hash) {
