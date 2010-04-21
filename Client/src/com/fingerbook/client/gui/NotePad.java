@@ -5,23 +5,21 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
-public class Query extends JFrame {
+public class NotePad extends JFrame {
+
 	private static final long serialVersionUID = 2440070097533761705L;
 	private Toolkit toolkit;
-
-	private JTextField tFile = new JTextField();
-	private JButton bIni;
 	
-	public Query() {
+	public NotePad(String text) {
 
 		Container contentPane = this.getContentPane();
 
-		this.setTitle("fbClient - Query");
+		this.setTitle("fbClient - Result");
 		this.setLayout(new BorderLayout());
 
 		JPanel panel = new JPanel();
@@ -29,22 +27,15 @@ public class Query extends JFrame {
 		contentPane.add(panel);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		tFile.setColumns(50);
-		tFile.setEditable(false);
+		JTextArea notepad = new JTextArea(20,80);
+		notepad.setText(text);
+		JScrollPane scrollingArea = new JScrollPane(notepad);
 
-		JButton bBrowse = new JButton("Browse");
-		bBrowse.addActionListener(new JFilePopUp());
+		panel.add(scrollingArea, BorderLayout.CENTER);
 
-		bIni = new JButton("OK");
-		bIni.setEnabled(false);
-		bIni.addActionListener(new InitQuery());
-
-		panel.add(tFile);
-		panel.add(bBrowse, BorderLayout.SOUTH);
 
 		contentPane.add(panel);
-		contentPane.add(bIni, BorderLayout.SOUTH);
-		
+	
 		
 		this.pack();
 		this.center();
@@ -58,14 +49,5 @@ public class Query extends JFrame {
 		Dimension size = toolkit.getScreenSize();
 		setLocation(size.width / 2 - getWidth() / 2, size.height / 2
 				- getHeight() / 2);
-	}
-
-	public void setOKEnabled() {
-		this.bIni.setEnabled(true);		
-	}
-
-	public void setFDir(String path) {
-		this.tFile.setText(path);
-		this.repaint();
 	}
 }

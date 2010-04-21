@@ -20,7 +20,7 @@ public class Front extends JFrame {
 	private static final long serialVersionUID = 2440070097533761701L;
 	private Toolkit toolkit;
 
-	public static JTextField tDir;
+	private JTextField tDir = new JTextField();
 
 	public Front() {
 
@@ -42,7 +42,6 @@ public class Front extends JFrame {
 		JMenuBar menuBar = new MainMenu();
 		this.setJMenuBar(menuBar);
 
-		tDir = new JTextField();
 		tDir.setColumns(50);
 		tDir.setEditable(false);
 
@@ -63,7 +62,7 @@ public class Front extends JFrame {
 		this.center();
 		this.setVisible(true);
 
-		this.setDefaultDir(new File(".").getAbsolutePath().toString());
+		this.setDir(new File(".").getAbsolutePath().toString());
 	}
 
 	private void center() {
@@ -73,9 +72,12 @@ public class Front extends JFrame {
 				- getHeight() / 2);
 	}
 
-	private void setDefaultDir(String defaultDir) {
+	public void setDir(String defaultDir) {
 		if (defaultDir.endsWith("\\."))
-			Front.tDir
-					.setText(defaultDir.substring(0, defaultDir.length() - 2));
+			this.tDir.setText(defaultDir.substring(0, defaultDir.length() - 2));
+	}
+
+	public String getDir() {
+		return this.tDir.getText();
 	}
 }
