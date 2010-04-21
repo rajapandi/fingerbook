@@ -21,10 +21,10 @@ public class MainMenu extends JMenuBar {
 
 		/* File Menu */
 		// New
-		objJMenuItem = new JMenuItem("Scan & Send");
+		objJMenuItem = new JMenuItem("Query");
 		objJMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		objJMenuItem.addActionListener(new About());
+		objJMenuItem.addActionListener(new MQuery());
 		fileMenu.add(objJMenuItem);
 
 		// add a horizontal separator line
@@ -34,14 +34,14 @@ public class MainMenu extends JMenuBar {
 		objJMenuItem = new JMenuItem("Exit");
 		objJMenuItem.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		objJMenuItem.addActionListener(new About());
+		objJMenuItem.addActionListener(new MExit());
 		fileMenu.add(objJMenuItem);
 		
 		/* Help Menu */
 		objJMenuItem = new JMenuItem("About");
 		objJMenuItem.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		objJMenuItem.addActionListener(new About());
+		objJMenuItem.addActionListener(new MAbout());
 		helpMenu.add(objJMenuItem);
 
 	}
