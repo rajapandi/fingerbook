@@ -6,10 +6,10 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fingerbook.rest.domain.FileInfo;
-import com.fingerbook.rest.domain.Fingerbook;
-import com.fingerbook.rest.domain.Fingerprints;
-import com.fingerbook.rest.domain.UserInfo;
+import com.fingerbook.models.FileInfo;
+import com.fingerbook.models.Fingerbook;
+import com.fingerbook.models.Fingerprints;
+import com.fingerbook.models.UserInfo;
 
 public class FingerbookServices {
 
@@ -38,7 +38,7 @@ public class FingerbookServices {
 			fileInfo.setFileInfoId(new Long(1));
 			fileInfo.setName("myfile.exe");
 			fileInfo.setShaHash("DAFDSFSDFGSG3432VSDV");
-			fileInfo.setSizeInBytes(new Integer(3324));
+			fileInfo.setSizeInBytes(new Long(3324));
 			files.add(fileInfo);
 			fingerPrints.setFiles(files);
 			fingerbook.setFingerPrints(fingerPrints);
@@ -63,7 +63,7 @@ public class FingerbookServices {
 			fileInfo.setFileInfoId(new Long(1));
 			fileInfo.setName("myfile1.exe");
 			fileInfo.setShaHash(hash);
-			fileInfo.setSizeInBytes(new Integer(3324));
+			fileInfo.setSizeInBytes(new Long(3324));
 			files.add(fileInfo);
 			fingerPrints.setFiles(files);
 			
@@ -77,7 +77,7 @@ public class FingerbookServices {
 			fileInfo.setFileInfoId(new Long(2));
 			fileInfo.setName("myfile2.exe");
 			fileInfo.setShaHash("GFHJFG54364HGFd54634");
-			fileInfo.setSizeInBytes(new Integer(9325425));
+			fileInfo.setSizeInBytes(new Long(9325425));
 			files.add(fileInfo);
 			fingerPrints.setFiles(files);
 			
