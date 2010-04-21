@@ -15,6 +15,7 @@ import com.fingerbook.client.Client;
 import com.fingerbook.client.FileHashCalculator;
 import com.fingerbook.client.FingerbookClient;
 import com.fingerbook.models.Fingerprints;
+import com.fingerbook.models.Response;
 import com.l2fprod.common.swing.JDirectoryChooser;
 
 class JDirPopUp implements ActionListener {
@@ -41,11 +42,17 @@ class JFilePopUp implements ActionListener {
 
 class InitScan implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
+		Response resp = null;
 		try {
 			Client.getScanner().scanDirectory(((Front)(SwingUtilities.getRoot((JButton)e.getSource()))).getDir());
 		} catch (Exception ex) { ex.printStackTrace(); }
 
-		JOptionPane.showMessageDialog((Component) e.getSource(), "Success!");
+		if(resp == null || resp.getErrorCode() != null) {
+			JOptionPane.showMessageDialog((Component) e.getSource(), "Error!:\n" + resp !=  null ? resp.getDesc() : "");
+		} else {
+			JOptionPane.showMessageDialog((Component) e.getSource(), "Success!:\n" + resp.getDesc());
+		}
+		
 	}
 }
 
