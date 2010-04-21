@@ -17,21 +17,23 @@
 					<constructor-arg>
 						<bean class="org.springframework.oxm.xstream.XStreamMarshaller">
 							<!-- Explicitly define the aliases -->
-							<!--
+							
 							<property name="aliases">
 								<props>
-									<prop key="article">com.informit.articleservice.model.Article</prop>
-									<prop key="category">com.informit.articleservice.model.Category</prop>
+									<prop key="Fingerbook">com.fingerbook.models.Fingerbook</prop>
+									<prop key="FileInfo">com.fingerbook.models.FileInfo</prop>
+									<prop key="Fingerprints">com.fingerbook.models.Fingerprints</prop>
+									<prop key="UserInfo">com.fingerbook.models.UserInfo</prop>
 								</props>
 							</property>
-							-->
+
 							
 							<!-- Tell XStream to find the alias names in the following classes -->
 							<property name="annotatedClasses">
-								<list>
-									<value>com.fingerbook.client.marshalling.CollectedData</value>							
+								<list>						
 									<value>com.fingerbook.client.marshalling.FileInfo</value>
-									<value>com.fingerbook.client.marshalling.UserInfo</value>							
+									<value>com.fingerbook.client.marshalling.UserInfo</value>
+									<value>com.fingerbook.client.marshalling.Fingerprints</value>							
 								</list>						
 							</property>
 						</bean>
