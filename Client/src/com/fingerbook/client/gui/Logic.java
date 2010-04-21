@@ -44,7 +44,7 @@ class InitScan implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Response resp = null;
 		try {
-			Client.getScanner().scanDirectory(((Front)(SwingUtilities.getRoot((JButton)e.getSource()))).getDir());
+			resp = Client.getScanner().scanDirectory(((Front)(SwingUtilities.getRoot((JButton)e.getSource()))).getDir());
 		} catch (Exception ex) { ex.printStackTrace(); }
 
 		if(resp == null || resp.getErrorCode() != null) {
