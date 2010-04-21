@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import com.fingerbook.client.FileHashCalculator.Method;
 import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
+import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
 
 
@@ -42,7 +42,7 @@ public class Scanner {
 		// System.out.println(result);
 	}
 
-	public Fingerbook scanDirectory(String scanDir)
+	public Response scanDirectory(String scanDir)
 			throws Exception {
 		File actual = null;
 		try {
@@ -71,11 +71,11 @@ public class Scanner {
 		fb.setFingerPrints(data);
 		fb.setStamp(new GregorianCalendar().getTimeInMillis());
 		FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
-		fiClient.postHashes(fb);
+		Response resp = fiClient.postHashes(fb);
 		// Serializer serializer = new Persister();
 		// File result = new File("data.xml");
 		// serializer.write(data, result);
-		return fb;
+		return resp;
 	}
 
 }
