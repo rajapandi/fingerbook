@@ -15,12 +15,10 @@ import com.fingerbook.models.UserInfo;
 
 public class Scanner {
 	private FileHashCalculator fhc;
-	private String dir;
 	private UserInfo userInfo;
 
 	public Scanner(String dir, UserInfo userInfo) throws Exception {
 		
-		this.dir = dir;
 		this.fhc = new FileHashCalculator(Method.SHA1);
 		this.userInfo = userInfo;
 		//Fingerprints fis = scanDirectory(dir, fhc);
