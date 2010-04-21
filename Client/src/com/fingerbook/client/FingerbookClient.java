@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import fingerbook.domain.Fingerbook;
-import fingerbook.domain.Fingerprints;
+import com.fingerbook.models.Fingerbook;
+import com.fingerbook.models.Fingerprints;
+
+
 
 @Component( "FingerprintsClient" )
 public class FingerbookClient {
