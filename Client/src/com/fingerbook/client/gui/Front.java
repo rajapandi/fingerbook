@@ -49,7 +49,7 @@ public class Front extends JFrame {
 		JButton bBrowse = new JButton("Browse");
 		bBrowse.addActionListener(new JDirPopUp());
 
-		JButton bIni = new JButton("Iniciar");
+		JButton bIni = new JButton("Scan & Send");
 		bIni.addActionListener(new InitScan());
 
 		panel.add(tDir);
