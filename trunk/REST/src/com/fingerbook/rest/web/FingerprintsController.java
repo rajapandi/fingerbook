@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fingerbook.models.ErrorResponse;
+import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
-import com.fingerbook.rest.domain.ErrorResponse;
-import com.fingerbook.rest.domain.SuccessResponse;
+import com.fingerbook.models.SuccessResponse;
+import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller
@@ -44,13 +46,21 @@ public class FingerprintsController {
      */
     @RequestMapping(value="/new", method=RequestMethod.POST)
     @ResponseBody
-    public SuccessResponse fileHashExists(@RequestBody Fingerprints fingerprints) {    
+    public void fileHashExists(@RequestBody Fingerbook fingerbook) {    
     	
-    	// TODO: Add it to HBASE. if succesfull return this message
-    	SuccessResponse response = new SuccessResponse("Fingerprints succesfully added");
-    	logger.info("Received fingerprints xml with: " + fingerprints.toString());
+    	logger.info("Received fingerbook xml with: " + fingerbook.toString());
+    	logger.info("Sending fingerbook to HBASE");
     	
-    	return response;
+    	// TODO add to persistence
+    	//PersistentFingerbook pf = new PersistentFingerbook(fingerbook);    	
+    	//fingerbook.setFingerbookId(pf.saveMe());
+    	
+    	//TODO send response
+    	SuccessResponse response = new SuccessResponse("Fingerprints succesfully added to Fingerbook with ID: " 
+    			+ fingerbook.getFingerbookId());
+    	
+    	
+    	return;
     }
 
     /**

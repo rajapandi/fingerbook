@@ -1,5 +1,6 @@
 package com.fingerbook.rest.service;
 
+
 import com.fingerbook.models.Fingerbook;
 
 import junit.framework.TestCase;

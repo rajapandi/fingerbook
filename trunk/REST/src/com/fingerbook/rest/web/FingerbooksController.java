@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.*;
 
-
+import com.fingerbook.models.ErrorResponse;
 import com.fingerbook.models.Fingerbook;
-import com.fingerbook.rest.domain.ErrorResponse;
 import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller

@@ -11,6 +11,7 @@ import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.UserInfo;
 
+
 public class FingerbookServices {
 
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -87,5 +88,11 @@ public class FingerbookServices {
 		} else {
 			return null;
 		}
+	}
+
+	public Fingerbook getFingerbook(Fingerprints fingerprints) {
+		Fingerbook fingerbook = new Fingerbook();
+		fingerbook.setFingerPrints(fingerprints);
+		return fingerbook;
 	}	
 }
