@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Fingerprints implements Serializable {
+	private static final long serialVersionUID = 6560432953570501232L;
 
 	private Long fingerprintsId;
 	private List<FileInfo> files;
