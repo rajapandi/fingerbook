@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import com.fingerbook.client.Client;
 import com.fingerbook.client.Scanner;
 import com.l2fprod.common.swing.JDirectoryChooser;
 
@@ -23,17 +24,10 @@ class JDirPopUp implements ActionListener {
 class InitScan implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		try {
-			new Scanner(Front.tDir.getText());
+			Client.getScanner().scanDirectory();
 		} catch (Exception ex) {}
 
 		JOptionPane.showMessageDialog((Component) e.getSource(), "Success!");
 
-	}
-}
-
-// Menu ActionListeners
-class Pepe implements ActionListener {
-	public void actionPerformed(ActionEvent e) {
-		System.out.println("pepe");
 	}
 }
