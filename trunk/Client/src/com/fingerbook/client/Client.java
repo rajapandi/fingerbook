@@ -8,7 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fingerbook.client.gui.Front;
 import com.fingerbook.client.marshalling.CollectedData;
-import com.fingerbook.models.Fingerprints;
+import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
 
@@ -69,7 +69,7 @@ public class Client {
 				File f = new File(params.path);
 				FileHashCalculator fhc = Client.applicationContext.getBean("fileHashCalculator", FileHashCalculator.class);
 				FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
-				List<Fingerprints> list = fiClient.getGroups(fhc.getFileHash(f));
+				List<Fingerbook> list = fiClient.getGroups(fhc.getFileHash(f));
 				
 				System.out.println(list.toString());
 			} catch (Exception ex) {ex.printStackTrace();}

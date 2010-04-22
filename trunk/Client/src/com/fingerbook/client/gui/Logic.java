@@ -14,6 +14,7 @@ import javax.swing.SwingUtilities;
 import com.fingerbook.client.Client;
 import com.fingerbook.client.FileHashCalculator;
 import com.fingerbook.client.FingerbookClient;
+import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
 import com.l2fprod.common.swing.JDirectoryChooser;
@@ -62,7 +63,7 @@ class InitQuery implements ActionListener {
 			File f = new File(((Query)(SwingUtilities.getRoot((JButton)e.getSource()))).getFDir());
 			FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
 			FileHashCalculator fhc = Client.applicationContext.getBean("fileHashCalculator", FileHashCalculator.class);
-			List<Fingerprints> list = fiClient.getGroups(fhc.getFileHash(f));
+			List<Fingerbook> list = fiClient.getGroups(fhc.getFileHash(f));
 			
 			
 			new NotePad(list.toString());
