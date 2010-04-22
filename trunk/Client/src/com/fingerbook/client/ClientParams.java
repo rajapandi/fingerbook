@@ -5,11 +5,12 @@ import java.lang.reflect.Field;
 public class ClientParams {
 
 	// Default param values if not passed by command line:
-	public String dir = new String(".");
+	public String path = new String(".");
+	public String action = new String("put");
 	public String user = new String("gimi");
 	public String mail = new String("ggross@gmail.com");
-	public String gui = new String("yes");
-	public String url = new String("http://localhost/fingerbookREST/");
+	public String gui = new String("no");
+	public String url = new String("http://localhost:8080/fbServer/");
 
 	ClientParams(String[] args) throws NumberFormatException,
 			IllegalArgumentException, IllegalAccessException {
@@ -35,6 +36,6 @@ public class ClientParams {
 
 	@Override
 	public String toString() {
-		return String.format("Scan Directory = " + "\"" + "%s" + "\"" + "\n" + "Username = " + "\"" + "%s" + "\"" + "\n" + "E-Mail = " + "\"" + "%s" + "\"" + "\n" + "GUI = " + "\"" + "%s" + "\"", dir, user, mail, gui);
+		return String.format("Scan Directory = " + "\"" + "%s" + "\"" + "\n" + "Username = " + "\"" + "%s" + "\"" + "\n" + "E-Mail = " + "\"" + "%s" + "\"" + "\n" + "GUI = " + "\"" + "%s" + "\"", path, user, mail, gui);
 	}
 }
