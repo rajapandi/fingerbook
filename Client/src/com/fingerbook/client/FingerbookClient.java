@@ -42,9 +42,9 @@ public class FingerbookClient {
 	}
 	
 	@SuppressWarnings( "unchecked" )
-	public List<Fingerprints> getGroups(String hash)
+	public List<Fingerbook> getGroups(String hash)
 	{
-		return restTemplate.getForObject( baseUrl + "fingerprints/" + hash, List.class );
+		return restTemplate.getForObject( baseUrl + "fingerbooks/" + hash, List.class );
 	}
 	
 	public Response postHashes(Fingerbook fb) {
