@@ -35,5 +35,21 @@ public class Fingerbook implements Serializable {
 		this.stamp = stamp;
 	}
 	
+	public String toString() {
+		StringBuffer ret = new StringBuffer();
+		ret.append(this.fingerbookId + "\n");
+	//	ret.append("Username: " + this.userInfo.getUser() + "\n");
+	//	ret.append("Email: " + this.userInfo.getMail() + "\n");
+//		for (FileInfo fi : this.fingerPrints.getFiles()) {
+//			//ret.append("File: ");
+//			//ret.append(this.fingerbookId);
+//			ret.append(" \nHash: ");
+//			ret.append(fi.getShaHash());
+//			//ret.append(" \nSize: ");
+//			//ret.append(fi.getSizeInBytes());
+//			//ret.append(" \n\n");
+//		}
+		return ret.toString();
+	}
 	
 }
