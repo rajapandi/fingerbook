@@ -26,6 +26,9 @@ public class Client {
 		applicationContext = new ClassPathXmlApplicationContext(
 				"applicationContext.xml");
 		params = new ClientParams(args);
+		
+		CollectedData.setUser(params.user);
+		CollectedData.setMail(params.mail);
 
 		System.out.println(params.toString());
 
@@ -38,14 +41,10 @@ public class Client {
 		fiClient.setBaseUrl(params.url);
 		scanner = new Scanner(params.path, userInfo);
 
-		if (params.gui.equals("yes")) {
+		if (params.gui.equals("yes"))
 			initGUI();
-		} else {
-			CollectedData.setUser(params.user);
-			CollectedData.setMail(params.mail);
-			
+		else
 			console();
-		}
 	}
 
 	private static void console() {
