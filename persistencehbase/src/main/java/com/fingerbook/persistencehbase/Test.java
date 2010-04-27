@@ -33,8 +33,8 @@ public class Test {
 //			e.printStackTrace();
 //		}
 		
-		long maxGroupId = PersistentFingerbook.getNextGroupId();
-		System.out.println("MAX GROUPID: " + maxGroupId);
+//		long maxGroupId = PersistentFingerbook.getNextGroupId();
+//		System.out.println("MAX GROUPID: " + maxGroupId);
 		
 //		Vector<FingerGroup> groups = PersistentFinger.getGroupsByFingerPrint(fp1);
 //		Vector<FingerElem> fingers = PersistentFinger.getFingerElemsByGroupId(1);

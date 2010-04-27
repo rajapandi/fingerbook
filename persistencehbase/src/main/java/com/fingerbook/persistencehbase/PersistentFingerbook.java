@@ -102,7 +102,7 @@ public class PersistentFingerbook extends Fingerbook{
 			familyMap = HbaseManager.getMembersMap(FINGER_TABLE_NAME, Bytes.toBytes(hash), TFINGER_GROUP_FAMILY);
 			for(byte[] fingerbookIdB: familyMap.keySet()) {
 				
-				long fingerbookId = Bytes.toInt(fingerbookIdB);
+				long fingerbookId = Bytes.toLong(fingerbookIdB);
 				long stamp = Bytes.toLong(familyMap.get(fingerbookIdB));
 				
 				Fingerbook auxFingerbook = new Fingerbook();
@@ -145,7 +145,10 @@ public class PersistentFingerbook extends Fingerbook{
 	    
 		Result result = table.getRowOrBefore(rowB, familyB);
 		
-		maxGroupId = Bytes.toLong(result.getRow());
+		if(result != null) {
+			maxGroupId = Bytes.toLong(result.getRow());			
+		}
+		
 		
 		return maxGroupId + 1;
 	}
