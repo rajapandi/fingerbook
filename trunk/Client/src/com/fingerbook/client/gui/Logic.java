@@ -15,7 +15,6 @@ import com.fingerbook.client.Client;
 import com.fingerbook.client.FileHashCalculator;
 import com.fingerbook.client.FingerbookClient;
 import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
 import com.l2fprod.common.swing.JDirectoryChooser;
 
