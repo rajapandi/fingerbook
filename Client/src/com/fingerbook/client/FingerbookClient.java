@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
 
 

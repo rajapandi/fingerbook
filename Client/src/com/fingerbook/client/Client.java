@@ -3,6 +3,8 @@ package com.fingerbook.client;
 import java.io.File;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -23,10 +25,13 @@ public class Client {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		Logger logger = LoggerFactory.getLogger(Client.class);
+		logger.debug("Application started.");
+
 		applicationContext = new ClassPathXmlApplicationContext(
 				"applicationContext.xml");
 		params = new ClientParams(args);
-		
+
 		CollectedData.setUser(params.user);
 		CollectedData.setMail(params.mail);
 
@@ -41,15 +46,16 @@ public class Client {
 		fiClient.setBaseUrl(params.url);
 		scanner = new Scanner(params.path, userInfo);
 
-		if (params.gui.equals("yes"))
+		if (params.gui.equals("yes")) {
+			logger.info("Starting GUI.");
 			initGUI();
-		else
+		} else
 			console();
 	}
 
 	private static void console() {
 		Response resp = null;
-		
+
 		if (params.action.equals("put")) {
 			try {
 				resp = Client.getScanner().scanDirectory(params.path);
@@ -63,18 +69,21 @@ public class Client {
 			} else {
 				System.out.println("Success!:\n" + resp.getDesc());
 			}
-		}
-		else {
+		} else {
 			try {
 				File f = new File(params.path);
-				FileHashCalculator fhc = Client.applicationContext.getBean("fileHashCalculator", FileHashCalculator.class);
-				FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
+				FileHashCalculator fhc = Client.applicationContext.getBean(
+						"fileHashCalculator", FileHashCalculator.class);
+				FingerbookClient fiClient = Client.applicationContext.getBean(
+						"FingerprintsClient", FingerbookClient.class);
 				List<Fingerbook> list = fiClient.getGroups(fhc.getFileHash(f));
-				
+
 				System.out.println(list.toString());
-			} catch (Exception ex) {ex.printStackTrace();}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
-		
+
 	}
 
 	private static void initGUI() {
@@ -84,5 +93,4 @@ public class Client {
 	public static Scanner getScanner() {
 		return scanner;
 	}
-
 }
