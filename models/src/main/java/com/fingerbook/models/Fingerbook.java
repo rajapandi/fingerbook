@@ -37,18 +37,19 @@ public class Fingerbook implements Serializable {
 	
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
-		ret.append(this.fingerbookId + "\n");
+		ret.append("ID: " + this.fingerbookId + "\n");
+		ret.append("Date: " + this.stamp + "\n");
 	//	ret.append("Username: " + this.userInfo.getUser() + "\n");
 	//	ret.append("Email: " + this.userInfo.getMail() + "\n");
-//		for (FileInfo fi : this.fingerPrints.getFiles()) {
+		for (FileInfo fi : this.fingerPrints.getFiles()) {
 //			//ret.append("File: ");
 //			//ret.append(this.fingerbookId);
-//			ret.append(" \nHash: ");
-//			ret.append(fi.getShaHash());
+			ret.append(" \nHash: ");
+			ret.append(fi.getShaHash());
 //			//ret.append(" \nSize: ");
 //			//ret.append(fi.getSizeInBytes());
-//			//ret.append(" \n\n");
-//		}
+			ret.append(" \n\n");
+		}
 		return ret.toString();
 	}
 	
