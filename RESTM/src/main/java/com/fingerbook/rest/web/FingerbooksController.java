@@ -1,5 +1,7 @@
 package com.fingerbook.rest.web;
 
+import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -28,16 +30,15 @@ public class FingerbooksController {
      * @param model
      * @return A Fingerbook
      */
-    @RequestMapping(value="/{fingerbookId}", method=RequestMethod.GET)
+    @RequestMapping(value="/{hash}", method=RequestMethod.GET)
     @ResponseBody
-    public Fingerbook getFingerbook(@PathVariable("fingerbookId") Long fingerbookId, Model model) {    
-    	//TODO: If I call /fingerbooks/asdsa it fails
-    	Fingerbook fingerbook = fingerbookService.getFingerbook(fingerbookId);
-    	model.addAttribute("fingerbook", fingerbook);
+    public Vector<Fingerbook> fileHashExists(@PathVariable("hash") String hash, Model model) {    
+    	Vector<Fingerbook> fingerbooks = fingerbookService.getFingerbooksWithHash(hash);
+    	model.addAttribute("fingerbooks", fingerbooks);
     	
-    	logger.info("Returning fingerbook with id: " + fingerbookId);
+    	logger.info("Returning fingerbooks which contain hash: " + hash);
     	
-    	return fingerbook;
+    	return fingerbooks;
     }
     
     /**
