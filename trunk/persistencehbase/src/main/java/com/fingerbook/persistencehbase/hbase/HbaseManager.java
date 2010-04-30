@@ -138,7 +138,7 @@ public class HbaseManager {
 	    table.close();
 	}
 	
-	public static String getValue(String tableName, String rowId, String columnFamily, String columnName) throws IOException {
+	public static byte[] getValue(String tableName, byte[] rowId, String columnFamily, byte[] columnName) throws IOException {
 		
 		// You need a configuration object to tell the client where to connect.
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
@@ -153,16 +153,17 @@ public class HbaseManager {
 		// Now, to retrieve the data we just wrote. The values that come back are
 	    // Result instances. Generally, a Result is an object that will package up
 	    // the hbase return into the form you find most palatable.
-	    Get g = new Get(Bytes.toBytes(rowId));
+//	    Get g = new Get(Bytes.toBytes(rowId));
+	    Get g = new Get(rowId);
 	    Result r = table.get(g);
-	    byte [] value = r.getValue(Bytes.toBytes(columnFamily),
-	      Bytes.toBytes(columnName));
+//	    byte [] value = r.getValue(Bytes.toBytes(columnFamily), Bytes.toBytes(columnName));
+	    byte [] value = r.getValue(Bytes.toBytes(columnFamily), columnName);
 	    // If we convert the value bytes, we should get back 'Some Value', the
 	    // value we inserted at this location.
-	    String valueStr = Bytes.toString(value);
-	    System.out.println("GET: " + valueStr);
+//	    String valueStr = Bytes.toString(value);
+//	    System.out.println("GET: " + valueStr);
 		
-		return valueStr;
+		return value;
 	}
 	
 	public static NavigableMap<byte[],byte[]> getMembersMap(String tableName, byte[] rowId, String columnFamily) throws IOException {
