@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
+import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller
@@ -50,8 +51,8 @@ public class FingerprintsController {
     	logger.info("Sending fingerbook to HBASE");
     	
     	// TODO add to persistence
-    	//PersistentFingerbook pf = new PersistentFingerbook(fingerbook);    	
-    	//fingerbook.setFingerbookId(pf.saveMe());
+    	PersistentFingerbook pf = new PersistentFingerbook(fingerbook);    	
+    	fingerbook.setFingerbookId(pf.saveMe());
     	
     	//TODO send response
     	Response response = new Response(null, "Fingerprints succesfully added to Fingerbook with ID: " 
