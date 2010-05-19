@@ -19,6 +19,27 @@ import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 
 public class HbaseManager {
+	
+	public static HTable getTable(String tableName) throws HbaseManagerException {
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+	    HBaseConfiguration config = new HBaseConfiguration();
+
+	    // This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table;
+		try {
+			table = new HTable(config, tableName);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new HbaseManagerException(e.getMessage());
+		}
+		
+		return table;
+	}
 
 	public static void putValue(String tableName, byte[] rowId, String columnFamily, String columnName, byte[] value) throws IOException {
 		
