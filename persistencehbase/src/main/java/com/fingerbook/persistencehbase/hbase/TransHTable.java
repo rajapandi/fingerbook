@@ -3,6 +3,7 @@ package com.fingerbook.persistencehbase.hbase;
 import java.io.IOException;
 
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.RowLock;
@@ -59,5 +60,12 @@ public class TransHTable {
 	public RowLock lockRow(byte[] rowId) throws IOException {
 		
 		return table.lockRow(rowId);
+	}
+	
+	public void deleteRow(byte[] rowId) throws IOException {
+		
+		Delete delete = new Delete(rowId);
+		
+		this.table.delete(delete);
 	}
 }
