@@ -120,8 +120,7 @@ public class PersistentFingerbook extends Fingerbook{
 			if(this.fingerPrints != null) {
 				this.saveFingerprints(this.fingerPrints);
 			}
-			
-			this.commitAndDestroy();
+			this.commitSave();
 			
 			return this.fingerbookId;
 			
@@ -156,10 +155,71 @@ public class PersistentFingerbook extends Fingerbook{
 				byte[] sizeInBytesB = Bytes.toBytes(fileInfo.getSizeInBytes());
 				
 				/* Insert groupId, fileName and size in finger table */
-				fingerTable.put(shaHashB, Bytes.toBytes(TFINGER_FILE_FAMILY), groupFileNameCol, sizeInBytesB);
+//				fingerTable.put(shaHashB, Bytes.toBytes(TFINGER_FILE_FAMILY), groupFileNameCol, sizeInBytesB);
 				
 				/* Insert hash, fileName and size in group table */
 				groupTable.put(groupIdB, Bytes.toBytes(TGROUP_FINGER_FAMILY), hashFileNameCol, sizeInBytesB);
+			}
+			groupTable.commit();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+//				return -1;
+		}
+	}
+	
+	public void commitSave() {
+		this.updateFingerTable();
+		this.commitAndDestroy();
+	}
+	
+	public int rollBackSave() {
+		byte[] groupIdB = Bytes.toBytes(this.fingerbookId);
+		
+		try {
+			this.groupTable.deleteRow(groupIdB);
+			this.commitAndDestroy();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+		return 0;
+	}
+	
+	private void updateFingerTable() {
+		
+		Fingerprints auxFingerprints = null;
+		
+		auxFingerprints = loadFingerPrintsByFingerBook(this.fingerbookId);
+		if(auxFingerprints == null) {
+			return;
+		}
+		try {
+//			byte[] groupIdB = Bytes.toBytes(this.fingerbookId);
+			List<FileInfo> files = auxFingerprints.getFiles();
+			
+			if(files == null) {
+				return;
+			}
+			for(FileInfo fileInfo: files) {
+			
+				String shaHash = fileInfo.getShaHash();
+				String fileName = fileInfo.getName();
+				byte[] shaHashB = Bytes.toBytes(shaHash);
+				
+				byte[] groupFileNameCol = createGroupFileNameCol(fingerbookId, fileName);
+//				byte[] hashFileNameCol = createHashFileNameCol(shaHash, fileName);
+				
+				byte[] sizeInBytesB = Bytes.toBytes(fileInfo.getSizeInBytes());
+				
+				/* Insert groupId, fileName and size in finger table */
+				fingerTable.put(shaHashB, Bytes.toBytes(TFINGER_FILE_FAMILY), groupFileNameCol, sizeInBytesB);
+				fingerTable.commit();
+				/* Insert hash, fileName and size in group table */
+//				groupTable.put(groupIdB, Bytes.toBytes(TGROUP_FINGER_FAMILY), hashFileNameCol, sizeInBytesB);
+//				groupTable.commit();
 			}
 			
 		} catch (IOException e) {
