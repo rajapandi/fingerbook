@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:fb="http://www.fingerbook.com/DataSchema" targetNamespace="http://www.fingerbook.com/DataSchema"
+	elementFormDefault="qualified">
+
+	<xs:element name="fingerbook" type="fb:fingerbookT" />
+
+	<xs:complexType name="fingerbookT">
+		<xs:sequence>
+			<xs:element name="fingerprints" minOccurs="1" maxOccurs="1" type="fb:fingerprintsT" />
+			<xs:element name="userInfo" minOccurs="0" maxOccurs="1" type="fb:userInfoT" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="fingerprintsT">
+		<xs:sequence>
+			<xs:element name="fileInfo" minOccurs="1" maxOccurs="unbounded" type="fb:fileInfoT" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="fileInfoT">
+		<xs:sequence>
+			<xs:element name="name" type="fb:nameT" />
+			<xs:element name="shaHash" type="fb:hashT" />
+			<xs:element name="sizeInBytes" type="fb:sizeT" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="nameT">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="255" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="hashT">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="32"/>
+			<xs:maxLength value="40"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="sizeT">
+		<xs:restriction base="xs:positiveInteger" />
+	</xs:simpleType>
+	
+	<xs:complexType name="userInfoT">
+		<xs:sequence>
+			<xs:element name="user" type="fb:userT" />
+			<xs:element name="mail" type="fb:mailT" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="userT">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="128" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="mailT">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[^@]+@[^\.]+\..+"/>
+			<xs:minLength value="5" />
+			<xs:maxLength value="255" />
+		</xs:restriction> 
+	</xs:simpleType> 
+
+</xs:schema>
