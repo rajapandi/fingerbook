@@ -77,7 +77,6 @@ public class Front extends JFrame {
 			this.tDir.setText(defaultDir.substring(0, defaultDir.length() - 2));
 		else
 			this.tDir.setText(defaultDir);
-		System.out.println("pepe");
 	}
 
 	public String getDir() {
