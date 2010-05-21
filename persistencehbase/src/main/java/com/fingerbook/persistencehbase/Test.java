@@ -2,8 +2,6 @@ package com.fingerbook.persistencehbase;
 
 import java.io.IOException;
 
-import com.fingerbook.models.Fingerbook;
-
 public class Test {
 
 	/**
@@ -16,7 +14,7 @@ public class Test {
 		PersistentFingerbook.createFingerTables();
 //		
 //		FingerGroup g1 = new FingerGroup(1, System.currentTimeMillis());
-		String fp1 = "aa11aa11aa";
+//		String fp1 = "aa11aa11aa";
 //		FingerElem f1 = new FingerElem(fp1, g1);
 		
 //		FingerGroup g2 = new FingerGroup(2, System.currentTimeMillis());

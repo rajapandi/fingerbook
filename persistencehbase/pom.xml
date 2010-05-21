@@ -9,10 +9,11 @@
 	<url>http://maven.apache.org</url>
 	<repositories>
 		<repository>
-      		<id>lib</id>
-      		<url>file://${basedir}/lib</url>
-    	</repository>
+			<id>fingerbook repo</id>
+			<url>http://fingerbook.googlecode.com/svn/trunk/mavenRepository/</url>
+		</repository>
 	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -56,16 +57,19 @@
 			<groupId>com.fingerbook</groupId>
 			<artifactId>hbase</artifactId>
 			<version>0.20.3</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fingerbook</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.15</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fingerbook</groupId>
 			<artifactId>zookeeper</artifactId>
 			<version>3.2.2</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

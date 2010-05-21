@@ -10,7 +10,6 @@ import java.util.Vector;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.RowLock;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.fingerbook.models.FileInfo;
@@ -21,7 +20,8 @@ import com.fingerbook.persistencehbase.hbase.HbaseManager;
 import com.fingerbook.persistencehbase.hbase.TransHTable;
 
 public class PersistentFingerbook extends Fingerbook{
-	
+	private static final long serialVersionUID = -2963312837954174296L;
+
 	public static int separator = 30;
 	
 	public static String FINGER_TABLE_NAME = "tfinger";
@@ -147,9 +147,9 @@ public class PersistentFingerbook extends Fingerbook{
 			
 				String shaHash = fileInfo.getShaHash();
 				String fileName = fileInfo.getName();
-				byte[] shaHashB = Bytes.toBytes(shaHash);
+				//byte[] shaHashB = Bytes.toBytes(shaHash);
 				
-				byte[] groupFileNameCol = createGroupFileNameCol(fingerbookId, fileName);
+				//byte[] groupFileNameCol = createGroupFileNameCol(fingerbookId, fileName);
 				byte[] hashFileNameCol = createHashFileNameCol(shaHash, fileName);
 				
 				byte[] sizeInBytesB = Bytes.toBytes(fileInfo.getSizeInBytes());

@@ -6,19 +6,10 @@ import java.util.NavigableMap;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.filter.ColumnCountGetFilter;
-import org.apache.hadoop.hbase.filter.ColumnValueFilter;
-import org.apache.hadoop.hbase.filter.FilterList;
-import org.apache.hadoop.hbase.filter.FilterList.Operator;
 import org.apache.hadoop.hbase.util.Bytes;
 
-import com.fingerbook.models.FileInfo;
-import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.Fingerprints;
-import com.fingerbook.persistencehbase.hbase.ColumnCountFilterAux;
-import com.fingerbook.persistencehbase.hbase.ColumnPaginationFilter;
 import com.fingerbook.persistencehbase.hbase.HbaseManager;
 import com.fingerbook.persistencehbase.hbase.HbaseManagerException;
 
@@ -29,20 +20,20 @@ public class TestTransaction {
 	 */
 	public static void main(String[] args) {
 		
-		Fingerbook fb = new Fingerbook();
+		//Fingerbook fb = new Fingerbook();
 		
-		Fingerprints fp1 = new Fingerprints();
+		//Fingerprints fp1 = new Fingerprints();
 		
-		FileInfo fi1 = new FileInfo();
+		//FileInfo fi1 = new FileInfo();
 		
 		
-		ColumnPaginationFilter colFilter = new ColumnPaginationFilter(1,0);
+		//ColumnPaginationFilter colFilter = new ColumnPaginationFilter(1,0);
 //		FilterList filter = new FilterList(Operator.MUST_PASS_ALL);
 //		filter.filterRowKey(Bytes.toBytes(1L), 0, 8);
 //		filter.addFilter(colFilter);
 		
 		ColumnCountGetFilter cvf = new ColumnCountGetFilter(1);
-		ColumnCountFilterAux ccf = new ColumnCountFilterAux(1);
+		//ColumnCountFilterAux ccf = new ColumnCountFilterAux(1);
 		
 		Get get = new Get(Bytes.toBytes(1L));
 //		get.setFilter(colFilter);
@@ -64,7 +55,7 @@ public class TestTransaction {
 	//				String shaHash = Bytes.toString(shaHashB); 
 					String shaHash = PersistentFingerbook.getHashFromHashFNCol(hashFNCol);
 					String fileName = PersistentFingerbook.getFileNameFromHashFNCol(hashFNCol);
-					long sizeInBytes = Bytes.toLong(ret.get(hashFNCol));
+					//long sizeInBytes = Bytes.toLong(ret.get(hashFNCol));
 					
 					System.out.println("Hash: " + shaHash + " - Name: " + fileName);
 			    }

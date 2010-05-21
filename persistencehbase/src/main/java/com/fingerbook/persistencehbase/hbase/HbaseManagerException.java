@@ -2,6 +2,8 @@ package com.fingerbook.persistencehbase.hbase;
 
 public class HbaseManagerException extends Exception {
 
+	private static final long serialVersionUID = -457961572354072477L;
+
 	public HbaseManagerException() {
 		super();
 		// TODO Auto-generated constructor stub
