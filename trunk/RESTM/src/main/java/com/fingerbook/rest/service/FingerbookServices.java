@@ -1,16 +1,13 @@
 package com.fingerbook.rest.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
-import com.fingerbook.models.UserInfo;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 
 
