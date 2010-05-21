@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:component-scan base-package="com.fingerbook.client" />
+
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<property name="messageConverters">
+			<list>
+				<!-- We only have one message converter for the RestTemplate, namely the XStream Marshaller -->
+				<bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+					<constructor-arg>
+						<bean class="org.springframework.oxm.xstream.XStreamMarshaller">
+							<!-- Explicitly define the aliases -->
+							
+							<property name="aliases">
+								<props>
+									<prop key="Fingerbook">com.fingerbook.models.Fingerbook</prop>
+									<prop key="FileInfo">com.fingerbook.models.FileInfo</prop>
+									<prop key="Fingerprints">com.fingerbook.models.Fingerprints</prop>
+									<prop key="UserInfo">com.fingerbook.models.UserInfo</prop>
+									<prop key="Response">com.fingerbook.models.Response</prop>
+								</props>
+							</property>
+
+							
+							<!-- Tell XStream to find the alias names in the following classes -->
+							<property name="annotatedClasses">
+								<list>						
+									<value>com.fingerbook.client.marshalling.FileInfo</value>
+									<value>com.fingerbook.client.marshalling.UserInfo</value>
+									<value>com.fingerbook.client.marshalling.Fingerprints</value>							
+								</list>						
+							</property>
+						</bean>
+					</constructor-arg>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="fingerbookClient" class="com.fingerbook.client.FingerbookClient">
+		<property name="restTemplate"><ref bean="restTemplate"/></property>
+		<property name="baseUrl"><value>http://localhost:8080/fingerbookREST/</value></property>
+	</bean>
+	
+	<bean id="fileHashCalculator" class="com.fingerbook.client.FileHashCalculator">
+		<constructor-arg><value>Method.SHA1</value></constructor-arg>
+	</bean> 
+	
+</beans>
