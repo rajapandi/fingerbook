@@ -73,10 +73,11 @@ public class Front extends JFrame {
 	}
 
 	public void setDir(String defaultDir) {
-		if (defaultDir.endsWith("\\."))
+		if (defaultDir.endsWith("\\.") || defaultDir.endsWith("/."))
 			this.tDir.setText(defaultDir.substring(0, defaultDir.length() - 2));
 		else
 			this.tDir.setText(defaultDir);
+		System.out.println("pepe");
 	}
 
 	public String getDir() {
