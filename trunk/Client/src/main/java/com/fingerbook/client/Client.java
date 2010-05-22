@@ -1,7 +1,11 @@
 package com.fingerbook.client;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.UIManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +17,7 @@ import com.fingerbook.client.marshalling.CollectedData;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
+import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 
 public class Client {
 
@@ -55,10 +60,11 @@ public class Client {
 
 	private static void console() {
 		Response resp = null;
+		Map<String, String> configuration = new HashMap<String, String>();
 
 		if (params.action.equals("put")) {
 			try {
-				resp = Client.getScanner().scanDirectory(params.path);
+				resp = Client.getScanner().scanDirectory(params.path, (HashMap<String, String>) configuration);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -83,10 +89,15 @@ public class Client {
 				ex.printStackTrace();
 			}
 		}
-
 	}
 
 	private static void initGUI() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			LookAndFeelAddons.setAddon(LookAndFeelAddons
+					.getBestMatchAddonClassName());
+		} catch (Exception e) {
+		}
 		new Front();
 	}
 
