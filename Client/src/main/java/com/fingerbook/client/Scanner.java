@@ -3,6 +3,7 @@ package com.fingerbook.client;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 import com.fingerbook.models.FileInfo;
@@ -11,27 +12,25 @@ import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
 
-
-
 public class Scanner {
 	private UserInfo userInfo;
 
 	public Scanner(String dir, UserInfo userInfo) throws Exception {
-		
-		this.userInfo = userInfo;
-		//Fingerprints fis = scanDirectory(dir, fhc);
 
-		
-//		FileInfo fi = new FileInfo("data.xml",
-//				"53870f83687822d7c768e6162cb32cf5e87567da", 1000L);
-//		List<fingerbook.domain.Fingerprints> list = fiClient.getGroups("53870f83687822d7c768e6162cb32cf5e87567da");
-//		for (fingerbook.domain.Fingerprints fingerprints : list) {
-//			for (fingerbook.domain.FileInfo file : fingerprints.getFiles()) {
-//				System.out.println(file.getName() + "--------------------"
-//						+ file.getShaHash());
-//			}
-//		}
-//		// RestClient rc = new RestClient();
+		this.userInfo = userInfo;
+		// Fingerprints fis = scanDirectory(dir, fhc);
+
+		// FileInfo fi = new FileInfo("data.xml",
+		// "53870f83687822d7c768e6162cb32cf5e87567da", 1000L);
+		// List<fingerbook.domain.Fingerprints> list =
+		// fiClient.getGroups("53870f83687822d7c768e6162cb32cf5e87567da");
+		// for (fingerbook.domain.Fingerprints fingerprints : list) {
+		// for (fingerbook.domain.FileInfo file : fingerprints.getFiles()) {
+		// System.out.println(file.getName() + "--------------------"
+		// + file.getShaHash());
+		// }
+		// }
+		// // RestClient rc = new RestClient();
 		//		
 		// File f = rc.getXML("http://www.wergehthin.de/xml/User/");
 		// rc.postXML(f, "http://www.wergehthin.de/xml/User/");
@@ -42,40 +41,51 @@ public class Scanner {
 		// System.out.println(result);
 	}
 
-	public Response scanDirectory(String scanDir)
-			throws Exception {
+	public Response scanDirectory(String scanDir,
+			HashMap<String, String> configuration) throws Exception {
 		File actual = null;
+		
 		try {
-		actual = new File(scanDir);
+			actual = new File(scanDir);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		List<File> fileList = new ArrayList<File>();
-
-		for (File f : actual.listFiles()) {
-			if (f.isFile())
-				fileList.add(f);
-		}
+		
+		addFiles(actual, (ArrayList<File>) fileList, configuration.get("recursive"));
 
 		List<FileInfo> files = new ArrayList<FileInfo>();
-		FileHashCalculator fhc = Client.applicationContext.getBean("fileHashCalculator", FileHashCalculator.class);
+		FileHashCalculator fhc = Client.applicationContext.getBean(
+				"fileHashCalculator", FileHashCalculator.class);
 		for (File f : fileList) {
-			files.add(new FileInfo(f.getName(), fhc.getFileHash(f), f.length()));
+			files
+					.add(new FileInfo(f.getName(), fhc.getFileHash(f), f
+							.length()));
 		}
 
 		Fingerprints data = new Fingerprints();
 		data.setFiles(files);
-		
+
 		Fingerbook fb = new Fingerbook();
 		fb.setUserInfo(this.userInfo);
 		fb.setFingerPrints(data);
 		fb.setStamp(new GregorianCalendar().getTimeInMillis());
-		FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
+		FingerbookClient fiClient = Client.applicationContext.getBean(
+				"FingerprintsClient", FingerbookClient.class);
 		Response resp = fiClient.postHashes(fb);
 		// Serializer serializer = new Persister();
 		// File result = new File("data.xml");
 		// serializer.write(data, result);
 		return resp;
+	}
+
+	private void addFiles(File actual, ArrayList<File> fileList, String recursive) {
+		for (File f : actual.listFiles()) {
+			if (f.isFile())
+				fileList.add(f);
+			else if (recursive.equals("true") && f.isDirectory())
+				addFiles(actual, (ArrayList<File>) fileList, "true");
+		}		
 	}
 
 }
