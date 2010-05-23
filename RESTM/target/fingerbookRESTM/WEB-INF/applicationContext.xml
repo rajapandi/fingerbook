@@ -19,11 +19,11 @@
 	<bean id="configuredMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
 		<property name="aliases">
 			<props>
-				<prop key="Fingerprints">com.fingerbook.rest.domain.Fingerprints</prop>
-				<prop key="Fingerbook">com.fingerbook.rest.domain.Fingerbook</prop>
-				<prop key="FileInfo">com.fingerbook.rest.domain.FileInfo</prop>
-				<prop key="UserInfo">com.fingerbook.rest.domain.UserInfo</prop>
-				<prop key="Response">com.fingerbook.rest.domain.Response</prop>
+				<prop key="Fingerprints">com.fingerbook.models.Fingerprints</prop>
+				<prop key="Fingerbook">com.fingerbook.models.Fingerbook</prop>
+				<prop key="FileInfo">com.fingerbook.models.FileInfo</prop>
+				<prop key="UserInfo">com.fingerbook.models.UserInfo</prop>
+				<prop key="Response">com.fingerbook.models.Response</prop>
 			</props>
 		</property>
 		<!--  
