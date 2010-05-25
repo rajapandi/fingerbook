@@ -21,8 +21,8 @@ public class FingerbooksController {
 
     protected final Log logger = LogFactory.getLog(getClass());
     
-    // TODO: Do it with IoC
-    private FingerbookServices fingerbookService = new FingerbookServices();
+    // DI
+    private FingerbookServices fingerbookService;
     
     /** 
      * Returns de Fingerbook with the given fingerbookId when method is GET
