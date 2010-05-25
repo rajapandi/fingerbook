@@ -2,8 +2,9 @@ package com.fingerbook.models;
 
 public class Response {
 
-	// Error code in null mean succes!
+	// Error code null means success!
 	private Integer errorCode;
+	private Long rid;
 	private String desc;
 	
 	public Response(Integer errorCode, String desc) {
@@ -18,6 +19,14 @@ public class Response {
 	public void setErrorCode(Integer errorCode) {
 		this.errorCode = errorCode;
 	}
+	public Long getRid() {
+		return rid;
+	}
+
+	public void setRid(Long rid) {
+		this.rid = rid;
+	}
+
 	public String getDesc() {
 		return desc;
 	}
