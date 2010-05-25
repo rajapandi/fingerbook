@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<!-- Enable annotation scanning. -->
 	<context:component-scan base-package="com.fingerbook.rest.web" />
+	<context:component-scan base-package="com.fingerbook.rest.back" />
 
 	<!--
 		Define the OXM marshaller which is used to convert the Objects <->
@@ -54,15 +56,36 @@
 		</property>
 	</bean>
 
-<!-- 
-  	<bean id="FingerbookServices" class="fingerbook.service.FingerbookServices" />
-  	<bean id="FingerbooksController" class="fingerbook.web.FingerbooksController">
-  		<property name="fingerbookService"><ref bean="FingerbookServices"/></property>
-  	</bean>
- -->
-
-  	
 	<!-- Should be defined last! -->
 	<mvc:annotation-driven />
+	
+	<!-- Construct TransactionCheckExecutor as a ThreadPoolTaskExecutor -->
+	<!-- 
+	<task:scheduler id="scheduler" pool-size="10"/>
+	
+	<bean id="mySchedulor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+	</bean>
+	<bean class="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor">
+    	<property name="scheduler" ref="mySchedulor"></property>
+  	</bean>
+  	
+  	<task:scheduler id="myScheduler" pool-size="10"/>
+  	<task:annotation-driven scheduler="myScheduler"/>
+  	-->
+  	<bean id="scheduledProcessor" class="com.fingerbook.rest.back.ScheduledProcessor" />
+  	<task:scheduled-tasks scheduler="myScheduler">
+	<task:scheduled ref="scheduledProcessor" method="process" fixed-delay="5000"/>
+	</task:scheduled-tasks>
+	<task:scheduler id="myScheduler" pool-size="10"/>
+	
+	<!-- DI of fingerbookServices --> 
+  	<bean id="fingerbookServices" class="com.fingerbook.rest.service.FingerbookServices" />
+  	<bean id="fingerbooksController" class="com.fingerbook.rest.web.FingerbooksController">
+  		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
+  	</bean>
+  	<bean id="fingerprintsController" class="com.fingerbook.rest.web.FingerprintsController">
+  		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
+  	</bean>
+  	 
 
 </beans>
