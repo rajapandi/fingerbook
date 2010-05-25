@@ -5,10 +5,15 @@ import java.io.Serializable;
 public class Fingerbook implements Serializable {
 	private static final long serialVersionUID = 3826603447160435399L;
 
+	public enum STATE {
+		START, CONTENT, FINISH
+	}
 	protected Long fingerbookId;
 	protected Fingerprints fingerPrints;
 	protected UserInfo userInfo;
 	protected long stamp;
+	protected Long groupId;
+	protected STATE state;
 	
 	public Long getFingerbookId() {
 		return fingerbookId;
@@ -35,6 +40,18 @@ public class Fingerbook implements Serializable {
 		this.stamp = stamp;
 	}
 	
+	public Long getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
+	public STATE getState() {
+		return state;
+	}
+	public void setState(STATE state) {
+		this.state = state;
+	}
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
 		ret.append("ID: " + this.fingerbookId + "\n");
