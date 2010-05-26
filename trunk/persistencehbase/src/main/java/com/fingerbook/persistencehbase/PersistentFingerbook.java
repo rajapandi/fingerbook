@@ -3,6 +3,7 @@ package com.fingerbook.persistencehbase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.Vector;
@@ -10,6 +11,10 @@ import java.util.Vector;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.RowLock;
+import org.apache.hadoop.hbase.filter.BinaryComparator;
+import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
+import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.fingerbook.models.FileInfo;
@@ -26,17 +31,21 @@ public class PersistentFingerbook extends Fingerbook{
 	
 	public static String FINGER_TABLE_NAME = "tfinger";
 	public static String GROUP_TABLE_NAME = "tgroup";
+	public static String TMP_TABLE_NAME = "ttmp";
 	
 	public static String TFINGER_GROUP_FAMILY = "group_info";
 	public static String TFINGER_FILE_FAMILY = "file_info";
 	public static String TGROUP_FINGER_FAMILY = "finger";
 	public static String TGROUP_INFO_FAMILY = "info";
+	public static String TTMP_STATE_FAMILY = "state";
 	
 	public static String COLUMN_STAMP = "stamp";
 	public static String COLUMN_USER = "user";
+	public static String COLUMN_LAST_ACTION = "last_action";
 	
-	private TransHTable groupTable;
-	private TransHTable fingerTable;
+//	private TransHTable groupTable;
+//	private TransHTable fingerTable;
+//	private TransHTable tmpTable;
 //	private RowLock groupRowLock;
 
 	public PersistentFingerbook(Fingerbook fingerBook) {
@@ -107,20 +116,20 @@ public class PersistentFingerbook extends Fingerbook{
 	public long saveMe() {
 		
 		try {
-			this.groupTable = new TransHTable(GROUP_TABLE_NAME);
-			this.fingerTable = new TransHTable(FINGER_TABLE_NAME);
+//			this.groupTable = new TransHTable(GROUP_TABLE_NAME);
+//			this.fingerTable = new TransHTable(FINGER_TABLE_NAME);
 			this.fingerbookId = insertGroupInfo(this);
 		
 			if(this.fingerbookId < 0) {
 				return -1;
 			}
-			
+			updateTmpState(this.fingerbookId);
 //			this.groupRowLock = groupTable.lockRow(groupIdB);
 			
 			if(this.fingerPrints != null) {
-				this.saveFingerprints(this.fingerPrints);
+				saveFingerprints(this.fingerbookId, this.fingerPrints);
 			}
-			this.commitSave();
+			commitSave(this.fingerbookId);
 			
 			return this.fingerbookId;
 			
@@ -131,13 +140,14 @@ public class PersistentFingerbook extends Fingerbook{
 		}
 	}
 	
-	public void saveFingerprints(Fingerprints fingerprints) {
+	public static void saveFingerprints(long fingerbookId, Fingerprints fingerprints) {
 		
 		if(fingerprints == null) {
 			return;
 		}
 		try {
-			byte[] groupIdB = Bytes.toBytes(this.fingerbookId);
+			TransHTable groupTable = new TransHTable(GROUP_TABLE_NAME);
+			byte[] groupIdB = Bytes.toBytes(fingerbookId);
 			List<FileInfo> files = fingerprints.getFiles();
 			
 			if(files == null) {
@@ -147,9 +157,9 @@ public class PersistentFingerbook extends Fingerbook{
 			
 				String shaHash = fileInfo.getShaHash();
 				String fileName = fileInfo.getName();
-				//byte[] shaHashB = Bytes.toBytes(shaHash);
+				byte[] shaHashB = Bytes.toBytes(shaHash);
 				
-				//byte[] groupFileNameCol = createGroupFileNameCol(fingerbookId, fileName);
+				byte[] groupFileNameCol = createGroupFileNameCol(fingerbookId, fileName);
 				byte[] hashFileNameCol = createHashFileNameCol(shaHash, fileName);
 				
 				byte[] sizeInBytesB = Bytes.toBytes(fileInfo.getSizeInBytes());
@@ -160,7 +170,8 @@ public class PersistentFingerbook extends Fingerbook{
 				/* Insert hash, fileName and size in group table */
 				groupTable.put(groupIdB, Bytes.toBytes(TGROUP_FINGER_FAMILY), hashFileNameCol, sizeInBytesB);
 			}
-			groupTable.commit();
+			groupTable.commitAndDestroy();
+			updateTmpState(fingerbookId);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -169,35 +180,54 @@ public class PersistentFingerbook extends Fingerbook{
 		}
 	}
 	
-	public void commitSave() {
-		this.updateFingerTable();
-		this.commitAndDestroy();
+	public static void commitSave(long fingerbookId) {
+		updateFingerTable(fingerbookId);
+		deleteFingerbookFromTmp(fingerbookId);
+//		this.commitAndDestroy();
 	}
 	
-	public int rollBackSave() {
-		byte[] groupIdB = Bytes.toBytes(this.fingerbookId);
+	public static int cleanExpired(long timeout) {
 		
+		Vector<Long> expiredIds;
 		try {
-			this.groupTable.deleteRow(groupIdB);
-			this.commitAndDestroy();
+			expiredIds = getExpiredFingerbooksIds(timeout);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return -1;
 		}
+		
+		for(Long id: expiredIds) {
+			rollBackSave(id.longValue());
+		}
+		
 		return 0;
 	}
 	
-	private void updateFingerTable() {
+	public static int rollBackSave(long fingerbookId) {
+		
+		if(deleteFingerbookFromTGroup(fingerbookId) < 0) {
+			return -1;
+		}
+		if(deleteFingerbookFromTmp(fingerbookId) < 0) {
+			return -2;
+		}
+//			this.commitAndDestroy();
+		
+		return 0;
+	}
+	
+	private static void updateFingerTable(long fingerbookId) {
 		
 		Fingerprints auxFingerprints = null;
 		
-		auxFingerprints = loadFingerPrintsByFingerBook(this.fingerbookId);
+		auxFingerprints = loadFingerPrintsByFingerBook(fingerbookId);
 		if(auxFingerprints == null) {
 			return;
 		}
 		try {
 //			byte[] groupIdB = Bytes.toBytes(this.fingerbookId);
+			TransHTable fingerTable = new TransHTable(FINGER_TABLE_NAME);
 			List<FileInfo> files = auxFingerprints.getFiles();
 			
 			if(files == null) {
@@ -216,11 +246,12 @@ public class PersistentFingerbook extends Fingerbook{
 				
 				/* Insert groupId, fileName and size in finger table */
 				fingerTable.put(shaHashB, Bytes.toBytes(TFINGER_FILE_FAMILY), groupFileNameCol, sizeInBytesB);
-				fingerTable.commit();
+//				fingerTable.commit();
 				/* Insert hash, fileName and size in group table */
 //				groupTable.put(groupIdB, Bytes.toBytes(TGROUP_FINGER_FAMILY), hashFileNameCol, sizeInBytesB);
 //				groupTable.commit();
 			}
+			fingerTable.commitAndDestroy();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -229,19 +260,19 @@ public class PersistentFingerbook extends Fingerbook{
 		}
 	}
 	
-	public void commitAndDestroy() {
-		try {
-			groupTable.commitAndDestroy();
-			fingerTable.commitAndDestroy();
-			
-			fingerTable = null;
-			groupTable = null;
-//			groupRowLock = null;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public void commitAndDestroy() {
+//		try {
+//			groupTable.commitAndDestroy();
+//			fingerTable.commitAndDestroy();
+//			
+//			fingerTable = null;
+//			groupTable = null;
+//
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public Fingerbook loadMe() {
 		
@@ -381,6 +412,11 @@ public class PersistentFingerbook extends Fingerbook{
 		families.add(TGROUP_INFO_FAMILY);
 		
 		HbaseManager.createTable(GROUP_TABLE_NAME, families);
+		
+		families = new Vector<String>();
+		families.add(TTMP_STATE_FAMILY);
+		
+		HbaseManager.createTable(TMP_TABLE_NAME, families);
 	}
 	
 	private static synchronized long insertGroupInfo(Fingerbook fingerbook) {
@@ -497,5 +533,60 @@ public class PersistentFingerbook extends Fingerbook{
 		hash = auxArr[0];
 		
 		return hash;
+	}
+	
+	private static void updateTmpState(long fingerbookId) throws IOException {
+		
+		long nowStamp = System.currentTimeMillis();
+		byte[] groupIdB = Bytes.toBytes(fingerbookId);
+		byte[] nowStampB = Bytes.toBytes(nowStamp);
+		
+		/* Insert stamp in tmp table */
+		HbaseManager.putValue(TMP_TABLE_NAME, groupIdB, TTMP_STATE_FAMILY, Bytes.toBytes(COLUMN_LAST_ACTION), nowStampB);
+	}
+	
+	public static Vector<Long> getExpiredFingerbooksIds(long timeout) throws IOException {
+		
+		Vector<Long> ids = new Vector<Long>();
+		long nowStamp = System.currentTimeMillis();
+		long expiration = nowStamp - timeout;
+		byte[] expStampB = Bytes.toBytes(expiration);
+		
+		Vector<byte[]> rows = HbaseManager.filterRows(TMP_TABLE_NAME, Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(COLUMN_LAST_ACTION), expStampB, CompareOp.LESS);
+//		SingleColumnValueFilter filter = new SingleColumnValueFilter(Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(COLUMN_LAST_ACTION), CompareOp.LESS, expStampB);
+		
+		for(byte[] row: rows) {
+			ids.add(Bytes.toLong(row));
+		}
+		
+		return ids;
+	}
+	
+	private static int deleteFingerbookFromTmp(long fingerbookId) {
+		
+		byte[] groupIdB = Bytes.toBytes(fingerbookId);
+		try {
+			HbaseManager.deleteRow(TMP_TABLE_NAME, groupIdB);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+		
+		return 0;
+	}
+	
+	private static int deleteFingerbookFromTGroup(long fingerbookId) {
+		
+		byte[] groupIdB = Bytes.toBytes(fingerbookId);
+		try {
+			HbaseManager.deleteRow(GROUP_TABLE_NAME, groupIdB);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+		
+		return 0;
 	}
 }
