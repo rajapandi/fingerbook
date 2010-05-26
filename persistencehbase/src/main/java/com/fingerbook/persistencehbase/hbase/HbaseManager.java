@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
@@ -16,6 +17,7 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
+import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.util.Bytes;
 
 public class HbaseManager {
@@ -262,7 +264,7 @@ public class HbaseManager {
 		return ret;
 	}
 	
-public static Vector<byte[]> scanRows(String tableName, String columnFamily, String columnName) throws IOException {
+	public static Vector<byte[]> scanRows(String tableName, String columnFamily, String columnName) throws IOException {
 		
 		Vector<byte[]> ret = new Vector<byte[]>();
 		
@@ -301,6 +303,52 @@ public static Vector<byte[]> scanRows(String tableName, String columnFamily, Str
 	        ret.add(rr.getRow());
 	      }
 
+	      // The other approach is to use a foreach loop. Scanners are iterable!
+	      // for (Result rr : scanner) {
+	      //   System.out.println("Found row: " + rr);
+	      // }
+	    } finally {
+	      // Make sure you close your scanners when you are done!
+	      // Thats why we have it inside a try/finally clause
+	      scanner.close();
+	    }
+		
+		return ret;
+	}
+
+	public static Vector<byte[]> filterRows(String tableName, byte[] columnFamily, byte[] columnName, byte[] value, CompareOp compareOp) throws IOException {
+		
+		Vector<byte[]> ret = new Vector<byte[]>();
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+	    HBaseConfiguration config = new HBaseConfiguration();
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+		// Sometimes, you won't know the row you're looking for. In this case, you
+	    // use a Scanner. This will give you cursor-like interface to the contents
+	    // of the table.  To set up a Scanner, do like you did above making a Put
+	    // and a Get, create a Scan.  Adorn it with column names, etc.
+	    Scan s = new Scan();
+	    SingleColumnValueFilter filter = new SingleColumnValueFilter(columnFamily, columnName, compareOp, value);
+	    s.setFilter(filter);
+	    
+	    
+	    ResultScanner scanner = table.getScanner(s);
+	    try {
+	      // Scanners return Result instances.
+	      // Now, for the actual iteration. One way is to use a while loop like so:
+	      for (Result rr = scanner.next(); rr != null; rr = scanner.next()) {
+	        // print out the row we found and the columns we were looking for
+//	        System.out.println("Found row: " + rr);
+	        ret.add(rr.getRow());
+	      }
+	
 	      // The other approach is to use a foreach loop. Scanners are iterable!
 	      // for (Result rr : scanner) {
 	      //   System.out.println("Found row: " + rr);
@@ -379,5 +427,14 @@ public static Vector<byte[]> scanRows(String tableName, String columnFamily, Str
 	    HTable table = new HTable(config, tableName);
 	    
 	    return table.getEndKeys();
+	}
+	
+	public static void deleteRow(String tableName, byte[] rowId) throws IOException {
+		
+		HBaseConfiguration config = new HBaseConfiguration();
+	    HTable table = new HTable(config, tableName);
+		Delete delete = new Delete(rowId);
+		
+		table.delete(delete);
 	}
 }
