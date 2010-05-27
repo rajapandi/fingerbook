@@ -140,18 +140,22 @@ public class PersistentFingerbook extends Fingerbook{
 		}
 	}
 	
-	public static void saveFingerprints(long fingerbookId, Fingerprints fingerprints) {
+	public static int saveFingerprints(long fingerbookId, Fingerprints fingerprints) {
 		
 		if(fingerprints == null) {
-			return;
+			return -1;
 		}
 		try {
+			
+			if(!fingerprintsSaveAllowed(fingerbookId)) {
+				return -2;
+			}
 			TransHTable groupTable = new TransHTable(GROUP_TABLE_NAME);
 			byte[] groupIdB = Bytes.toBytes(fingerbookId);
 			List<FileInfo> files = fingerprints.getFiles();
 			
 			if(files == null) {
-				return;
+				return -1;
 			}
 			for(FileInfo fileInfo: files) {
 			
@@ -176,14 +180,26 @@ public class PersistentFingerbook extends Fingerbook{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-//				return -1;
+				return -1;
 		}
+		return 0;
 	}
 	
-	public static void commitSave(long fingerbookId) {
+	public static int commitSave(long fingerbookId) {
+		
+		try {
+			if(!fingerprintsSaveAllowed(fingerbookId)) {
+				return -2;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
 		updateFingerTable(fingerbookId);
 		deleteFingerbookFromTmp(fingerbookId);
 //		this.commitAndDestroy();
+		return 0;
 	}
 	
 	public static int cleanExpired(long timeout) {
@@ -588,5 +604,12 @@ public class PersistentFingerbook extends Fingerbook{
 		}
 		
 		return 0;
+	}
+	
+	private static boolean fingerprintsSaveAllowed(long fingerbookId) throws IOException {
+		
+		byte[] groupIdB = Bytes.toBytes(fingerbookId);
+		boolean ret = HbaseManager.rowExists(TMP_TABLE_NAME, groupIdB);
+		return ret;
 	}
 }
