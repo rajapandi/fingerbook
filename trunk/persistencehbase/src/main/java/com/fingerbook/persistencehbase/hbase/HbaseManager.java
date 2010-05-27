@@ -437,4 +437,13 @@ public class HbaseManager {
 		
 		table.delete(delete);
 	}
+	
+	public static boolean rowExists(String tableName, byte[] rowId) throws IOException {
+		
+		HBaseConfiguration config = new HBaseConfiguration();
+	    HTable table = new HTable(config, tableName);
+	    Get g = new Get(rowId);
+	    
+	    return table.exists(g);
+	}
 }
