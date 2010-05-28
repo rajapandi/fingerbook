@@ -84,7 +84,7 @@ public class Scanner {
 			if (f.isFile())
 				fileList.add(f);
 			else if (recursive.equals("true") && f.isDirectory())
-				addFiles(actual, (ArrayList<File>) fileList, "true");
+				addFiles(f, (ArrayList<File>) fileList, "true");
 		}		
 	}
 
