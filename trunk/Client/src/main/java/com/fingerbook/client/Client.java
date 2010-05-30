@@ -24,7 +24,7 @@ public class Client {
 	static ClientParams params;
 	static Scanner scanner;
 	public static ApplicationContext applicationContext;
-
+	public static Front front;
 	/**
 	 * @param args
 	 * @throws Exception
@@ -33,8 +33,7 @@ public class Client {
 		Logger logger = LoggerFactory.getLogger(Client.class);
 		logger.debug("Application started.");
 
-		applicationContext = new ClassPathXmlApplicationContext(
-				"applicationContext.xml");
+		applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 		params = new ClientParams(args);
 
 		CollectedData.setUser(params.user);
@@ -98,7 +97,8 @@ public class Client {
 					.getBestMatchAddonClassName());
 		} catch (Exception e) {
 		}
-		new Front();
+		
+		front = new Front();
 	}
 
 	public static Scanner getScanner() {

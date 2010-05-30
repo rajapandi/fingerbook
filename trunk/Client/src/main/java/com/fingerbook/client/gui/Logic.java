@@ -48,7 +48,7 @@ class MAbout implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JOptionPane
 				.showMessageDialog(
-						(Component) e.getSource(),
+						(Component)Client.front,
 						"Fingerbook\nITBA - Proyecto Final\n\n"
 								+ "Autores:\nAberg Cobo, Simon\nOybin, Nahuel\nGross, German\nPampliega, Juan Martin",
 						"About Us", JOptionPane.INFORMATION_MESSAGE);
