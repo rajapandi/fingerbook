@@ -231,7 +231,7 @@ public class Front extends JFrame {
 		
 		if (SystemTray.isSupported()) {
 		    SystemTray tray = SystemTray.getSystemTray();
-		    Image image = Toolkit.getDefaultToolkit().getImage("src/main/resources/images/thumb.png");
+		    Image image = getToolkit().getImage("src/main/resources/images/thumbs_up.gif");
 		    
 		    MouseListener mouseListener = new MouseListener() {
                 
@@ -250,8 +250,8 @@ public class Front extends JFrame {
 		            
 		    PopupMenu popup = new ClientPopupMenu();
 		    
-		    trayIcon = new TrayIcon(image, "fbClient", popup);
-		    trayIcon.setImageAutoSize(true);
+		    trayIcon = new TrayIcon(image, "Tray Demo", popup);
+//		    trayIcon.setImageAutoSize(true);
 		    trayIcon.addMouseListener(mouseListener);
  
 //		    ActionListener actionListener = new ActionListener() {
