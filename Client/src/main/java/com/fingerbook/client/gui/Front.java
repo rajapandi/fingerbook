@@ -1,13 +1,20 @@
 package com.fingerbook.client.gui;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.PopupMenu;
 import java.awt.Rectangle;
+import java.awt.SystemTray;
 import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +42,9 @@ public class Front extends JFrame {
 	private JButton bBrowse = null;
 	private JCheckBox cRecursive = null;
 	private JButton bIni = null;
+	
+	private TrayIcon trayIcon;
+	private Boolean minimizedNotice = false;
 
 	public Front() {
 		initialize();
@@ -44,7 +54,7 @@ public class Front extends JFrame {
 		setLocation(size.width / 2 - getWidth() / 2, size.height / 2
 				- getHeight() / 2);
 
-		setVisible(true);
+		//setVisible(true);
 	}
 
 	/**
@@ -65,12 +75,15 @@ public class Front extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
-				if (JOptionPane.showConfirmDialog(null,
-						"Are you sure you want to quit the application?",
-						"Exit", JOptionPane.OK_CANCEL_OPTION) == 0)
-					System.exit(0);
+				Client.front.setVisible(false);
+				if(!minimizedNotice) {
+					trayIcon.displayMessage("Minimized to tray","Fingerbook Client has been minimized to tray",TrayIcon.MessageType.INFO);
+					minimizedNotice = true;
+				}
 			}
 		});
+		addSysTrayIcon();
+		setVisible(true);
 	}
 
 	/**
@@ -203,5 +216,56 @@ public class Front extends JFrame {
 			bIni.setBounds(new Rectangle(10, 85, 570, 30));
 		}
 		return bIni;
+	}
+	
+	private void addSysTrayIcon(){
+		
+		if (SystemTray.isSupported()) {
+		    SystemTray tray = SystemTray.getSystemTray();
+		    Image image = Toolkit.getDefaultToolkit().getImage("icon.jpg");
+		    
+		    MouseListener mouseListener = new MouseListener() {
+                
+		        public void mouseClicked(MouseEvent e) {
+		        	if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+		        		Client.front.setVisible(true);
+		        	}                
+		        }
+
+		        public void mouseEntered(MouseEvent e){}
+		        public void mouseExited(MouseEvent e){}
+		        public void mousePressed(MouseEvent e){}
+		        public void mouseReleased(MouseEvent e){}
+		    };
+
+		            
+		    PopupMenu popup = new ClientPopupMenu();
+		    
+		    trayIcon = new TrayIcon(image, "Tray Demo", popup);
+		    trayIcon.setImageAutoSize(true);
+		    trayIcon.addMouseListener(mouseListener);
+ 
+//		    ActionListener actionListener = new ActionListener() {
+//		        public void actionPerformed(ActionEvent e) {
+//		            trayIcon.displayMessage("Action Event", 
+//		                "An Action Event Has Been Performed!",
+//		                TrayIcon.MessageType.INFO);
+//		        }
+//		    };
+//		    trayIcon.addActionListener(actionListener);
+
+		    try {
+		        tray.add(trayIcon);
+		    } catch (AWTException e) {
+		        System.err.println("TrayIcon could not be added.");
+		    }
+
+		} else {
+
+		    //  System Tray is not supported
+			System.err.println("Warning: System Tray Not Supported");
+
+		}
+
 	}
 }
