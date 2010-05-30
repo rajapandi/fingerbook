@@ -1,6 +1,5 @@
 package com.fingerbook.client.gui;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -8,7 +7,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.fingerbook.client.Client;
@@ -40,32 +38,5 @@ class InitQuery implements ActionListener {
 			
 			new NotePad(list.toString());
 		} catch (Exception ex) {ex.printStackTrace();}
-	}
-}
-
-// Menu ActionListeners
-class MAbout implements ActionListener {
-	public void actionPerformed(ActionEvent e) {
-		JOptionPane
-				.showMessageDialog(
-						(Component)Client.front,
-						"Fingerbook\nITBA - Proyecto Final\n\n"
-								+ "Autores:\nAberg Cobo, Simon\nOybin, Nahuel\nGross, German\nPampliega, Juan Martin",
-						"About Us", JOptionPane.INFORMATION_MESSAGE);
-	}
-}
-
-class MExit implements ActionListener {
-	public void actionPerformed(ActionEvent e) {
-		if (JOptionPane.showConfirmDialog(null,
-				"Are you sure you want to quit the application?", "Exit",
-				JOptionPane.OK_CANCEL_OPTION) == 0)
-			System.exit(0);
-	}
-}
-
-class MQuery implements ActionListener {
-	public void actionPerformed(ActionEvent e) {
-		new Query();		
 	}
 }

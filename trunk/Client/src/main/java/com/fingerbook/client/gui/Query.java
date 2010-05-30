@@ -6,11 +6,12 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Query extends JFrame {
+public class Query extends JDialog {
 	private static final long serialVersionUID = 2440070097533761705L;
 	private Toolkit toolkit;
 
@@ -45,7 +46,7 @@ public class Query extends JFrame {
 		contentPane.add(panel);
 		contentPane.add(bIni, BorderLayout.SOUTH);
 		
-		
+		this.setModal(true);
 		this.pack();
 		this.center();
 		this.setVisible(true);
