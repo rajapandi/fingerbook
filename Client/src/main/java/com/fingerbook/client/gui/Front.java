@@ -54,6 +54,9 @@ public class Front extends JFrame {
 		setLocation(size.width / 2 - getWidth() / 2, size.height / 2
 				- getHeight() / 2);
 
+		// Set Icon
+		Image icon = toolkit.getImage("src/main/resources/images/thumb.png");
+	    setIconImage(icon);
 		setVisible(true);
 	}
 
@@ -64,7 +67,7 @@ public class Front extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.setSize(590, 180);
 		this.setResizable(false);
-		this.setTitle("fbClient");
+		this.setTitle("fbClient"); //$NON-NLS-1$
 
 		// MenuBar
 		JMenuBar menuBar = new MainMenu();
@@ -75,6 +78,12 @@ public class Front extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
+
+//				if (JOptionPane.showConfirmDialog(null,
+//						Messages.getString("Front.1"), //$NON-NLS-1$
+//						Messages.getString("Front.2"), JOptionPane.OK_CANCEL_OPTION) == 0) //$NON-NLS-1$
+//					System.exit(0);
+
 				Client.front.setVisible(false);
 				if(!minimizedNotice) {
 					trayIcon.displayMessage("Minimized to tray","Fingerbook Client has been minimized to tray",TrayIcon.MessageType.INFO);
@@ -90,12 +99,12 @@ public class Front extends JFrame {
 	 * This method removes '/.' from the end of the path string
 	 */
 	public void setDir(JTextField tDir, String defaultDir) {
-		if (defaultDir.endsWith("\\.") || defaultDir.endsWith("/."))
-			configuration.put("scanDir", defaultDir.substring(0, defaultDir
+		if (defaultDir.endsWith("\\.") || defaultDir.endsWith("/.")) //$NON-NLS-1$ //$NON-NLS-2$
+			configuration.put("scanDir", defaultDir.substring(0, defaultDir //$NON-NLS-1$
 					.length() - 2));
 		else
-			configuration.put("scanDir", defaultDir);
-		tDir.setText(configuration.get("scanDir"));
+			configuration.put("scanDir", defaultDir); //$NON-NLS-1$
+		tDir.setText(configuration.get("scanDir")); //$NON-NLS-1$
 	}
 
 	/**
@@ -128,7 +137,7 @@ public class Front extends JFrame {
 			tDir.setEditable(false);
 			tDir.setBounds(new Rectangle(10, 10, 500, 30));
 
-			setDir(tDir, new File(".").getAbsolutePath().toString());
+			setDir(tDir, new File(".").getAbsolutePath().toString()); //$NON-NLS-1$
 		}
 		return tDir;
 	}
@@ -140,15 +149,15 @@ public class Front extends JFrame {
 	 */
 	private JButton getBBrowse() {
 		if (bBrowse == null) {
-			bBrowse = new JButton("Browse");
+			bBrowse = new JButton(Messages.getString("Front.9")); //$NON-NLS-1$
 			bBrowse.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					JDirectoryChooser chooser = new JDirectoryChooser(".");
+					JDirectoryChooser chooser = new JDirectoryChooser("."); //$NON-NLS-1$
 					chooser.setShowingCreateDirectory(false);
 					int choice = chooser.showOpenDialog((Component) e
 							.getSource());
 					if (choice == JDirectoryChooser.APPROVE_OPTION) {
-						configuration.put("scanDir", chooser.getSelectedFile()
+						configuration.put("scanDir", chooser.getSelectedFile() //$NON-NLS-1$
 								.getAbsolutePath());
 						tDir.setText(chooser.getSelectedFile()
 								.getAbsolutePath());
@@ -167,15 +176,15 @@ public class Front extends JFrame {
 	 */
 	private JCheckBox getCRecursive() {
 		if (cRecursive == null) {
-			cRecursive = new JCheckBox("Recursive?");
+			cRecursive = new JCheckBox(Messages.getString("Front.12")); //$NON-NLS-1$
 			cRecursive.setSelected(false);
-			configuration.put("recursive", "false");
+			configuration.put("recursive", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 			cRecursive.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (cRecursive.isSelected())
-						configuration.put("recursive", "true");
+						configuration.put("recursive", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 					else
-						configuration.put("recursive", "false");
+						configuration.put("recursive", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			});
 			cRecursive.setBounds(new Rectangle(10, 45, 100, 30));
@@ -190,13 +199,13 @@ public class Front extends JFrame {
 	 */
 	private JButton getBIni() {
 		if (bIni == null) {
-			bIni = new JButton("Scan & Send");
+			bIni = new JButton(Messages.getString("Front.19")); //$NON-NLS-1$
 			bIni.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Response resp = null;
 					try {
 						resp = Client.getScanner().scanDirectory(
-								configuration.get("scanDir"),
+								configuration.get("scanDir"), //$NON-NLS-1$
 								(HashMap<String, String>) configuration);
 
 					} catch (Exception ex) {
@@ -205,10 +214,10 @@ public class Front extends JFrame {
 
 					if (resp == null || resp.getErrorCode() != null)
 						JOptionPane.showMessageDialog(
-								(Component) e.getSource(), "Error!");
+								(Component) e.getSource(), Messages.getString("Front.21")); //$NON-NLS-1$
 					else {
 						JOptionPane.showMessageDialog(
-								(Component) e.getSource(), "Success!:\n"
+								(Component) e.getSource(), Messages.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
 										+ resp.getDesc());
 					}
 				}

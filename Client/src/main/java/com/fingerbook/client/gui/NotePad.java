@@ -19,7 +19,7 @@ public class NotePad extends JFrame {
 
 		Container contentPane = this.getContentPane();
 
-		this.setTitle("fbClient - Result");
+		this.setTitle("fbClient - " + Messages.getString("NotePad.1")); //$NON-NLS-1$ //$NON-NLS-2$
 		this.setLayout(new BorderLayout());
 
 		JPanel panel = new JPanel();
