@@ -16,7 +16,7 @@ public class ClientPopupMenu extends PopupMenu {
 	private static final long serialVersionUID = -4792167419434448410L;
 
 	public ClientPopupMenu() {
-			MenuItem aboutItem = new MenuItem("About");
+			MenuItem aboutItem = new MenuItem(Messages.getString("MainMenu.6")); //$NON-NLS-1$
 		    aboutItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					JOptionPane
@@ -29,7 +29,7 @@ public class ClientPopupMenu extends PopupMenu {
 			});
 		    //this.add(aboutItem);
 		    
-		    MenuItem queryItem = new MenuItem("Query");
+		    MenuItem queryItem = new MenuItem(Messages.getString("MainMenu.2")); //$NON-NLS-1$
 		    queryItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					new Query();
@@ -38,7 +38,7 @@ public class ClientPopupMenu extends PopupMenu {
 		    this.add(queryItem);
 		    
 		    
-		    MenuItem defaultItem = new MenuItem("Exit");
+		    MenuItem defaultItem = new MenuItem(Messages.getString("MainMenu.3")); //$NON-NLS-1$
 		    defaultItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (JOptionPane.showConfirmDialog(null,
