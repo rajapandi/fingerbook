@@ -86,7 +86,7 @@ public class Front extends JFrame {
 
 				Client.front.setVisible(false);
 				if(!minimizedNotice) {
-					trayIcon.displayMessage("Minimized to tray","Fingerbook Client has been minimized to tray",TrayIcon.MessageType.INFO);
+					trayIcon.displayMessage(Messages.getString("Front.10"),Messages.getString("Front.11"),TrayIcon.MessageType.INFO);
 					minimizedNotice = true;
 				}
 			}
