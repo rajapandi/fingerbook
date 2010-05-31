@@ -14,6 +14,13 @@ public class Response {
 		this.desc = desc;
 	}
 	
+	public Response(Integer errorCode, String desc, Long rid) {
+		super();
+		this.errorCode = errorCode;
+		this.desc = desc;
+		this.rid = rid;
+	}
+	
 	public Integer getErrorCode() {
 		return errorCode;
 	}
