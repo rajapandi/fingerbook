@@ -12,7 +12,6 @@ public class Fingerbook implements Serializable {
 	protected Fingerprints fingerPrints;
 	protected UserInfo userInfo;
 	protected long stamp;
-	protected Long groupId;
 	protected STATE state;
 	
 	public Long getFingerbookId() {
@@ -40,12 +39,6 @@ public class Fingerbook implements Serializable {
 		this.stamp = stamp;
 	}
 	
-	public Long getGroupId() {
-		return groupId;
-	}
-	public void setGroupId(Long groupId) {
-		this.groupId = groupId;
-	}
 	public STATE getState() {
 		return state;
 	}
