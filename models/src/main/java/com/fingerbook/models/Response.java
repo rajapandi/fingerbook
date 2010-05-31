@@ -5,6 +5,7 @@ public class Response {
 	// Error code null means success!
 	private Integer errorCode;
 	private Long rid;
+	private String ticket;
 	private String desc;
 	
 	public Response(Integer errorCode, String desc) {
@@ -32,6 +33,14 @@ public class Response {
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+
+	public String getTicket() {
+		return ticket;
+	}
+
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
 	}
 	
 	

@@ -9,6 +9,7 @@ public class FileInfo implements Serializable {
 	private String name;
 	private String shaHash;
 	private Long sizeInBytes;
+	private String path;
 	
 	public FileInfo() {
 		
@@ -42,6 +43,14 @@ public class FileInfo implements Serializable {
 	public Long getSizeInBytes() {
 		return sizeInBytes;
 	}
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	public void setSizeInBytes(Long sizeInBytes) {
 		this.sizeInBytes = sizeInBytes;
 	}
