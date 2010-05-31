@@ -8,6 +8,7 @@ public class UserInfo implements Serializable {
 	private Long userInfoId;
 	private String user;
 	private String mail;
+	protected String ticket;
 	
 	public Long getUserInfoId() {
 		return userInfoId;
@@ -26,6 +27,12 @@ public class UserInfo implements Serializable {
 	}
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+	public String getTicket() {
+		return ticket;
+	}
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
 	}
 	
 }
