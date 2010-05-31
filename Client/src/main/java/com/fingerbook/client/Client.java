@@ -45,8 +45,7 @@ public class Client {
 		userInfo.setUser(params.user);
 		userInfo.setMail(params.mail);
 
-		FingerbookClient fiClient = applicationContext.getBean(
-				"FingerprintsClient", FingerbookClient.class);
+		FingerbookClient fiClient = applicationContext.getBean(FingerbookClient.class);
 		fiClient.setBaseUrl(params.url);
 		scanner = new Scanner(params.path, userInfo);
 
@@ -77,10 +76,8 @@ public class Client {
 		} else {
 			try {
 				File f = new File(params.path);
-				FileHashCalculator fhc = Client.applicationContext.getBean(
-						"fileHashCalculator", FileHashCalculator.class);
-				FingerbookClient fiClient = Client.applicationContext.getBean(
-						"FingerprintsClient", FingerbookClient.class);
+				FileHashCalculator fhc = Client.applicationContext.getBean(FileHashCalculator.class);
+				FingerbookClient fiClient = Client.applicationContext.getBean(FingerbookClient.class);
 				List<Fingerbook> list = fiClient.getGroups(fhc.getFileHash(f));
 
 				System.out.println(list.toString());
