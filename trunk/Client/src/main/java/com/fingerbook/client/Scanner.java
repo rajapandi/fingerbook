@@ -23,7 +23,7 @@ import com.fingerbook.models.Fingerbook.STATE;
 
 
 public class Scanner {
-	private UserInfo userInfo;
+	//private UserInfo userInfo;
 	
 	private @Autowired FileHashCalculator fhc; 
 	private @Autowired FingerbookClient fiClient;
@@ -37,7 +37,7 @@ public class Scanner {
 	
 	public Scanner(String dir, UserInfo userInfo) throws Exception {
 
-		this.userInfo = userInfo;
+		///this.userInfo = userInfo;
 		this.finishedScan = false;
 		this.finishedPosting = true;
 		this.queue = new LinkedBlockingQueue<FileInfo>();
