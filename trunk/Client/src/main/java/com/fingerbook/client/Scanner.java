@@ -240,13 +240,19 @@ public class Scanner {
 			
 			while(true) {
 				
-				FileInfo fi = null;
-				try {
-					fi = scanner.getQueue().take();
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
+				if((scanner.getQueue().isEmpty() && scanner.getFinishedScan() == true)) {
 					scanner.setCanStartScan(true);
+					break;
 				}
+				
+				FileInfo fi = null;
+//				try {
+					fi = scanner.getQueue().poll(); //TODO: revisar esto porque hace busy waiting, ver como se puede arreglar teniendo en cuenta
+													// cuando cae en el take() bloqueante y el FileScanner termino
+//				} catch (InterruptedException e) {
+//					Thread.currentThread().interrupt();
+//					scanner.setCanStartScan(true);
+//				}
 				
 				if(fi != null) {
 					files.add(fi);
@@ -266,10 +272,7 @@ public class Scanner {
 					}
 				}
 				
-				if((scanner.getQueue().isEmpty() && scanner.getFinishedScan() == true)) {
-					scanner.setCanStartScan(true);
-					break;
-				}
+			
 			}
 		}
 	}
