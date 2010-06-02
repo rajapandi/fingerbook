@@ -429,6 +429,13 @@ public class Front extends JFrame {
 			bIni.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Response resp = null;
+					
+					// Get Ticket
+					if (getCTicket().isSelected())
+						configuration.put("ticket", getTTicket().getText());
+					else
+						configuration.remove("ticket");
+					
 					try {
 						resp = Client.getScanner().scanDirectory(
 								configuration.get("scanDir"), //$NON-NLS-1$
