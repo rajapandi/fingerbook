@@ -191,12 +191,13 @@ public class Front extends JFrame {
 		if (cLogin == null) {
 			cLogin = new JCheckBox(Messages.getString("Front.5")); //$NON-NLS-1$
 			cLogin.setSelected(false);
+			cLogin.setEnabled(false);
 
 			cLogin.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (cLogin.isSelected()) {
-						//tUser.setEnabled(true);
-						//tPass.setEnabled(true);
+						tUser.setEnabled(true);
+						tPass.setEnabled(true);
 					} else {
 						tUser.setEnabled(false);
 						tPass.setEnabled(false);
