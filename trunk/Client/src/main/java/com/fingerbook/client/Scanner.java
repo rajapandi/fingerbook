@@ -68,12 +68,11 @@ public class Scanner {
 		// System.out.println(result);
 	}
 
-	public Response scanDirectory(String scanDir,
-			HashMap<String, String> configuration) throws Exception {
+	public Response scanDirectory(HashMap<String, String> configuration) throws Exception {
 		File actual = null;
 		
 		try {
-			actual = new File(scanDir);
+			actual = new File(configuration.get("scanDirectory"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -81,8 +80,7 @@ public class Scanner {
 		fb.setState(STATE.START);
 		//TODO: ver como se setea el user info cuando se tenga hecho lo de ticket y autenticacion
 		//fb.setUserInfo(userInfo)
-		if(fiClient == null)
-			System.out.println("NULLLLLLLLLL!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		
 		Response resp = fiClient.startHashTransaction(null);
 		
 		if(resp.getErrorCode() != null) {
