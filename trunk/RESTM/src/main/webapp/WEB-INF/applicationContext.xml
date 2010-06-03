@@ -74,7 +74,7 @@
   	-->
   	<bean id="scheduledProcessor" class="com.fingerbook.rest.back.ScheduledProcessor" />
   	<task:scheduled-tasks scheduler="myScheduler">
-	<task:scheduled ref="scheduledProcessor" method="process" fixed-delay="5000"/>
+	<task:scheduled ref="scheduledProcessor" method="process" fixed-delay="120000"/>
 	</task:scheduled-tasks>
 	<task:scheduler id="myScheduler" pool-size="10"/>
 	
