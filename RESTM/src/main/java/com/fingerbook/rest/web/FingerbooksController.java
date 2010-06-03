@@ -96,8 +96,9 @@ public class FingerbooksController {
 	
     private Response addContent(Fingerbook fingerbook, PersistentFingerbook pf) {
      	logger.info("Adding content to fingerbook id: " + fingerbook.getFingerbookId());
-     	Long fbId = pf.saveMe();
-     	if(fbId > 0) {
+//     	Long fbId = pf.saveMe();
+     	Long fbId = PersistentFingerbook.saveFingerprints(fingerbook);
+     	if(fbId >= 0) {
 	    	fingerbook.setFingerbookId(fbId);
 	    	String msg = "Fingerbook succesfully added to fingerbook id: " +  fingerbook.getFingerbookId();
 	    	Response response = new Response(null, msg);
@@ -114,13 +115,15 @@ public class FingerbooksController {
 	private Response finishTransaction(Fingerbook fingerbook, PersistentFingerbook pf) {
     	logger.info("Finishing transaction");
     	//TODO Call PersistentFingerbook.commitSave()
-    	Long fbId = pf.saveMe();  	
-      	if(fbId > 0) {
+//    	Long fbId = pf.saveMe();  	
+    	Long fbId = PersistentFingerbook.commitSave(fingerbook);
+      	if(fbId >= 0) {
 	    	fingerbook.setFingerbookId(fbId);
 	    	String msg = "Transaction succefully finished with fingerbook id: " +  fingerbook.getFingerbookId();
 	    	Response response = new Response(null, msg);
 	    	if(true) {  //TODO return ticket only when not previously using one
-	    		String ticket = fingerbookService.generateTicket();
+//	    		String ticket = fingerbookService.generateTicket();
+	    		String ticket = PersistentFingerbook.createTicket(fbId);
 	    		response.setTicket(ticket);
 	    	}
 	    	logger.info("Returning response object: " + msg);
