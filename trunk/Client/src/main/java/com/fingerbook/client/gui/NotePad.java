@@ -2,8 +2,6 @@ package com.fingerbook.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,7 +11,6 @@ import javax.swing.JTextArea;
 public class NotePad extends JFrame {
 
 	private static final long serialVersionUID = 2440070097533761705L;
-	private Toolkit toolkit;
 	
 	public NotePad(String text) {
 
@@ -38,16 +35,10 @@ public class NotePad extends JFrame {
 	
 		
 		this.pack();
-		this.center();
+		
+		// Center window
+		setLocationRelativeTo(null);
+		
 		this.setVisible(true);
-
-
-	}
-
-	private void center() {
-		toolkit = getToolkit();
-		Dimension size = toolkit.getScreenSize();
-		setLocation(size.width / 2 - getWidth() / 2, size.height / 2
-				- getHeight() / 2);
 	}
 }
