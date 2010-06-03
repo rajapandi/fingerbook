@@ -44,7 +44,7 @@ public class Scanner {
 
 	public Response scanDirectory(Map<String, String> configuration) throws Exception {
 		File actual = null;
-		Integer connectionTimeout = 60;
+		Integer connectionTimeout = 300;
 		Boolean error = false;
 		Boolean timeout = false;
 		
@@ -55,19 +55,9 @@ public class Scanner {
 		}
 		
 		String ticket = configuration.get("ticket");
-		UserInfo ui = new UserInfo();
-		Fingerbook fb = new Fingerbook();
-		if(ticket != null) {
-			ui.setTicket(ticket);
-			fb.setUserInfo(ui);
-		}
+		Fingerbook fb;
 		
-		
-		fb.setState(STATE.START);
-		//TODO: ver como se setea el user info cuando se tenga hecho lo de ticket y autenticacion
-		//fb.setUserInfo(userInfo)
-		
-		Response resp = fiClient.startHashTransaction(null);
+		Response resp = fiClient.startHashTransaction(ticket);
 		
 		if(resp.getErrorCode() != null) {
 			return resp;
@@ -78,7 +68,7 @@ public class Scanner {
 		
 		
 		
-		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 1, 60);
+		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 1, 300);
 		
 		execFileScanner = Executors.newSingleThreadExecutor();
 		
