@@ -456,7 +456,7 @@ public class Front extends JFrame {
 						JOptionPane.showMessageDialog(
 								(Component) e.getSource(), Messages
 										.getString("Front.21")); //$NON-NLS-1$
-					else if (resp != null && resp.getTicket() != getTTicket().getText())
+					else if (resp != null && !resp.getTicket().equals(getTTicket().getText()))
 						new Ticket(resp.getTicket());
 					else
 						JOptionPane.showMessageDialog(
