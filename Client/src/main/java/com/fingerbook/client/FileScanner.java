@@ -92,7 +92,7 @@ public class FileScanner implements Runnable {
 	private void addFiles(File actual) throws InterruptedException {
 		for (File f : actual.listFiles()) {
 			if (f.isFile())
-					queue.put(new FileInfo(f.getName(), fhc.getFileHash(f), f.length()));
+					queue.put(new FileInfo(f.getAbsolutePath(), f.getName(), fhc.getFileHash(f), f.length()));
 			else if (recursive.equals("true") && f.isDirectory())
 				addFiles(f);
 		}		

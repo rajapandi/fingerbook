@@ -29,6 +29,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fingerbook.client.Client;
 import com.fingerbook.client.TicketFile;
 import com.fingerbook.client.gui.helpers.GBHelper;
@@ -38,6 +41,8 @@ import com.l2fprod.common.swing.JDirectoryChooser;
 
 public class Front extends JFrame {
 	private static final long serialVersionUID = 2440070097533761701L;
+
+	Logger logger = LoggerFactory.getLogger(Client.class);
 
 	private static final int BORDER = 12; // Window border in pixels.
 	private static final int GAP = 5; // Default gap btwn components
@@ -429,30 +434,35 @@ public class Front extends JFrame {
 			bIni.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Response resp = null;
-					
+
 					// Get Ticket
 					if (getCTicket().isSelected())
 						configuration.put("ticket", getTTicket().getText());
 					else
 						configuration.remove("ticket");
-					
+
+					// Aca hay que abrir el progress bar
+
 					try {
 						resp = Client.getScanner().scanDirectory(configuration);
-
 					} catch (Exception ex) {
-						ex.printStackTrace();
+						logger.error("An unexpected error happened: "
+								+ ex.getMessage());
 					}
+
+					// Aca hay que cerrar el progress bar
 
 					if (resp == null || resp.getErrorCode() != null)
 						JOptionPane.showMessageDialog(
 								(Component) e.getSource(), Messages
 										.getString("Front.21")); //$NON-NLS-1$
-					else {
+					else if (resp != null && resp.getTicket() == null)
 						JOptionPane.showMessageDialog(
 								(Component) e.getSource(), Messages
 										.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
 										+ resp.getDesc());
-					}
+					else
+						new Ticket(resp.getTicket());
 				}
 			});
 		}
@@ -506,13 +516,13 @@ public class Front extends JFrame {
 			try {
 				tray.add(trayIcon);
 			} catch (AWTException e) {
-				System.err.println("TrayIcon could not be added."); //$NON-NLS-1$
+				logger.error("TrayIcon could not be added."); //$NON-NLS-1$
 			}
 
 		} else {
 
 			// System Tray is not supported
-			System.err.println("Warning: System Tray Not Supported"); //$NON-NLS-1$
+			logger.error("Warning: System Tray Not Supported"); //$NON-NLS-1$
 
 		}
 	}
