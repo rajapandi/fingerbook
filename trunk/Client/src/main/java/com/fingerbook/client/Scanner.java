@@ -1,8 +1,6 @@
 package com.fingerbook.client;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -16,12 +14,10 @@ import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestClientException;
 
 import com.fingerbook.client.gui.Messages;
 import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.Fingerbook.STATE;
@@ -56,7 +52,16 @@ public class Scanner {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		String ticket = configuration.get("ticket");
+		UserInfo ui = new UserInfo();
 		Fingerbook fb = new Fingerbook();
+		if(ticket != null) {
+			ui.setTicket(ticket);
+			fb.setUserInfo(ui);
+		}
+		
+		
 		fb.setState(STATE.START);
 		//TODO: ver como se setea el user info cuando se tenga hecho lo de ticket y autenticacion
 		//fb.setUserInfo(userInfo)
@@ -69,6 +74,8 @@ public class Scanner {
 		Long fid = resp.getRid();
 //		Response resp = null;
 //		Long fid = 1L;
+		
+		
 		
 		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 1, 60);
 		
