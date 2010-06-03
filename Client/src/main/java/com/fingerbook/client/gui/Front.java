@@ -456,13 +456,13 @@ public class Front extends JFrame {
 						JOptionPane.showMessageDialog(
 								(Component) e.getSource(), Messages
 										.getString("Front.21")); //$NON-NLS-1$
-					else if (resp != null && resp.getTicket() == null)
+					else if (resp != null && resp.getTicket() != null && !resp.getTicket().equals(""))
+						new Ticket(resp.getTicket());
+					else
 						JOptionPane.showMessageDialog(
 								(Component) e.getSource(), Messages
 										.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
 										+ resp.getDesc());
-					else
-						new Ticket(resp.getTicket());
 				}
 			});
 		}
