@@ -145,7 +145,7 @@ public class FileScanner implements Runnable {
 								throw new ResponseException(Messages.getString("ResponseException.1"), resp);
 							}
 							count = 0;
-							files = new ArrayList<FileInfo>();
+							files.clear();
 						}
 					}	
 				}
