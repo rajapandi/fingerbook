@@ -40,8 +40,8 @@ public class FingerprintsController {
     
     /**
      * Receives a new Fingerprints and adds it to HBASE
-     * @return A SuccessREsponse XML object with if the Fingerprints was succesfully
-     * added to HBASE, an ErrorResponse with and error code and description if not
+     * @return A Response XML object with if Fingerprints was succesfully
+     * added to HBASE, a Response with and error code and description if not
      */
     @RequestMapping(value="/new", method=RequestMethod.POST)
     @ResponseBody
@@ -58,13 +58,15 @@ public class FingerprintsController {
     	Response response = new Response(null, "Fingerprints succesfully added to Fingerbook with ID: " 
     			+ fingerbook.getFingerbookId());
     	
+    	//TODO When does it fail?
+    	
     	
     	return response;
     }
 
     /**
      * Catches erroneous mappings for GET requests
-     * @return An ErrorResponse XML object with an error code and description
+     * @return A Response XML object with an error code and description
      */
     @RequestMapping("/*")
     @ResponseBody

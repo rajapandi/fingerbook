@@ -1,12 +1,17 @@
 package com.fingerbook.rest.back;
 
-import org.springframework.scheduling.annotation.Scheduled;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.fingerbook.persistencehbase.PersistentFingerbook;
 	
 public class ScheduledProcessor {
 
+	protected final Log logger = LogFactory.getLog(getClass());
+	
     public void process() {
-        for (int i = 0; i < 10; i++) {
-        	System.out.println("message " + i);
-        }
+    	// Transactions timeout after 5 minutes
+    	logger.info("Running scheduled transaction cleaner..");
+        PersistentFingerbook.cleanExpired(5*60*1000);
     }
 }
