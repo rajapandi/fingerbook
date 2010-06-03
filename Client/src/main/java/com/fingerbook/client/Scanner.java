@@ -44,8 +44,9 @@ public class Scanner {
 
 	public Response scanDirectory(Map<String, String> configuration) throws Exception {
 		File actual = null;
-		Integer timeout = 300;
+		Integer connectionTimeout = 60;
 		Boolean error = false;
+		Boolean timeout = false;
 		
 		try {
 			actual = new File(configuration.get("scanDir"));
@@ -77,15 +78,16 @@ public class Scanner {
 		
 		
 		
-		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 1, 300);
+		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 1, 60);
 		
 		execFileScanner = Executors.newSingleThreadExecutor();
 		
 		Future<?> producer =  execFileScanner.submit(fileScanner);
 		
 		try {
-	        producer.get(timeout, TimeUnit.SECONDS);
+	        producer.get(connectionTimeout, TimeUnit.SECONDS);
 	    } catch (TimeoutException e) {
+	    	timeout = true;
 	    	logger.warn(Messages.getString("TimeoutException.2"));
 	    } catch (ExecutionException e) {
 	        error = true;
@@ -96,13 +98,16 @@ public class Scanner {
 	        producer.cancel(true);
 	        queue.clear();
 	    }
+	    fb = new Fingerbook();
+		fb.setFingerbookId(fid);
 		
-	    if(!error) {
-			fb = new Fingerbook();
-			fb.setFingerbookId(fid);
+		if(timeout) {
+			fb.setState(STATE.TIMEOUT_ERROR);
+			resp = fiClient.postHashes(fb);
+		} else if(!error) {
 			fb.setState(STATE.FINISH);
 			resp = fiClient.postHashes(fb);
-	    }
+	    } 
 	    
 	    return resp;
 	}
