@@ -6,16 +6,17 @@ import java.io.Serializable;
 public class FileInfo implements Serializable {
 
 	private Long fileInfoId;
+	private String path;
 	private String name;
 	private String shaHash;
 	private Long sizeInBytes;
-	private String path;
 	
 	public FileInfo() {
 		
 	}
 	
-	public FileInfo(String name, String hash, Long size) {
+	public FileInfo(String path, String name, String hash, Long size) {
+		this.path = path;
 		this.name = name;
 		this.shaHash = hash;
 		this.sizeInBytes = size;
