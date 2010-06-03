@@ -46,15 +46,15 @@ public class FingerbookClient {
 	}
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
-		System.out.println(fb.getFingerPrints().getFiles().get(0).getName());
-		return restTemplate.postForObject(this.baseUrl + "fingerprints/new", fb, Response.class);
+//		System.out.println(fb.getFingerPrints().getFiles().get(0).getName());
+		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
 	}
 
 	public Response startHashTransaction(UserInfo userInfo) {
 		Fingerbook fb = new Fingerbook();
 		fb.setState(STATE.START);
 		fb.setUserInfo(userInfo);
-		return restTemplate.postForObject(this.baseUrl + "fingerprints/new", fb, Response.class);
+		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
 	}
 	
 	

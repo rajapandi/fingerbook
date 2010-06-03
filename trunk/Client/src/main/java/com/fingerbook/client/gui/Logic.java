@@ -31,7 +31,8 @@ class InitQuery implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		try {
 			File f = new File(((Query)(SwingUtilities.getRoot((JButton)e.getSource()))).getFDir());
-			FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
+//			FingerbookClient fiClient = Client.applicationContext.getBean("FingerprintsClient", FingerbookClient.class);
+			FingerbookClient fiClient = Client.applicationContext.getBean("fingerbookClient", FingerbookClient.class);
 			FileHashCalculator fhc = Client.applicationContext.getBean("fileHashCalculator", FileHashCalculator.class);
 			List<Fingerbook> list = fiClient.getGroups(fhc.getFileHash(f));
 			
