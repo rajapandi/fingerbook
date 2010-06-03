@@ -2,6 +2,7 @@ package com.fingerbook.persistencehbase;
 
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,10 +24,13 @@ import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.UserInfo;
 import com.fingerbook.persistencehbase.hbase.HbaseManager;
 import com.fingerbook.persistencehbase.hbase.TransHTable;
+import com.fingerbook.persistencehbase.svc.Sha1;
 
 public class PersistentFingerbook extends Fingerbook{
 	private static final long serialVersionUID = -2963312837954174296L;
 
+	private static String TICKET_KEY = "fingerbook";
+	
 	public static int separator = 30;
 	
 	public static String FINGER_TABLE_NAME = "tfinger";
@@ -41,6 +45,7 @@ public class PersistentFingerbook extends Fingerbook{
 	
 	public static String COLUMN_STAMP = "stamp";
 	public static String COLUMN_USER = "user";
+	public static String COLUMN_TICKET = "ticket";
 	public static String COLUMN_LAST_ACTION = "last_action";
 	
 //	private TransHTable groupTable;
@@ -129,7 +134,7 @@ public class PersistentFingerbook extends Fingerbook{
 			if(this.fingerPrints != null) {
 				saveFingerprints(this.fingerbookId, this.fingerPrints);
 			}
-			commitSave(this.fingerbookId);
+//			commitSave(this.fingerbookId);
 			
 			return this.fingerbookId;
 			
@@ -140,7 +145,10 @@ public class PersistentFingerbook extends Fingerbook{
 		}
 	}
 	
-	public static int saveFingerprints(long fingerbookId, Fingerprints fingerprints) {
+	public static long saveFingerprints(Fingerbook fingerbook) {
+		return saveFingerprints(fingerbook.getFingerbookId(), fingerbook.getFingerPrints());
+	}
+	public static long saveFingerprints(long fingerbookId, Fingerprints fingerprints) {
 		
 		if(fingerprints == null) {
 			return -1;
@@ -182,10 +190,13 @@ public class PersistentFingerbook extends Fingerbook{
 			e.printStackTrace();
 				return -1;
 		}
-		return 0;
+		return fingerbookId;
 	}
 	
-	public static int commitSave(long fingerbookId) {
+	public static long commitSave(Fingerbook fingerbook) {
+		return commitSave(fingerbook.getFingerbookId());
+	}
+	public static long commitSave(long fingerbookId) {
 		
 		try {
 			if(!fingerprintsSaveAllowed(fingerbookId)) {
@@ -199,7 +210,7 @@ public class PersistentFingerbook extends Fingerbook{
 		updateFingerTable(fingerbookId);
 		deleteFingerbookFromTmp(fingerbookId);
 //		this.commitAndDestroy();
-		return 0;
+		return fingerbookId;
 	}
 	
 	public static int cleanExpired(long timeout) {
@@ -446,14 +457,23 @@ public class PersistentFingerbook extends Fingerbook{
 			byte[] stampB = Bytes.toBytes(fingerbook.getStamp());
 			byte[] userB = null;
 			UserInfo userInfo = fingerbook.getUserInfo();
-		
+			String ticket = null;
+			
 			/* Insert stamp in group table */
 			HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_STAMP), stampB);
-			if(userInfo != null && userInfo.getUser() != null) {
-				userB = Bytes.toBytes(userInfo.getUser());
-				HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_USER), userB);
+			if(userInfo != null) {
+				if(userInfo.getUser() != null) {
+					userB = Bytes.toBytes(userInfo.getUser());
+					HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_USER), userB);
+				}
+				if(userInfo.getTicket() != null) {
+					ticket = userInfo.getTicket();
+				}
 			}
-			
+			if(ticket == null) {
+				ticket = createTicket(auxFingerbookId);
+			}
+			HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_TICKET), Bytes.toBytes(ticket));
 			return auxFingerbookId;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -611,5 +631,18 @@ public class PersistentFingerbook extends Fingerbook{
 		byte[] groupIdB = Bytes.toBytes(fingerbookId);
 		boolean ret = HbaseManager.rowExists(TMP_TABLE_NAME, groupIdB);
 		return ret;
+	}
+	
+	public static String createTicket(long fingerbookId) {
+		String ticket = null;
+		String tmpTicket = TICKET_KEY + String.valueOf(fingerbookId);
+		try {
+			ticket = (new Sha1()).getHash(tmpTicket);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ticket;
 	}
 }
