@@ -62,7 +62,7 @@ public class Client {
 
 		if (params.action.equals("put")) {
 			try {
-				resp = Client.getScanner().scanDirectory(params.path, (HashMap<String, String>) configuration);
+				resp = Client.getScanner().scanDirectory(configuration);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

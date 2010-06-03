@@ -437,9 +437,7 @@ public class Front extends JFrame {
 						configuration.remove("ticket");
 					
 					try {
-						resp = Client.getScanner().scanDirectory(
-								configuration.get("scanDir"), //$NON-NLS-1$
-								(HashMap<String, String>) configuration);
+						resp = Client.getScanner().scanDirectory(configuration);
 
 					} catch (Exception ex) {
 						ex.printStackTrace();
