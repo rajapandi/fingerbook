@@ -3,6 +3,7 @@ package com.fingerbook.client;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fingerbook.models.Fingerbook;
@@ -44,7 +45,7 @@ public class FingerbookClient {
 		return restTemplate.getForObject( baseUrl + "fingerbooks/" + hash, List.class );
 	}
 	
-	public Response postHashes(Fingerbook fb) {
+	public Response postHashes(Fingerbook fb) throws RestClientException {
 		return restTemplate.postForObject(this.baseUrl + "fingerprints/new", fb, Response.class);
 	}
 
