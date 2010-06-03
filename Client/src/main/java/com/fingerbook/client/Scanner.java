@@ -44,7 +44,7 @@ public class Scanner {
 
 	public Response scanDirectory(Map<String, String> configuration) throws Exception {
 		File actual = null;
-		Integer timeout = 60;
+		Integer timeout = 300;
 		Boolean error = false;
 		
 		try {
@@ -77,7 +77,7 @@ public class Scanner {
 		
 		
 		
-		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 1, 60);
+		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 1, 300);
 		
 		execFileScanner = Executors.newSingleThreadExecutor();
 		

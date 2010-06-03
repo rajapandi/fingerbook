@@ -128,7 +128,7 @@ public class FileScanner implements Runnable {
 					if(fi != null) {
 						files.add(fi);
 						count++;
-						if(count == 10 || (queue.isEmpty() && files.size() > 0)) {
+						if(count == 2 || (queue.isEmpty() && files.size() > 0)) {
 							fb = new Fingerbook();
 							fb.setFingerbookId(this.fid);
 							fb.setState(STATE.CONTENT);
@@ -145,6 +145,7 @@ public class FileScanner implements Runnable {
 								throw new ResponseException(Messages.getString("ResponseException.1"), resp);
 							}
 							count = 0;
+							files = new ArrayList<FileInfo>();
 						}
 					}	
 				}
