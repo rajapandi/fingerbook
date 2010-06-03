@@ -50,10 +50,12 @@ public class FingerbookClient {
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
 	}
 
-	public Response startHashTransaction(UserInfo userInfo) {
+	public Response startHashTransaction(String ticket) {
 		Fingerbook fb = new Fingerbook();
+		UserInfo ui = new UserInfo();
+		ui.setTicket(ticket);
 		fb.setState(STATE.START);
-		fb.setUserInfo(userInfo);
+		fb.setUserInfo(ui);
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
 	}
 	
