@@ -5,7 +5,7 @@ import java.io.File;
 public class TicketFile {
 
 	String ticket = null;
-	private static final int ticketLenght = 41;
+	private static final int ticketLenght = 40;
 	
 	public TicketFile(File file) throws Exception {
 		if(file.length() != ticketLenght)
