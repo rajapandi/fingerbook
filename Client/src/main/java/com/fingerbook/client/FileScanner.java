@@ -46,6 +46,7 @@ public class FileScanner implements Runnable {
 		this.consumerAmount = consumerAmount;
 		this.timeout = timeout;
 		this.logger = LoggerFactory.getLogger(FileScanner.class);
+
 	}
 	
 	@Override
@@ -53,7 +54,7 @@ public class FileScanner implements Runnable {
 		synchronized (this) {
 			this.scanHasEnded = false;			
 		}
-		
+
 		FingerbookPoster fingerbookPoster = new FingerbookPoster(fid, this.queue,this.fiClient);
 		execFingerbookPoster = Executors.newFixedThreadPool(this.consumerAmount); 
 		
@@ -116,6 +117,7 @@ public class FileScanner implements Runnable {
 			int count = 0;
 			List<FileInfo> files = new ArrayList<FileInfo>();
 			Fingerbook fb = null;
+
 			try {
 				while(!Thread.currentThread().isInterrupted()) {
 					if((queue.isEmpty() && scanHasEnded == true)) {
@@ -123,8 +125,7 @@ public class FileScanner implements Runnable {
 						break;
 					}
 					
-					FileInfo fi = queue.take(); //TODO: revisar esto porque hace busy waiting, ver como se puede arreglar teniendo en cuenta
-														// cuando cae en el take() bloqueante y el FileScanner termino
+					FileInfo fi = queue.take(); 
 					if(fi != null) {
 						files.add(fi);
 						count++;
@@ -139,6 +140,7 @@ public class FileScanner implements Runnable {
 							try {
 								 resp = fiClient.postHashes(fb); 
 							} catch (RestClientException ex){
+								System.out.println("EXCEPTION!!!");
 								throw new ResponseException(Messages.getString("ResponseException.1"), null);
 							}
 							if(resp != null && resp.getErrorCode() != null) {
@@ -153,6 +155,7 @@ public class FileScanner implements Runnable {
 				Thread.currentThread().interrupt();
 				//scanner.setCanStartScan(true);
 			}
+
 		}
 	}
 }

@@ -23,11 +23,17 @@ public class Task extends SwingWorker<Void, Void> {
 		// Initialize progress property.
 		setProgress(0);
 
-		resp = Client.getScanner().scanDirectory(Front.getConfiguration());
+		try {
+			resp = Client.getScanner().scanDirectory(Front.getConfiguration());			
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			Client.getScanner().stopScanning();
+			resp = null; //TODO: ver si esta bien setear resp en null o habria que hacer otra cosa
+		}
 
 		setProgress(1);
 		Front.inProgress = false;
-		
+
 		if (resp == null || resp.getErrorCode() != null)
 			JOptionPane.showMessageDialog(
 					Client.front, Messages

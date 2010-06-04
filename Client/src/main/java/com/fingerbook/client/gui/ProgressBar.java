@@ -45,7 +45,7 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 
 		this.setContentPane(getJContentPane());
 		
-        //Instances of javax.swing.SwingWorker are not reusuable, so
+        //Instances of javax.swing.SwingWorker are not reusable, so
         //we create new instances as needed.
         task = new Task();
         task.addPropertyChangeListener(this);
@@ -122,7 +122,8 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 			bCancel = new JButton(Messages.getString("ProgressBar.1")); //$NON-NLS-1$
 			bCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// ACA HAY QUE INTERRUMPIR LOS THREADS!
+					// interrupt scanner threads
+					Client.getScanner().stopScanning();
 					dispose();
 				}
 			});

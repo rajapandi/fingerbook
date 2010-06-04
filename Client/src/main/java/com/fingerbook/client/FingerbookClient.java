@@ -46,7 +46,6 @@ public class FingerbookClient {
 	}
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
-//		System.out.println(fb.getFingerPrints().getFiles().get(0).getName());
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
 	}
 
@@ -58,11 +57,6 @@ public class FingerbookClient {
 		fb.setUserInfo(ui);
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
 	}
-	
-	
-//	public FileInfo getFileInfo(String hash) {
-//		return restTemplate.getForObject(this.baseUrl + "knownfigerprint/" + hash , FileInfo.class);
-//	}
 	
 	
 }

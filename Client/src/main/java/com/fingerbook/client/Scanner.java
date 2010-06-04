@@ -26,26 +26,22 @@ import com.fingerbook.models.Fingerbook.STATE;
 public class Scanner {
 
 	private @Autowired FingerbookClient fiClient;
-	private Boolean finishedScan;
-	private Boolean finishedPosting;
 	private final BlockingQueue<FileInfo> queue;
 	private Response response;
 	private ExecutorService execFileScanner;
 	private Logger logger; 
+	Future<?> producer = null;
 	
 	public Scanner(String dir, UserInfo userInfo) throws Exception {
-		this.finishedScan = false;
-		this.finishedPosting = true;
 		this.queue = new LinkedBlockingQueue<FileInfo>();
-		this.logger = LoggerFactory.getLogger(Scanner.class);
+		this.logger = LoggerFactory.getLogger(Client.class);
 		this.fiClient = Client.applicationContext.getBean(FingerbookClient.class);
-		
 	}
 
 	public Response scanDirectory(Map<String, String> configuration) throws Exception {
 		File actual = null;
-		Integer connectionTimeout = 300;
-		Boolean error = false;
+		Integer connectionTimeout = 600; //TODO: ver si habria que setear el timeout en algun lado o no deberia haber
+		Boolean error = false; 
 		Boolean timeout = false;
 		
 		try {
@@ -56,9 +52,9 @@ public class Scanner {
 		
 		String ticket = configuration.get("ticket");
 		Fingerbook fb;
-		
+
 		Response resp = fiClient.startHashTransaction(ticket);
-		
+
 		if(resp.getErrorCode() != null) {
 			return resp;
 		}
@@ -68,11 +64,12 @@ public class Scanner {
 		
 		
 		
-		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 1, 300);
+		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 
+				1, connectionTimeout);
 		
 		execFileScanner = Executors.newSingleThreadExecutor();
 		
-		Future<?> producer =  execFileScanner.submit(fileScanner);
+		producer =  execFileScanner.submit(fileScanner);
 		
 		try {
 	        producer.get(connectionTimeout, TimeUnit.SECONDS);
@@ -98,24 +95,7 @@ public class Scanner {
 			fb.setState(STATE.FINISH);
 			resp = fiClient.postHashes(fb);
 	    } 
-	    
 	    return resp;
-	}
-	
-	public synchronized Boolean getFinishedScan() {
-		return finishedScan;
-	}
-
-	public synchronized void setFinishedScan(Boolean finishedScan) {
-		this.finishedScan = finishedScan;
-	}
-
-	public synchronized Boolean getCanStartScan() {
-		return finishedPosting;
-	}
-
-	public synchronized void setCanStartScan(Boolean canStartScan) {
-		this.finishedPosting = canStartScan;
 	}
 	
 	public Response getResponse() {
@@ -131,6 +111,12 @@ public class Scanner {
 		return queue;
 	}
 	
+	public synchronized void stopScanning() {
+		//TODO: ver si habria que mandar un paquete al servidor cuando se cancela el escaneo
+		if(producer != null) {
+			this.producer.cancel(true);
+		}
+	}
 	
 
 
