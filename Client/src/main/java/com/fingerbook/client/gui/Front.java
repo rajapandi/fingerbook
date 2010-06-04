@@ -36,7 +36,6 @@ import com.fingerbook.client.Client;
 import com.fingerbook.client.TicketFile;
 import com.fingerbook.client.gui.helpers.GBHelper;
 import com.fingerbook.client.gui.helpers.Gap;
-import com.fingerbook.models.Response;
 import com.l2fprod.common.swing.JDirectoryChooser;
 
 public class Front extends JFrame {
@@ -47,7 +46,7 @@ public class Front extends JFrame {
 	private static final int BORDER = 12; // Window border in pixels.
 	private static final int GAP = 5; // Default gap btwn components
 
-	private Map<String, String> configuration = new HashMap<String, String>();
+	private static Map<String, String> configuration = new HashMap<String, String>();
 
 	private JPanel jContentPane = null;
 
@@ -67,9 +66,12 @@ public class Front extends JFrame {
 	private JButton bBrowse = null;
 	private JCheckBox cRecursive = null;
 	private JButton bIni = null;
+	
+	private ProgressBar pBar = null;
+	public static boolean inProgress = false;
 
-	private TrayIcon trayIcon;
-	private Boolean minimizedNotice = false;
+	public static TrayIcon trayIcon;
+	public static Boolean minimizedNotice = false;
 
 	public Front() {
 		initialize();
@@ -98,10 +100,9 @@ public class Front extends JFrame {
 
 		this.setContentPane(getJContentPane());
 
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
-				Client.front.setVisible(false);
 				if (!minimizedNotice) {
 					trayIcon.displayMessage(Messages.getString("Front.10"), //$NON-NLS-1$
 							Messages.getString("Front.11"), //$NON-NLS-1$
@@ -433,7 +434,7 @@ public class Front extends JFrame {
 			bIni = new JButton(Messages.getString("Front.19")); //$NON-NLS-1$
 			bIni.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Response resp = null;
+					//Response resp = null;
 
 					// Get Ticket
 					if (getCTicket().isSelected())
@@ -441,28 +442,14 @@ public class Front extends JFrame {
 					else
 						configuration.remove("ticket");
 
-					// Aca hay que abrir el progress bar
-
+					// Abro el progress bar
 					try {
-						resp = Client.getScanner().scanDirectory(configuration);
+						pBar = new ProgressBar();
+						//resp = pBar.getResp();
 					} catch (Exception ex) {
 						logger.error("An unexpected error happened: "
 								+ ex.getMessage());
 					}
-
-					// Aca hay que cerrar el progress bar
-
-					if (resp == null || resp.getErrorCode() != null)
-						JOptionPane.showMessageDialog(
-								(Component) e.getSource(), Messages
-										.getString("Front.21")); //$NON-NLS-1$
-					else if (resp != null && !resp.getTicket().equals(getTTicket().getText()))
-						new Ticket(resp.getTicket());
-					else
-						JOptionPane.showMessageDialog(
-								(Component) e.getSource(), Messages
-										.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
-										+ resp.getDesc());
 				}
 			});
 		}
@@ -481,7 +468,9 @@ public class Front extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					if (e.getButton() == MouseEvent.BUTTON1
 							&& e.getClickCount() == 2) {
-						Client.front.setVisible(true);
+						setVisible(true);
+						if (inProgress)
+							pBar.setVisible(true);
 					}
 				}
 
@@ -525,5 +514,9 @@ public class Front extends JFrame {
 			logger.error("Warning: System Tray Not Supported"); //$NON-NLS-1$
 
 		}
+	}
+	
+	public static Map<String, String> getConfiguration() {
+		return configuration;
 	}
 }
