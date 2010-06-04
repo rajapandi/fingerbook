@@ -41,7 +41,8 @@ public class Ticket extends JDialog {
 	public Ticket(String ticket) {
 		this.ticket = ticket;
 
-		this.setTitle("fbClient"); //$NON-NLS-1$ //$NON-NLS-2$
+		this.setTitle("fbClient"); //$NON-NLS-1$
+		this.setModal(true);
 
 		// Center window
 		this.setLocationRelativeTo(null);
