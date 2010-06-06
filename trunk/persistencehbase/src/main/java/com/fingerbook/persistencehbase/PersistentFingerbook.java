@@ -645,4 +645,18 @@ public class PersistentFingerbook extends Fingerbook{
 		
 		return ticket;
 	}
+	
+	public static String getTicket(long fingerbookId) {
+		String ticket = null;
+		
+		try {
+			byte[] ticketB = HbaseManager.getValue(GROUP_TABLE_NAME, Bytes.toBytes(fingerbookId), TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_TICKET));
+			ticket = Bytes.toString(ticketB);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ticket;
+	}
 }
