@@ -14,6 +14,7 @@
           <string>WEB-INF/web.xml</string>
           <string>WEB-INF/classes/com/fingerbook/rest/web/FingerprintsController.class</string>
           <string>WEB-INF/classes/com/fingerbook/rest/web/FingerbooksController.class</string>
+          <string>WEB-INF/classes/com/fingerbook/rest/back/ScheduledProcessor.class</string>
           <string>WEB-INF/classes/com/fingerbook/rest/service/FingerbookServices.class</string>
           <string>WEB-INF/lib/spring-core-3.0.2.RELEASE.jar</string>
           <string>WEB-INF/lib/spring-asm-3.0.2.RELEASE.jar</string>

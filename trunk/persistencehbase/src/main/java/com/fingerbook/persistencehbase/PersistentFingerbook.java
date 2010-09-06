@@ -4,7 +4,6 @@ package com.fingerbook.persistencehbase;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.Vector;
@@ -12,9 +11,6 @@ import java.util.Vector;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.RowLock;
-import org.apache.hadoop.hbase.filter.BinaryComparator;
-import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -169,9 +165,9 @@ public class PersistentFingerbook extends Fingerbook{
 			
 				String shaHash = fileInfo.getShaHash();
 				String fileName = fileInfo.getName();
-				byte[] shaHashB = Bytes.toBytes(shaHash);
+				//byte[] shaHashB = Bytes.toBytes(shaHash);
 				
-				byte[] groupFileNameCol = createGroupFileNameCol(fingerbookId, fileName);
+				//byte[] groupFileNameCol = createGroupFileNameCol(fingerbookId, fileName);
 				byte[] hashFileNameCol = createHashFileNameCol(shaHash, fileName);
 				
 				byte[] sizeInBytesB = Bytes.toBytes(fileInfo.getSizeInBytes());
