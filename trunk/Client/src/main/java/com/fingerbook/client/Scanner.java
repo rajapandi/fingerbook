@@ -31,9 +31,10 @@ public class Scanner {
 	private ExecutorService execFileScanner;
 	private Logger logger; 
 	Future<?> producer = null;
+	private final int QUEUE_SIZE = 1000;
 	
 	public Scanner(String dir, UserInfo userInfo) throws Exception {
-		this.queue = new LinkedBlockingQueue<FileInfo>();
+		this.queue = new LinkedBlockingQueue<FileInfo>(QUEUE_SIZE);
 		this.logger = LoggerFactory.getLogger(Client.class);
 		this.fiClient = Client.applicationContext.getBean(FingerbookClient.class);
 	}
