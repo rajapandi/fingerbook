@@ -34,6 +34,7 @@ public class FileScanner implements Runnable {
 	private Integer consumerAmount;
 	private Integer timeout;
 	private Logger logger; 
+	private final int FILE_INFO_AMOUNT = 50;
 	
 	public FileScanner(File actual, String recursive, BlockingQueue<FileInfo> queue, Long fid, FingerbookClient fiClient, 
 			Integer consumerAmount, Integer timeout) {
@@ -129,7 +130,7 @@ public class FileScanner implements Runnable {
 					if(fi != null) {
 						files.add(fi);
 						count++;
-						if(count == 2 || (queue.isEmpty() && files.size() > 0)) {
+						if(count == FILE_INFO_AMOUNT || (queue.isEmpty() && files.size() > 0)) {
 							fb = new Fingerbook();
 							fb.setFingerbookId(this.fid);
 							fb.setState(STATE.CONTENT);
