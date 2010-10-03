@@ -11,7 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.binary.Hex;
 
-
 public class FileHashCalculator {
 
 		private MessageDigest md;
