@@ -1,7 +1,6 @@
 package com.fingerbook.client;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
