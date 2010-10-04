@@ -35,7 +35,7 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 	private JProgressBar pBar = null;
 	private JButton bCancel = null;
 
-	public ProgressBar() {
+	public ProgressBar(boolean resume) {
 		this.setTitle("fbClient - Please Wait..."); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.setModal(true);
@@ -47,7 +47,7 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 		
         //Instances of javax.swing.SwingWorker are not reusable, so
         //we create new instances as needed.
-        task = new Task();
+        task = new Task(resume);
         task.addPropertyChangeListener(this);
         task.execute();
 

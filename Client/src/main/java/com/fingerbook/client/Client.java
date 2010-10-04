@@ -25,11 +25,16 @@ public class Client {
 	static Scanner scanner;
 	public static ApplicationContext applicationContext;
 	public static Front front;
+	public static ResumePMan fMan;
+	
 	/**
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		boolean resume;
+		boolean populate = false;
+		
 		Logger logger = LoggerFactory.getLogger(Client.class);
 		logger.debug("Application started.");
 
@@ -40,29 +45,36 @@ public class Client {
 		CollectedData.setMail(params.mail);
 
 		System.out.println(params.toString());
-
+		
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUser(params.user);
 		userInfo.setMail(params.mail);
 
 		FingerbookClient fiClient = applicationContext.getBean(FingerbookClient.class);
 		fiClient.setBaseUrl(params.url);
-		scanner = new Scanner(params.path, userInfo);
-
+		scanner = new Scanner();
+		fMan = new ResumePMan();		
+		
+		resume = fMan.checkResume();
+		if (resume)
+			populate = true;
+			
 		if (params.gui.equals("yes")) {
 			logger.info("Starting GUI.");
-			initGUI();
+			if (resume)
+				logger.info("Resume detected");
+			initGUI(populate, resume);				
 		} else
-			console();
+			console(resume);
 	}
 
-	private static void console() {
+	private static void console(boolean resume) {
 		Response resp = null;
 		Map<String, String> configuration = new HashMap<String, String>();
 
 		if (params.action.equals("put")) {
 			try {
-				resp = Client.getScanner().scanDirectory(configuration);
+				resp = Client.getScanner().scanDirectory(configuration, false);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -87,15 +99,14 @@ public class Client {
 		}
 	}
 
-	private static void initGUI() {
+	private static void initGUI(boolean populate, boolean resume) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			LookAndFeelAddons.setAddon(LookAndFeelAddons
 					.getBestMatchAddonClassName());
 		} catch (Exception e) {
 		}
-		
-		front = new Front();
+		front = new Front(populate, resume);
 	}
 
 	public static Scanner getScanner() {

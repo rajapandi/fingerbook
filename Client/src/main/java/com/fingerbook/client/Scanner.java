@@ -1,6 +1,8 @@
 package com.fingerbook.client;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -19,7 +21,6 @@ import com.fingerbook.client.gui.Messages;
 import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
-import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.Fingerbook.STATE;
 
 
@@ -33,20 +34,20 @@ public class Scanner {
 	Future<?> producer = null;
 	private final int QUEUE_SIZE = 1000;
 	
-	public Scanner(String dir, UserInfo userInfo) throws Exception {
+	public Scanner() throws Exception {
 		this.queue = new LinkedBlockingQueue<FileInfo>(QUEUE_SIZE);
 		this.logger = LoggerFactory.getLogger(Client.class);
 		this.fiClient = Client.applicationContext.getBean(FingerbookClient.class);
 	}
 
-	public Response scanDirectory(Map<String, String> configuration) throws Exception {
-		File actual = null;
+	public Response scanDirectory(Map<String, String> configuration, boolean resume) throws Exception {
+		String actual = null;
 		Integer connectionTimeout = 600; //TODO: ver si habria que setear el timeout en algun lado o no deberia haber
 		Boolean error = false; 
 		Boolean timeout = false;
-		
+
 		try {
-			actual = new File(configuration.get("scanDir"));
+			actual = new String(configuration.get("scanDir"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,9 +65,16 @@ public class Scanner {
 //		Long fid = 1L;
 		
 		
-		
-		FileScanner fileScanner = new FileScanner(actual, configuration.get("recursive"), this.queue, fid, this.fiClient, 
-				1, connectionTimeout);
+		/* Parse dirs paths and add them to a List */
+		java.util.Scanner scan = new java.util.Scanner(actual);
+		List<File> files = new ArrayList<File>();
+
+		scan.useDelimiter(";");
+		while (scan.hasNext())
+			files.add(new File(scan.next()));		
+
+		FileScanner fileScanner = new FileScanner(files, configuration.get("recursive"), this.queue, fid, this.fiClient, 
+				1, connectionTimeout, resume);
 		
 		execFileScanner = Executors.newSingleThreadExecutor();
 		
@@ -118,7 +126,4 @@ public class Scanner {
 			this.producer.cancel(true);
 		}
 	}
-	
-
-
 }

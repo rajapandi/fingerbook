@@ -11,9 +11,15 @@ import com.fingerbook.models.Response;
 
 public class Task extends SwingWorker<Void, Void> {
 	private Response resp = null;
+	private boolean resume;
 
 	Logger logger = LoggerFactory.getLogger(Client.class);
 
+	public Task(boolean resume) {
+		super();
+		resume = this.resume;
+	}
+	
 	/*
 	 * Main task. Executed in background thread.
 	 */
@@ -24,7 +30,7 @@ public class Task extends SwingWorker<Void, Void> {
 		setProgress(0);
 
 		try {
-			resp = Client.getScanner().scanDirectory(Front.getConfiguration());			
+			resp = Client.getScanner().scanDirectory(Front.getConfiguration(), false);			
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			Client.getScanner().stopScanning();
