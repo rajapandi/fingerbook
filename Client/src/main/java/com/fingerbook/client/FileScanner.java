@@ -77,6 +77,8 @@ public class FileScanner implements Runnable {
 			Client.fMan.storeInitialFilesPath(actual);
 		} catch (Exception e1) {}
 
+		/* Get files in initial paths to scan */
+		actual = getSons(actual);
 		try {
 			addFiles(actual, null);
 		} catch (InterruptedException e) {
@@ -107,6 +109,15 @@ public class FileScanner implements Runnable {
 	    }
 	}
 	
+	private List<File> getSons(List<File> actual) {
+		List<File> ans = new ArrayList<File>();
+		
+		for (File f1:actual)
+			for (File f2:f1.listFiles())
+					ans.add(f2);
+		return ans;
+	}
+
 	private static List<File> sanitizePaths(List<File> files) {
 		int size;
 		int i, j;
@@ -151,20 +162,25 @@ public class FileScanner implements Runnable {
 		else
 			lastPath = new String(resume.getAbsolutePath());
 				
-		// Pensar si hace falta! (tecnicamente el orden de los archivos varias segun alocacion fisica)
+		//TODO: Pensar si hace falta! (tecnicamente el orden de los archivos varia segun alocacion fisica)
 		Collections.sort(actual, PathFileComparator.PATH_COMPARATOR);
 		
-		for (File f : actual) {		
+		for (File f : actual) {
+			/* If access to file is denied, then continue with next file */
+			if (!f.canRead())
+				continue;
+
 			if (search && f.isDirectory() && lastPath.startsWith(f.getAbsolutePath())) {
 				if (lastPath.equals(f.getAbsolutePath()))
 					/* Resume directory reached, start queueing files */
 					search = false;
 			}
+			/* Search tree until resume path is found */
 			else if(search)
 				continue;
 
 			if (!search && f.isFile()) {
-				System.out.println("FILE: "+f.getAbsolutePath());
+				System.out.println("FILE: " + f.getAbsolutePath());
 				queue.put(new FileInfo(f.getAbsolutePath(), f.getName(), fhc.getFileHash(f), f.length()));
 			}
 			else if (f.isDirectory()) {
@@ -173,6 +189,7 @@ public class FileScanner implements Runnable {
 				} catch(Exception e) {}
 				
 				System.out.println(f.getAbsolutePath());
+				
 				if (recursive.equals("true")) {
 					if (search)
 						addFiles(Arrays.asList(f.listFiles()), resume);

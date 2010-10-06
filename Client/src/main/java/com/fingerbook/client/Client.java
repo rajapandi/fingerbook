@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fingerbook.client.gui.Front;
-import com.fingerbook.client.marshalling.CollectedData;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
@@ -35,26 +34,28 @@ public class Client {
 		boolean resume;
 		boolean populate = false;
 		
+		/* Init Logger */
 		Logger logger = LoggerFactory.getLogger(Client.class);
 		logger.debug("Application started.");
 
 		applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-		params = new ClientParams(args);
-
-		CollectedData.setUser(params.user);
-		CollectedData.setMail(params.mail);
-
-		System.out.println(params.toString());
 		
+		/* Set client parameters passed through the arguments */
+		params = new ClientParams(args);
+		System.out.println(params.toString());
+
+		/* Set user account Info */
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUser(params.user);
 		userInfo.setMail(params.mail);
 
 		FingerbookClient fiClient = applicationContext.getBean(FingerbookClient.class);
 		fiClient.setBaseUrl(params.url);
+
 		scanner = new Scanner();
 		fMan = new ResumePMan();		
 		
+		/* Check if there is any scan that can be resumed */
 		resume = fMan.checkResume();
 		if (resume)
 			populate = true;
@@ -63,11 +64,14 @@ public class Client {
 			logger.info("Starting GUI.");
 			if (resume)
 				logger.info("Resume detected");
+			/* Start GUI */
 			initGUI(populate, resume);				
 		} else
+			/* No GUI */
 			console(resume);
 	}
 
+	// TODO: HAY QUE ACTUALIZARLO, ASI COMO ESTA NO ANDA NI EN JODA
 	private static void console(boolean resume) {
 		Response resp = null;
 		Map<String, String> configuration = new HashMap<String, String>();
@@ -101,11 +105,13 @@ public class Client {
 
 	private static void initGUI(boolean populate, boolean resume) {
 		try {
+			/* Set OS native Look & Feel */
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			LookAndFeelAddons.setAddon(LookAndFeelAddons
 					.getBestMatchAddonClassName());
 		} catch (Exception e) {
 		}
+		/* Initial screen */
 		front = new Front(populate, resume);
 	}
 
