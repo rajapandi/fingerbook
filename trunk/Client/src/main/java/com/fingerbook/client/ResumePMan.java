@@ -66,6 +66,7 @@ public class ResumePMan {
 		for (int i=0; i<2; i++) {
 			try {
 				scan = new java.util.Scanner(getNextFile());
+				scan.useDelimiter("\n");
 			} catch (FileNotFoundException e) { continue; }
 			if (scan.hasNext()) {
 				/* Read last path scaned */
@@ -86,9 +87,14 @@ public class ResumePMan {
 		return ans;
 	}
 	
-	public void clean() {
+	public void cleanAll() {
 		/* Delete resume files */
 		file0.delete();
+		clean();
+	}
+	
+	public void clean() {
+		/* Delete resume files */
 		fileA.delete();
 		fileB.delete();
 	}
@@ -129,6 +135,7 @@ public class ResumePMan {
 		List<File> files = new ArrayList<File>();
 		try {
 			java.util.Scanner dirs = new java.util.Scanner(file0);
+			dirs.useDelimiter("\n");
 			while (dirs.hasNext())
 				files.add(new File(dirs.next()));
 			return files;
@@ -145,6 +152,7 @@ public class ResumePMan {
 		/* Get Last Parameters. If the file is invalid, then use default params */
 		try {
 			scan = new java.util.Scanner(fileC);
+			scan.useDelimiter("\n");
 			if (scan.hasNext())
 				configuration.put(SCANDIR, scan.next());
 			else

@@ -36,6 +36,9 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 	private JButton bCancel = null;
 
 	public ProgressBar(boolean resume) {
+		// Center window
+		setLocationRelativeTo(null);
+		
 		this.setTitle("fbClient - Please Wait..."); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.setModal(true);
@@ -124,6 +127,7 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 				public void actionPerformed(ActionEvent e) {
 					// interrupt scanner threads
 					Client.getScanner().stopScanning();
+					Task.canceled = true;
 					dispose();
 				}
 			});

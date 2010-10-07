@@ -69,28 +69,20 @@ public class FileScanner implements Runnable {
 		execFingerbookPoster = Executors.newFixedThreadPool(this.consumerAmount); 
 		
 		Future<?> consumers =  execFingerbookPoster.submit(fingerbookPoster);
-		
-		actual = sanitizePaths(actual);
-		
-		// Create Dirs to scan Array and make it persistant
-		try {
-			Client.fMan.storeInitialFilesPath(actual);
-		} catch (Exception e1) {}
 
-		/* Get files in initial paths to scan */
-		actual = getSons(actual);
 		try {
-			addFiles(actual, null);
+			addFiles();
 		} catch (InterruptedException e) {
 			  Thread.currentThread().interrupt();
 			  consumers.cancel(true);
 			  return;
 			  //scanner.setFinishedScan(true);
 		}
+		
 		synchronized (this) {
 			this.scanHasEnded = true;			
 		}
-		Client.fMan.clean();
+		Client.fMan.cleanAll();
 		
 		try {
 	        consumers.get(timeout, TimeUnit.SECONDS);
@@ -109,42 +101,34 @@ public class FileScanner implements Runnable {
 	    }
 	}
 	
-	private List<File> getSons(List<File> actual) {
-		List<File> ans = new ArrayList<File>();
-		
-		for (File f1:actual)
-			for (File f2:f1.listFiles())
-					ans.add(f2);
-		return ans;
-	}
-
-	private static List<File> sanitizePaths(List<File> files) {
+	private List<File> sanitizePaths(List<File> files) {
 		int size;
 		int i, j;
 		List<File> resp = new ArrayList<File>();
+		List<File> respAux = new ArrayList<File>();
 		File fi, fj;
-		
+
 		/* Remove invalid paths */
 		for (File f:files) {
-			if (!f.exists())
-				files.remove(f);
-			else
+			if (f.exists()) {
+				/* Need two copies because cannot modify 'files' while iterating over it */
 				resp.add(f);
+				respAux.add(f);
+			}
 		}
-		
 		/* If a path or file is child from another path, then remove it */
-		for (i=0, size=files.size(); i < size-1; i++) {
-			fi = files.get(i);
+		for (i=0, size=respAux.size(); i < size-1; i++) {
+			fi = respAux.get(i);
 			for (j=i+1; j < size; j++) {
 				fj = files.get(j);
 				if (fi.getAbsolutePath().startsWith(fj.getAbsolutePath())) {
-					if (fj.isDirectory())
+					if (fj.isDirectory() && (recursive.equals("true") || (fi.getParent() != null && fi.getParent().equals(fj.getAbsolutePath()) && fi.isFile())))
 						resp.remove(fi);
 					else if (fi.isFile() && fj.isFile() && fi.getAbsolutePath().equals(fj.getAbsolutePath()))
 						resp.remove(fi);
 				}
 				else if (fj.getAbsolutePath().startsWith(fi.getAbsolutePath()))
-					if (fi.isDirectory())
+					if (fi.isDirectory() && (recursive.equals("true") || (fj.getParent() != null && fj.getParent().equals(fi.getAbsolutePath()) && fj.isFile())))
 						resp.remove(fj);
 					else if (fi.isFile() && fj.isFile() && fi.getAbsolutePath().equals(fj.getAbsolutePath()))
 						resp.remove(fj);
@@ -153,10 +137,23 @@ public class FileScanner implements Runnable {
 		return resp;
 	}
 	
-	@SuppressWarnings({ "unchecked" })
-	private void addFiles(List<File> actual, File resume) throws InterruptedException {
+	private void addFiles() throws InterruptedException {
+		actual = sanitizePaths(actual);
 
+		// Create Dirs to scan Array and make it persistant
+		try {
+			Client.fMan.storeInitialFilesPath(actual);
+		} catch (Exception e1) {}
+		if (resume)
+			doAddFiles(actual, Client.fMan.init(), true);
+		else
+			doAddFiles(actual, null, true);
+	}
+	
+	@SuppressWarnings({ "unchecked" })
+	private void doAddFiles(List<File> actual, File resume, boolean first) throws InterruptedException {
 		String lastPath = new String("/////"); // Forbidden file name
+
 		if (resume == null)
 			search = false;
 		else
@@ -183,19 +180,17 @@ public class FileScanner implements Runnable {
 				System.out.println("FILE: " + f.getAbsolutePath());
 				queue.put(new FileInfo(f.getAbsolutePath(), f.getName(), fhc.getFileHash(f), f.length()));
 			}
-			else if (f.isDirectory()) {
-				try{
+			else if (f.isDirectory() && (recursive.equals("true") || first)) {
+				try {
 					Client.fMan.save(f.getAbsolutePath());
 				} catch(Exception e) {}
 				
 				System.out.println(f.getAbsolutePath());
-				
-				if (recursive.equals("true")) {
-					if (search)
-						addFiles(Arrays.asList(f.listFiles()), resume);
-					else
-						addFiles(Arrays.asList(f.listFiles()), null);
-				}
+
+				if (search)
+					doAddFiles(Arrays.asList(f.listFiles()), resume, false);
+				else
+					doAddFiles(Arrays.asList(f.listFiles()), null, false);
 			}
 		}
 	}	
