@@ -10,6 +10,7 @@ import com.fingerbook.client.Client;
 import com.fingerbook.models.Response;
 
 public class Task extends SwingWorker<Void, Void> {
+	protected static boolean canceled = false;
 	private Response resp = null;
 	private boolean resume;
 
@@ -17,7 +18,7 @@ public class Task extends SwingWorker<Void, Void> {
 
 	public Task(boolean resume) {
 		super();
-		resume = this.resume;
+		this.resume = resume;
 	}
 	
 	/*
@@ -30,7 +31,7 @@ public class Task extends SwingWorker<Void, Void> {
 		setProgress(0);
 
 		try {
-			resp = Client.getScanner().scanDirectory(Front.getConfiguration(), false);			
+			resp = Client.getScanner().scanDirectory(Front.getConfiguration(), resume);			
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			Client.getScanner().stopScanning();
@@ -40,7 +41,7 @@ public class Task extends SwingWorker<Void, Void> {
 		setProgress(1);
 		Front.inProgress = false;
 
-		if (resp == null || resp.getErrorCode() != null)
+		if (!canceled && (resp == null || resp.getErrorCode() != null))
 			JOptionPane.showMessageDialog(
 					Client.front, Messages
 							.getString("Front.21")); //$NON-NLS-1$
@@ -52,6 +53,7 @@ public class Task extends SwingWorker<Void, Void> {
 					Client.front, Messages
 							.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
 							+ resp.getDesc());
+		canceled = false;
 		return null;
 	}
 

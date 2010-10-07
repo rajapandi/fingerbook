@@ -78,6 +78,7 @@ public class Scanner {
 		
 		execFileScanner = Executors.newSingleThreadExecutor();
 		
+		// TODO: Si la lista de archivos que mando esta vacia, se cuelga. ARREGLAR!
 		producer =  execFileScanner.submit(fileScanner);
 		
 		try {

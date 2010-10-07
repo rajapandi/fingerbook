@@ -142,7 +142,8 @@ public class Ticket extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					JDirectoryChooser chooser = new JDirectoryChooser("."); //$NON-NLS-1$
 					chooser.setShowingCreateDirectory(false);
-					int choice = chooser.showOpenDialog((Component) e
+					chooser.setMultiSelectionEnabled(false);
+					int choice = chooser.showSaveDialog((Component) e
 							.getSource());
 					if (choice == JDirectoryChooser.APPROVE_OPTION) {
 						try {

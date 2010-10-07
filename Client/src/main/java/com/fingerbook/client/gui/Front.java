@@ -49,8 +49,6 @@ public class Front extends JFrame {
 
 	/* Configuration Map */
 	private static Map<String, String> configuration = new HashMap<String, String>();
-
-	private boolean resume = false;
 	
 	/* Swing Components */
 	private JPanel jContentPane = null;
@@ -82,7 +80,7 @@ public class Front extends JFrame {
 		initialize();
 
 		/* If populate, then load last configuration */
-		if (populate)
+		if (resume)
 			populate();
 
 		setVisible(true);
@@ -91,7 +89,7 @@ public class Front extends JFrame {
 		if (resume) {
 			if (JOptionPane.showConfirmDialog(null,
 					"fbClient has detected that last scanning was interrupted. Do you want to resume it?", "Resume" , JOptionPane.OK_CANCEL_OPTION) == 0)
-				proceed();
+				proceed(true);
 		}
 	}
 
@@ -486,7 +484,8 @@ public class Front extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if (!setConfig())
 						return;
-					proceed();
+					/* Proceed without resuming */
+					proceed(false);
 				}
 			});
 		}
@@ -529,10 +528,9 @@ public class Front extends JFrame {
 		return true;
 	}
 	
-	private void proceed() {
+	private void proceed(boolean auto) {
 		try {
-			/* Open Progress */
-			pBar = new ProgressBar(resume);
+				pBar = new ProgressBar(auto);
 		} catch (Exception ex) {
 			logger.error("An unexpected error happened: " + ex.getMessage());
 		}

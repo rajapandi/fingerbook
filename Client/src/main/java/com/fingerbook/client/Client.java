@@ -53,7 +53,7 @@ public class Client {
 		fiClient.setBaseUrl(params.url);
 
 		scanner = new Scanner();
-		fMan = new ResumePMan();		
+		fMan = new ResumePMan();
 		
 		/* Check if there is any scan that can be resumed */
 		resume = fMan.checkResume();
