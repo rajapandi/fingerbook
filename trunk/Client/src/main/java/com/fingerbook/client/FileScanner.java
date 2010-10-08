@@ -82,7 +82,7 @@ public class FileScanner implements Runnable {
 		synchronized (this) {
 			this.scanHasEnded = true;			
 		}
-		Client.fMan.cleanAll();
+		Client.fMan.clean();
 		
 		try {
 	        consumers.get(timeout, TimeUnit.SECONDS);
@@ -140,10 +140,6 @@ public class FileScanner implements Runnable {
 	private void addFiles() throws InterruptedException {
 		actual = sanitizePaths(actual);
 
-		// Create Dirs to scan Array and make it persistant
-		try {
-			Client.fMan.storeInitialFilesPath(actual);
-		} catch (Exception e1) {}
 		if (resume)
 			doAddFiles(actual, Client.fMan.init(), true);
 		else

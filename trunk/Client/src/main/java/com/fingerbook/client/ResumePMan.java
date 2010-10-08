@@ -10,15 +10,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import com.fingerbook.client.marshalling.ConfigurationData;
+
 public class ResumePMan {
 	/* Configuration Items */
 	private static final String SCANDIR  = "scanDir";		//$NON-NLS-1$
 	private static final String CTICKET  = "cTicket";		//$NON-NLS-1$
-	private static final String TICKET  = "ticket";		//$NON-NLS-1$
+	private static final String TICKET  = "ticket";			//$NON-NLS-1$
 	private static final String RECURSIVE  = "recursive";	//$NON-NLS-1$
 	
 	/* Recovery files */
-	private static File file0 = null;
 	private static File fileA = null;
 	private static File fileB = null;
 	
@@ -31,23 +35,12 @@ public class ResumePMan {
 	public ResumePMan() {
 		/* Only once */
 		if(nextFileToUse == 0) {
-			file0 = new File(".fbp0");
 			fileA = new File(".fbpa");
 			fileB = new File(".fbpb");
-			fileC = new File(".fbpc");
+			fileC = new File("conf.xml");
 			/* Start with file A */
 			nextFileToUse = 1;
 		}
-	}
-
-	public void storeInitialFilesPath (List<File> files) throws IOException {
-		/* Erase file0 */
-		file0.delete();
-		BufferedWriter file = new BufferedWriter(new FileWriter(file0));
-		/* Write initials paths to file 0 */
-		for(File f : files)
-			file.write(f.getAbsolutePath() + "\n");
-		file.close();
 	}
 	
 	public File init() {
@@ -87,12 +80,6 @@ public class ResumePMan {
 		return ans;
 	}
 	
-	public void cleanAll() {
-		/* Delete resume files */
-		file0.delete();
-		clean();
-	}
-	
 	public void clean() {
 		/* Delete resume files */
 		fileA.delete();
@@ -125,71 +112,87 @@ public class ResumePMan {
 
 	public boolean checkResume() {
 		/* Check if a resume is possible */
-		if (file0.length() > 0 && (fileA.length() + fileB.length() > 0) && fileC.length() > 0)
+		if ((fileA.length() + fileB.length()) > 0 && fileC.length() > 0)
 			return true;
 		return false;
 	}
 
-	public List<File> getDirs() {
-		/* Get inital paths from last scan */
-		List<File> files = new ArrayList<File>();
-		try {
-			java.util.Scanner dirs = new java.util.Scanner(file0);
-			dirs.useDelimiter("\n");
-			while (dirs.hasNext())
-				files.add(new File(dirs.next()));
-			return files;
-		} catch (Exception e) {
-			return null;
-		}
-	}
+	/* Deprecated */
+//	public List<File> getDirs() {
+//		/* Get inital paths from last scan */
+//		List<File> files = new ArrayList<File>();
+//		try {
+//			java.util.Scanner dirs = new java.util.Scanner(file0);
+//			dirs.useDelimiter("\n");
+//			while (dirs.hasNext())
+//				files.add(new File(dirs.next()));
+//			return files;
+//		} catch (Exception e) {
+//			return null;
+//		}
+//	}
+
+	/* Deprecated */
+//	public void storeInitialFilesPath (List<File> files) throws IOException {
+//		/* Erase file0 */
+//		file0.delete();
+//		BufferedWriter file = new BufferedWriter(new FileWriter(file0));
+//		/* Write initials paths to file 0 */
+//		for(File f : files)
+//			file.write(f.getAbsolutePath() + "\n");
+//		file.close();
+//	}
 
 	public Map<String, String> getLastParams() {
 		/* Get configuration from last scan */
 		Map<String, String> configuration = new HashMap<String, String>();
-		java.util.Scanner scan;
-		
-		/* Get Last Parameters. If the file is invalid, then use default params */
-		try {
-			scan = new java.util.Scanner(fileC);
-			scan.useDelimiter("\n");
-			if (scan.hasNext())
-				configuration.put(SCANDIR, scan.next());
-			else
-				configuration.put(SCANDIR, ".");
-			if (scan.hasNext())
-				configuration.put(RECURSIVE, scan.next());
-			else
-				configuration.put(RECURSIVE, "false");
-			if (scan.hasNext())
-				configuration.put(CTICKET, scan.next());
-			else
-				configuration.put(CTICKET, "false");
-			if (scan.hasNext())
-				configuration.put(TICKET, scan.next());
-			else
-				configuration.put(TICKET, "");
+		StringBuffer paths = new StringBuffer("");		
+		Serializer serializer = new Persister();
 
+		try {
+			/* Unmarshall */
+			ConfigurationData config = serializer.read(ConfigurationData.class, fileC);
+
+			/* Build string from List */
+			for (String s:config.getPaths())
+				paths.append(s + ";");
+			
+			/* Save parameters to Configuration Map */
+			configuration.put(RECURSIVE, config.getRecursive());
+			configuration.put(CTICKET, config.getSemiAuth());
+			configuration.put(TICKET, config.getTicket());
+			configuration.put(SCANDIR, paths.toString());			
 		} catch (Exception e) {
-			return null;
+			/* If error ocurrs, use default params */
+			configuration.put(SCANDIR, ".");
+			configuration.put(RECURSIVE, "false");
+			configuration.put(CTICKET, "false");
+			configuration.put(TICKET, "");
 		}
 		return configuration;
 	}
 
 	public void saveActualParams(Map<String, String> configuration) {
 		/* Save configuration from this scan */
-		String scanDir = new String(configuration.get(SCANDIR));		//$NON-NLS-1$
-		String recursive = new String(configuration.get(RECURSIVE));	//$NON-NLS-1$
-		String cTicket = new String(configuration.get(CTICKET));		//$NON-NLS-1$
-		String ticket = new String(configuration.get(TICKET));			//$NON-NLS-1$
+		Serializer serializer = new Persister();
+		ConfigurationData config = new ConfigurationData();
 		
-		/* Delete and recreate file 0 */
-		fileC.delete();
+		/* Build List from String */
+		List<String> paths = new ArrayList<String>();
+		java.util.Scanner scan = new java.util.Scanner(configuration.get(SCANDIR));
+		scan.useDelimiter(";");
+		while (scan.hasNext())
+			paths.add(scan.next());
+		
+		/* Set parameters before marshalling */
+		config.setAuth("false");
+		config.setSemiAuth(configuration.get(CTICKET));
+		config.setTicket(configuration.get(TICKET));
+		config.setRecursive(configuration.get(RECURSIVE));
+		config.setPaths(paths);
+
 		try {
-			BufferedWriter file = new BufferedWriter(new FileWriter(fileC));
-			file.write(scanDir + "\n" + recursive + "\n" +cTicket + "\n" + ticket);
-			file.close();
-		}
-		catch (Exception e) {}
+			serializer.write(config, fileC);
+		} catch (Exception e) {}
 	}
 }
