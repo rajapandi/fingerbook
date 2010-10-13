@@ -49,7 +49,7 @@ public class Front extends JFrame {
 
 	/* Configuration Map */
 	private static Map<String, String> configuration = new HashMap<String, String>();
-	
+
 	/* Swing Components */
 	private JPanel jContentPane = null;
 
@@ -69,7 +69,7 @@ public class Front extends JFrame {
 	private JButton bBrowse = null;
 	private JCheckBox cRecursive = null;
 	private JButton bIni = null;
-	
+
 	private ProgressBar pBar = null;
 	public static boolean inProgress = false;
 
@@ -77,18 +77,19 @@ public class Front extends JFrame {
 	public static Boolean minimizedNotice = false;
 
 	public Front(boolean populate, boolean resume) {
+		/* Set initial stuff */
 		initialize();
 
-		/* If populate, then load last configuration */
 		if (resume)
+			/* Load last configuration */
 			populate();
 
 		setVisible(true);
-		
+
 		/* Ask user if he wants to resume */
 		if (resume) {
 			if (JOptionPane.showConfirmDialog(null,
-					"fbClient has detected that last scanning was interrupted. Do you want to resume it?", "Resume" , JOptionPane.OK_CANCEL_OPTION) == 0)
+					Messages.getString("Front.8"), Messages.getString("Front.14") , JOptionPane.OK_CANCEL_OPTION) == 0) //$NON-NLS-1$ //$NON-NLS-2$
 				proceed(true);
 		}
 	}
@@ -121,30 +122,30 @@ public class Front extends JFrame {
 
 		// Set Icon
 		setIconImage(getToolkit().getImage(
-				"src/main/resources/images/thumb.png")); //$NON-NLS-1$
-	
+		"src/main/resources/images/thumb.png")); //$NON-NLS-1$
+
 		// Center window
 		setLocationRelativeTo(null);
 	}
-	
+
 	private void populate() {
 		/* Get Config Params */
 		configuration = Client.fMan.getLastParams();
 
 		/* Load Config Params */
 		tDir.setText(configuration.get("scanDir")); 		//$NON-NLS-1$
-		if (configuration.get("cTicket").equals("true")) {
+		if (configuration.get("cTicket").equals("true")) {	//$NON-NLS-1$ //$NON-NLS-2$
 			cTicket.setSelected(true);
 			tTicket.setEnabled(true);
 			tTicket.setText(configuration.get("ticket"));	//$NON-NLS-1$
 		}		
-		if (configuration.get("recursive").equals("true"))
+		if (configuration.get("recursive").equals("true"))	//$NON-NLS-1$ //$NON-NLS-2$
 			cRecursive.setSelected(true);
 	}
 
 	public String correctPath(String path) {
 		/* Remove '/.' or '\.' from the end of the path string */
-		if (path.endsWith("\\.") || path.endsWith("/.")) //$NON-NLS-1$ //$NON-NLS-2$
+		if (path.endsWith("\\.") || path.endsWith("/."))	//$NON-NLS-1$ //$NON-NLS-2$
 			return path.substring(0, path.length() - 2);
 		else
 			return path; //$NON-NLS-1$
@@ -231,7 +232,7 @@ public class Front extends JFrame {
 		if (cLogin == null) {
 			cLogin = new JCheckBox(Messages.getString("Front.5")); //$NON-NLS-1$
 			/* Initially unselected. Currently disabled */
-			// TODO: Habilitar el Login
+			//TODO: Habilitar el Login
 			cLogin.setSelected(false);
 			cLogin.setEnabled(false);
 
@@ -367,13 +368,13 @@ public class Front extends JFrame {
 	private JButton getBTicket() {
 		if (bTicket == null) {
 			bTicket = new JButton(new ImageIcon(getToolkit().getImage(
-					"src/main/resources/images/browse2.gif"))); //$NON-NLS-1$
+			"src/main/resources/images/browse2.gif"))); //$NON-NLS-1$
 
 			/* When clicked, open JFileChooser */
 			bTicket.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					JFileChooser chooser = new JFileChooser("."); //$NON-NLS-1$
-					
+
 					int choice = chooser.showOpenDialog(null);
 					if (choice == JFileChooser.APPROVE_OPTION) {
 						try {
@@ -382,9 +383,9 @@ public class Front extends JFrame {
 						} catch (Exception ex) {
 							/* Invalid ticket. Inform user */
 							JOptionPane
-									.showMessageDialog(
-											(Component) e.getSource(),
-											Messages.getString("Front.16"), Messages.getString("Front.0"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+							.showMessageDialog(
+									(Component) e.getSource(),
+									Messages.getString("Front.16"), Messages.getString("Front.0"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}
 				}
@@ -433,7 +434,7 @@ public class Front extends JFrame {
 	private JButton getBBrowse() {
 		if (bBrowse == null) {
 			bBrowse = new JButton(Messages.getString("Front.9")); //$NON-NLS-1$
-			
+
 			/* When clicked, open JDirectoryChooser (multiple selections enabled) */
 			bBrowse.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -445,9 +446,9 @@ public class Front extends JFrame {
 							.getSource());
 					if (choice == JDirectoryChooser.APPROVE_OPTION) {
 						/* Load input with selection */
-						StringBuffer filesPaths = new StringBuffer("");
+						StringBuffer filesPaths = new StringBuffer(""); //$NON-NLS-1$
 						for (File f:chooser.getSelectedFiles())
-							filesPaths.append(f.getAbsolutePath() + ";");
+							filesPaths.append(f.getAbsolutePath() + ";"); //$NON-NLS-1$
 						tDir.setText(filesPaths.toString());
 					}
 				}
@@ -491,32 +492,32 @@ public class Front extends JFrame {
 		}
 		return bIni;
 	}
-	
+
 	private boolean setConfig() {
 		/* If no directories selected, show error and return */
 		String dirs = tDir.getText().trim();
-		if (dirs.equals("")) {
+		if (dirs.equals("")) { //$NON-NLS-1$
 			JOptionPane
 			.showMessageDialog(null,
-					"Please select at least one directory", Messages.getString("Front.0"), JOptionPane.ERROR_MESSAGE);
+					Messages.getString("Front.28"), Messages.getString("Front.0"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		}
 		else
 			/* Get Files */
 			configuration.put("scanDir", dirs); //$NON-NLS-1$
-		
+
 		/* Get cTicket */
 		if (getCTicket().isSelected())
-			configuration.put("cTicket", "true");
+			configuration.put("cTicket", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 		else
-			configuration.put("cTicket", "false");
-		
+			configuration.put("cTicket", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+
 		/* Get Ticket */
 		if (getCTicket().isSelected())
-			configuration.put("ticket", getTTicket().getText());
+			configuration.put("ticket", getTTicket().getText()); //$NON-NLS-1$
 		else
-			configuration.put("ticket", "");
-		
+			configuration.put("ticket", ""); //$NON-NLS-1$ //$NON-NLS-2$
+
 		/* Get if recursive is set */
 		if (cRecursive.isSelected())
 			configuration.put("recursive", "true"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -527,12 +528,12 @@ public class Front extends JFrame {
 		Client.fMan.saveActualParams(configuration);
 		return true;
 	}
-	
+
 	private void proceed(boolean auto) {
 		try {
-				pBar = new ProgressBar(auto);
+			pBar = new ProgressBar(auto);
 		} catch (Exception ex) {
-			logger.error("An unexpected error happened: " + ex.getMessage());
+			logger.error("An unexpected error happened: " + ex.getMessage()); //$NON-NLS-1$
 		}
 	}
 
@@ -540,7 +541,7 @@ public class Front extends JFrame {
 		if (SystemTray.isSupported()) {
 			SystemTray tray = SystemTray.getSystemTray();
 			Image image = getToolkit().getImage(
-					"src/main/resources/images/thumbs_up.gif"); //$NON-NLS-1$
+			"src/main/resources/images/thumbs_up.gif"); //$NON-NLS-1$
 
 			/* If Systray Icon is double clicked, make window(s) visible */
 			MouseListener mouseListener = new MouseListener() {
@@ -577,7 +578,7 @@ public class Front extends JFrame {
 			logger.error("Warning: System Tray Not Supported"); //$NON-NLS-1$
 		}
 	}
-	
+
 	public static Map<String, String> getConfiguration() {
 		return configuration;
 	}

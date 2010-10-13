@@ -120,7 +120,7 @@ public class MainMenu extends JMenuBar {
 							.showMessageDialog(
 									(Component) e.getSource(),
 									Messages.getString("MainMenu.7") //$NON-NLS-1$
-											+ Messages.getString("MainMenu.8"), //$NON-NLS-1$
+											+ Messages.getString("MainMenu.8") + ":\nAberg Cobo, Simon\nOybin, Nahuel\nGross, German\nPampliega, Juan Martin", //$NON-NLS-1$
 									Messages.getString("MainMenu.9"), JOptionPane.INFORMATION_MESSAGE); //$NON-NLS-1$
 				}
 			});

@@ -192,6 +192,7 @@ public class ResumePMan {
 		config.setPaths(paths);
 
 		try {
+			/* write xml persistent configuration file */
 			serializer.write(config, fileC);
 		} catch (Exception e) {}
 	}
