@@ -55,8 +55,7 @@ public class FingerbookClient {
 		ui.setTicket(ticket);
 		fb.setState(STATE.START);
 		fb.setUserInfo(ui);
+		
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
-	}
-	
-	
+	}	
 }

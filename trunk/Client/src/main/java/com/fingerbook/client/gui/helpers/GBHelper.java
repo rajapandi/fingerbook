@@ -5,8 +5,6 @@ import java.awt.*;
 public class GBHelper extends GridBagConstraints {
 	private static final long serialVersionUID = -8577905019336682132L;
 
-	// ==============================================================
-	// constructor
 	/* Creates helper at top left, component always fills cells. */
 	public GBHelper() {
 		gridx = 0;
@@ -14,16 +12,12 @@ public class GBHelper extends GridBagConstraints {
 		fill = GridBagConstraints.BOTH; // Component fills area
 	}
 
-	// ==================================================================
-	// nextCol
 	/* Moves the helper's cursor to the right one column. */
 	public GBHelper nextCol() {
 		gridx++;
 		return this;
 	}
 
-	// ==================================================================
-	// nextRow
 	/* Moves the helper's cursor to first col in next row. */
 	public GBHelper nextRow() {
 		gridx = 0;
@@ -31,21 +25,16 @@ public class GBHelper extends GridBagConstraints {
 		return this;
 	}
 
-	// ==================================================================
-	// expandW
-	/*
-	 * Expandable Width. Returns new helper allowing horizontal expansion. A new
+
+	/* Expandable Width. Returns new helper allowing horizontal expansion. A new
 	 * helper is created so the expansion values don't pollute the origin
-	 * helper.
-	 */
+	 * helper. */
 	public GBHelper expandW() {
 		GBHelper duplicate = (GBHelper) this.clone();
 		duplicate.weightx = 1.0;
 		return duplicate;
 	}
 
-	// ==================================================================
-	// expandH
 	/* Expandable Height. Returns new helper allowing vertical expansion. */
 	public GBHelper expandH() {
 		GBHelper duplicate = (GBHelper) this.clone();
@@ -53,8 +42,6 @@ public class GBHelper extends GridBagConstraints {
 		return duplicate;
 	}
 
-	// ====================================================================
-	// width
 	/* Sets the width of the area in terms of number of columns. */
 	public GBHelper width(int colsWide) {
 		GBHelper duplicate = (GBHelper) this.clone();
@@ -62,8 +49,6 @@ public class GBHelper extends GridBagConstraints {
 		return duplicate;
 	}
 
-	// ====================================================================
-	// width
 	/* Width is set to all remaining columns of the grid. */
 	public GBHelper width() {
 		GBHelper duplicate = (GBHelper) this.clone();
@@ -71,8 +56,6 @@ public class GBHelper extends GridBagConstraints {
 		return duplicate;
 	}
 
-	// ===================================================================
-	// height
 	/* Sets the height of the area in terms of rows. */
 	public GBHelper height(int rowsHigh) {
 		GBHelper duplicate = (GBHelper) this.clone();
@@ -80,8 +63,6 @@ public class GBHelper extends GridBagConstraints {
 		return duplicate;
 	}
 
-	// ===================================================================
-	// height
 	/* Height is set to all remaining rows. */
 	public GBHelper height() {
 		GBHelper duplicate = (GBHelper) this.clone();
@@ -89,8 +70,6 @@ public class GBHelper extends GridBagConstraints {
 		return duplicate;
 	}
 
-	// ====================================================================
-	// align
 	/* Alignment is set by parameter. */
 	public GBHelper align(int alignment) {
 		GBHelper duplicate = (GBHelper) this.clone();

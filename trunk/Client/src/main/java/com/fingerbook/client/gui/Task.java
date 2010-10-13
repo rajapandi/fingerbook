@@ -20,7 +20,7 @@ public class Task extends SwingWorker<Void, Void> {
 		super();
 		this.resume = resume;
 	}
-	
+
 	/*
 	 * Main task. Executed in background thread.
 	 */
@@ -44,15 +44,15 @@ public class Task extends SwingWorker<Void, Void> {
 		if (!canceled && (resp == null || resp.getErrorCode() != null))
 			JOptionPane.showMessageDialog(
 					Client.front, Messages
-							.getString("Front.21")); //$NON-NLS-1$
+					.getString("Front.21")); //$NON-NLS-1$
 		else if (resp != null
 				&& !resp.getTicket().equals(Front.getConfiguration().get("ticket")))
 			new Ticket(resp.getTicket());
 		else
 			JOptionPane.showMessageDialog(
 					Client.front, Messages
-							.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
-							+ resp.getDesc());
+					.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
+					+ resp.getDesc());
 		canceled = false;
 		return null;
 	}

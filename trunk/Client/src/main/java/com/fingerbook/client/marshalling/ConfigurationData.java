@@ -7,6 +7,7 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+/* XML struct class */
 @Root
 public class ConfigurationData {
 	/* Login Info */
@@ -30,12 +31,13 @@ public class ConfigurationData {
 	private String recursive;
 	
 	public ConfigurationData() {
+		/* Set default values */
 		auth = "false";
 		user = "";
 		pass = "";
 		semiAuth = "false";
 		ticket = "";
-		setPaths(new ArrayList<String>());
+		paths = new ArrayList<String>();
 		recursive = "false";
 	}
 	

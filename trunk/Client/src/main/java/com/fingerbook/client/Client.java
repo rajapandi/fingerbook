@@ -25,41 +25,48 @@ public class Client {
 	public static ApplicationContext applicationContext;
 	public static Front front;
 	public static ResumePMan fMan;
-	
+
 	/**
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		boolean resume;
+		/* populate indicates if GUI must be populated with config file info */
 		boolean populate = false;
-		
+		boolean resume;
+
 		/* Init Logger */
 		Logger logger = LoggerFactory.getLogger(Client.class);
 		logger.debug("Application started.");
 
+		/* Spring Application context */
 		applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-		
+
 		/* Set client parameters passed through the arguments */
 		params = new ClientParams(args);
 		System.out.println(params.toString());
 
 		/* Set user account Info */
+		//TODO: Esto deberiamos usarlo para encriptar el pass del user y poder guardarlo persistente
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUser(params.user);
 		userInfo.setMail(params.mail);
 
 		FingerbookClient fiClient = applicationContext.getBean(FingerbookClient.class);
+
+		/* Set REST server URL */
 		fiClient.setBaseUrl(params.url);
 
+		/* Fingerbooks Scanner */
 		scanner = new Scanner();
+		/* Resume Manager */
 		fMan = new ResumePMan();
-		
+
 		/* Check if there is any scan that can be resumed */
 		resume = fMan.checkResume();
 		if (resume)
 			populate = true;
-			
+
 		if (params.gui.equals("yes")) {
 			logger.info("Starting GUI.");
 			if (resume)
