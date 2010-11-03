@@ -421,6 +421,24 @@ public class HbaseManager {
 		admin.createTable(desc);
 	}
 	
+	public static void deleteTable(String tableName) throws IOException {
+		
+		HBaseConfiguration config = new HBaseConfiguration();
+		HBaseAdmin admin = new HBaseAdmin(config);
+		
+		admin.disableTable(tableName);
+		admin.deleteTable(tableName);
+	}
+	
+	public static boolean tableExists(String tableName) throws IOException {
+		
+		HBaseConfiguration config = new HBaseConfiguration();
+		HBaseAdmin admin = new HBaseAdmin(config);
+		
+		boolean ret = admin.tableExists(tableName);
+		return ret;
+	}
+	
 	public static byte[][] getEndingKeys(String tableName) throws IOException {
 		
 		HBaseConfiguration config = new HBaseConfiguration();
