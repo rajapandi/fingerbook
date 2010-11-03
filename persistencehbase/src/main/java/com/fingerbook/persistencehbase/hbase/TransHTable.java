@@ -68,4 +68,10 @@ public class TransHTable {
 		
 		this.table.delete(delete);
 	}
+	
+	public long incrementColumnValue(byte[] rowId, byte[] family, byte[] column, long amount) throws IOException {
+		
+		long ret = this.table.incrementColumnValue(rowId, family, column, amount);
+		return ret;
+	}
 }

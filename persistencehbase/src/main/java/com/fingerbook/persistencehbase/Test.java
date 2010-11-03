@@ -11,6 +11,7 @@ public class Test {
 	
 	public static void main(String[] args) throws IOException {
 		
+		PersistentFingerbook.deleteFingerTables();
 		PersistentFingerbook.createFingerTables();
 //		
 //		FingerGroup g1 = new FingerGroup(1, System.currentTimeMillis());
