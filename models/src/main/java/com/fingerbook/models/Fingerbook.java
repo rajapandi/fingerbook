@@ -13,6 +13,7 @@ public class Fingerbook implements Serializable {
 	protected UserInfo userInfo;
 	protected long stamp;
 	protected STATE state;
+	protected String transactionId;
 	
 	public Long getFingerbookId() {
 		return fingerbookId;
@@ -65,6 +66,12 @@ public class Fingerbook implements Serializable {
 			}
 		}
 		return ret.toString();
+	}
+	public String getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
 	}
 	
 }
