@@ -7,6 +7,7 @@ public class Response {
 	private Long rid;
 	private String ticket;
 	private String desc;
+	private String transactionId;
 	
 	public Response(Integer errorCode, String desc) {
 		super();
@@ -49,6 +50,13 @@ public class Response {
 	public void setTicket(String ticket) {
 		this.ticket = ticket;
 	}
-	
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
 	
 }

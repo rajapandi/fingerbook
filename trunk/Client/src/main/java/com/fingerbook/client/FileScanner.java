@@ -39,11 +39,12 @@ public class FileScanner implements Runnable {
 	private Logger logger; 
 	private final int FILE_INFO_AMOUNT = 50;
 	private boolean resume = false;
+	private String transactionId;
 	
 	private static boolean search = true;
 	
 	public FileScanner(List<File> actual, String recursive, BlockingQueue<FileInfo> queue, Long fid, FingerbookClient fiClient, 
-			Integer consumerAmount, Integer timeout, boolean resume) {
+			Integer consumerAmount, Integer timeout, boolean resume, String transactionId) {
 		this.actual = actual;
 		this.queue = queue;
 		this.recursive = recursive;
@@ -54,6 +55,7 @@ public class FileScanner implements Runnable {
 		this.timeout = timeout;
 		this.logger = LoggerFactory.getLogger(FileScanner.class);
 		this.resume = resume;
+		this.transactionId = transactionId;
 	}
 	
 	@Override
@@ -227,6 +229,7 @@ public class FileScanner implements Runnable {
 							Fingerprints fps = new Fingerprints();
 							fps.setFiles(files);
 							fb.setFingerPrints(fps); 
+							fb.setTransactionId(transactionId);
 							Response resp = null;
 							try {
 								 resp = fiClient.postHashes(fb); 
