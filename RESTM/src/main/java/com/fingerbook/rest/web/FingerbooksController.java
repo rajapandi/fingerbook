@@ -58,7 +58,7 @@ public class FingerbooksController {
      * 			was succesfully finished, a Response with an error code and 
      * 			description if not
      */
-    @RequestMapping(value="/new", method=RequestMethod.POST)
+    @RequestMapping(value="/put", method=RequestMethod.POST)
     @ResponseBody
     public Response fileHashExists(@RequestBody Fingerbook fingerbook) {    
     	
@@ -81,10 +81,14 @@ public class FingerbooksController {
 	private Response startTransaction(PersistentFingerbook pf) {
     	logger.info("Starting new transaction");
     	// Save to HBASE. Get id to continue with transaction
-		Long rid = pf.saveMe();   	
-		if(rid >= 0) {
-			Response response = new Response(null, "Transaction succesfully started", rid);   		
-    		logger.info("Returning Response object with rid: " + rid);
+		Long fbId = pf.saveMe();   	
+		String transactionId = pf.createTransactionId(fbId);
+		if(fbId >= 0) {
+			Response response = new Response(null, "Transaction succesfully started", fbId);   
+    		String ticket = PersistentFingerbook.createTicket(fbId);
+    		response.setTicket(ticket);
+    		response.setTransactionId(transactionId);
+    		logger.info("Returning Response object with fbId: " + fbId);
     		return response;
 		} else {
 			String msg = "Transaction: There was an unexpected error: Transaction aborted.";
@@ -96,7 +100,8 @@ public class FingerbooksController {
 	
     private Response addContent(Fingerbook fingerbook, PersistentFingerbook pf) {
      	logger.info("Adding content to fingerbook id: " + fingerbook.getFingerbookId());
-//     	Long fbId = pf.saveMe();
+     	// Add new content to fingerbook fbId
+     	// TODO: What about the transactionId?
      	Long fbId = PersistentFingerbook.saveFingerprints(fingerbook);
      	if(fbId >= 0) {
 	    	fingerbook.setFingerbookId(fbId);
@@ -114,18 +119,13 @@ public class FingerbooksController {
     
 	private Response finishTransaction(Fingerbook fingerbook, PersistentFingerbook pf) {
     	logger.info("Finishing transaction");
-    	//TODO Call PersistentFingerbook.commitSave()
-//    	Long fbId = pf.saveMe();  	
+    	// TODO Call PersistentFingerbook.commitSave()
+    	// TODO: What about transactionId?
     	Long fbId = PersistentFingerbook.commitSave(fingerbook);
       	if(fbId >= 0) {
 	    	fingerbook.setFingerbookId(fbId);
 	    	String msg = "Transaction succefully finished with fingerbook id: " +  fingerbook.getFingerbookId();
 	    	Response response = new Response(null, msg);
-	    	if(true) {  //TODO return ticket only when not previously using one
-//	    		String ticket = fingerbookService.generateTicket();
-	    		String ticket = PersistentFingerbook.createTicket(fbId);
-	    		response.setTicket(ticket);
-	    	}
 	    	logger.info("Returning response object: " + msg);
 			return response;
      	} else {

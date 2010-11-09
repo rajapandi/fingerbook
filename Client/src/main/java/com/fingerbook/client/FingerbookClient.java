@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fingerbook.client.gui.Front;
+import com.fingerbook.client.gui.Ticket;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
@@ -46,7 +48,7 @@ public class FingerbookClient {
 	}
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
-		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
+		return restTemplate.postForObject(this.baseUrl + "fingerbooks/put", fb, Response.class);
 	}
 
 	public Response startHashTransaction(String ticket) {
@@ -56,6 +58,7 @@ public class FingerbookClient {
 		fb.setState(STATE.START);
 		fb.setUserInfo(ui);
 		
-		return restTemplate.postForObject(this.baseUrl + "fingerbooks/new", fb, Response.class);
+		return restTemplate.postForObject(this.baseUrl + "fingerbooks/put", fb, Response.class);
+		
 	}	
 }

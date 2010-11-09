@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fingerbook.client.gui.Front;
 import com.fingerbook.client.gui.Messages;
 import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
@@ -54,13 +55,32 @@ public class Scanner {
 
 		String ticket = configuration.get("ticket");
 		Fingerbook fb;
+		String transactionId = null;
 
 		Response resp = fiClient.startHashTransaction(ticket);
+		if (resp == null) {
+			logger.error("Error: null response");
+			return null;
+		}
 
 		if(resp.getErrorCode() != null) {
 			return resp;
 		}
+		
 		Long fid = resp.getRid();
+		
+		// Get ticket
+		if (!resp.getTicket().equals(ticket)) {
+			ticket = resp.getTicket();
+		}
+		
+		// Get transactionId
+		if (resp.getTransactionId() != null) {
+			transactionId = resp.getTransactionId();
+		} else {
+			logger.error("Error: null transaction ID");
+			return resp;
+		}
 
 		/* Parse dirs paths and add them to a List */
 		java.util.Scanner scan = new java.util.Scanner(actual);
@@ -71,7 +91,7 @@ public class Scanner {
 			files.add(new File(scan.next()));		
 
 		FileScanner fileScanner = new FileScanner(files, configuration.get("recursive"), this.queue, fid, this.fiClient, 
-				1, connectionTimeout, resume);
+				1, connectionTimeout, resume, transactionId);
 
 		execFileScanner = Executors.newSingleThreadExecutor();
 
@@ -92,6 +112,7 @@ public class Scanner {
 			producer.cancel(true);
 			queue.clear();
 		}
+		
 		fb = new Fingerbook();
 		fb.setFingerbookId(fid);
 
