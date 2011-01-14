@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fingerbook.client.gui.Front;
-import com.fingerbook.client.gui.Ticket;
 import com.fingerbook.models.Fingerbook;
+import com.fingerbook.models.Fingerbook.STATE;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
-import com.fingerbook.models.Fingerbook.STATE;
 
 public class FingerbookClient {
 	@Autowired
