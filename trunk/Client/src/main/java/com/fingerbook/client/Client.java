@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.swing.UIManager;
 
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -25,6 +26,10 @@ public class Client {
 	public static ApplicationContext applicationContext;
 	public static Front front;
 	public static ResumePMan fMan;
+	
+	//TODO Hardwired
+	private static final String userName = "scott";
+	private static final String password = "wombat";
 
 	/**
 	 * @param args
@@ -58,7 +63,7 @@ public class Client {
 		fiClient.setBaseUrl(params.url);
 
 		/* Fingerbooks Scanner */
-		scanner = new Scanner();
+		scanner = new Scanner(Client.userName, Client.password);
 		/* Resume Manager */
 		fMan = new ResumePMan();
 

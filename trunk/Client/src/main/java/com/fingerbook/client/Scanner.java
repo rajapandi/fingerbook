@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fingerbook.client.gui.Front;
 import com.fingerbook.client.gui.Messages;
 import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
@@ -32,11 +33,22 @@ public class Scanner {
 	private Logger logger; 
 	Future<?> producer = null;
 	private final int QUEUE_SIZE = 1000;
+	
+	private String userName;
+	private String password;
 
 	public Scanner() throws Exception {
 		this.logger = LoggerFactory.getLogger(Client.class);
 		this.queue = new LinkedBlockingQueue<FileInfo>(QUEUE_SIZE);
 		this.fiClient = Client.applicationContext.getBean(FingerbookClient.class);
+	}
+
+	public Scanner(String userName, String password) {
+		this.logger = LoggerFactory.getLogger(Client.class);
+		this.queue = new LinkedBlockingQueue<FileInfo>(QUEUE_SIZE);
+		this.fiClient = Client.applicationContext.getBean(FingerbookClient.class);
+		this.userName = userName;
+		this.password = password;
 	}
 
 	public Response scanDirectory(Map<String, String> configuration, boolean resume) throws Exception {
@@ -90,7 +102,7 @@ public class Scanner {
 			files.add(new File(scan.next()));		
 
 		FileScanner fileScanner = new FileScanner(files, configuration.get("recursive"), this.queue, fid, this.fiClient, 
-				1, connectionTimeout, resume, transactionId);
+				1, connectionTimeout, resume, transactionId, userName, password);
 
 		execFileScanner = Executors.newSingleThreadExecutor();
 
