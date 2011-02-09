@@ -43,8 +43,11 @@ public class FileScanner implements Runnable {
 	
 	private static boolean search = true;
 	
+	private String userName;
+	private String password;
+	
 	public FileScanner(List<File> actual, String recursive, BlockingQueue<FileInfo> queue, Long fid, FingerbookClient fiClient, 
-			Integer consumerAmount, Integer timeout, boolean resume, String transactionId) {
+			Integer consumerAmount, Integer timeout, boolean resume, String transactionId, String userName, String password) {
 		this.actual = actual;
 		this.queue = queue;
 		this.recursive = recursive;
@@ -56,6 +59,8 @@ public class FileScanner implements Runnable {
 		this.logger = LoggerFactory.getLogger(FileScanner.class);
 		this.resume = resume;
 		this.transactionId = transactionId;
+		this.userName = userName;
+		this.password = password;
 	}
 	
 	@Override

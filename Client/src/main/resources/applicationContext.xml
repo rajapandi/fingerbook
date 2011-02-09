@@ -43,6 +43,18 @@
 				</bean>
 			</list>
 		</property>
+		
+		<!-- Added basic authentication headers to restTemplate client -->
+		<constructor-arg>
+			<ref bean="commons"/>
+		</constructor-arg>
+	</bean>
+	
+	<!-- Class necessary for adding basic authentication headers -->
+	<bean id="commons" class="org.springframework.http.client.CommonsClientHttpRequestFactory">
+		<constructor-arg>
+			<bean class="com.fingerbook.client.HttpClientExt" init-method="init"/>
+		</constructor-arg>
 	</bean>
 	
 	<bean id="fingerbookClient" class="com.fingerbook.client.FingerbookClient">
