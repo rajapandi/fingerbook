@@ -28,13 +28,6 @@
 				<prop key="Response">com.fingerbook.models.Response</prop>
 			</props>
 		</property>
-		<!--  
-		<property name="converters">
-			<list>
-				<bean class="org.sensatic.jqr.jobs.ParamsConverter" />
-			</list>
-		</property>
-		-->
 	</bean>
 	
 	<bean id="marshallingHttpMessageConverter"
@@ -59,19 +52,9 @@
 	<!-- Should be defined last! -->
 	<mvc:annotation-driven />
 	
-	<!-- Construct TransactionCheckExecutor as a ThreadPoolTaskExecutor -->
 	<!-- 
-	<task:scheduler id="scheduler" pool-size="10"/>
-	
-	<bean id="mySchedulor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
-	</bean>
-	<bean class="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor">
-    	<property name="scheduler" ref="mySchedulor"></property>
-  	</bean>
-  	
-  	<task:scheduler id="myScheduler" pool-size="10"/>
-  	<task:annotation-driven scheduler="myScheduler"/>
-  	-->
+		Scheluded task as ScheduledProcessor 
+	-->
   	<bean id="scheduledProcessor" class="com.fingerbook.rest.back.ScheduledProcessor" />
   	<task:scheduled-tasks scheduler="myScheduler">
 	<task:scheduled ref="scheduledProcessor" method="process" fixed-delay="120000"/>
@@ -87,5 +70,4 @@
   		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
   	</bean>
   	 
-
 </beans>
