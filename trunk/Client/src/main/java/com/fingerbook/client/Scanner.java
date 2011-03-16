@@ -126,6 +126,7 @@ public class Scanner {
 		
 		fb = new Fingerbook();
 		fb.setFingerbookId(fid);
+		fb.setTransactionId(transactionId);
 
 		if(timeout) {
 			fb.setState(STATE.TIMEOUT_ERROR);
