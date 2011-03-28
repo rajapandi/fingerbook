@@ -9,5 +9,7 @@ create table authorities (username varchar(50) not null,authority varchar(50) no
 create unique index ix_auth_username on authorities (username,authority);
 
 insert into users(username, password, enabled) values ('scott', 'wombat', true);
+insert into users(username, password, enabled) values ('anonymous', 'anonymous', true);
 
 insert into authorities(username, authority) values ('scott', 'ROLE_USER');
+insert into authorities(username, authority) values ('anonymous', 'ROLE_USER');
