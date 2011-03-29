@@ -27,23 +27,16 @@ public class User extends com.fingerbook.rest.domain.entities.Entity {
         private String email;
 
         @Column(nullable=false)
-        private String type;
+        private String usertype;
 
-        @Column(nullable=false)
+        @Column
         private Date birthdate;
 
-        @Column(nullable=false)
+        @Column
         private Date lastLoginDate;
 
-        @Column(nullable=false)
+        @Column
         private Date registrationDate;
-
-//        @Column(nullable=false)
-//        private Picture avatar;
-//        
-//        @OneToMany(mappedBy="user", cascade=CascadeType.ALL,fetch = FetchType.EAGER)
-//        private Set<User> friends = new HashSet<User>();
-
         
         public User(String username, String name, String lastName, String password,
                 String email, Date birthdate) {
@@ -106,13 +99,13 @@ public class User extends com.fingerbook.rest.domain.entities.Entity {
         }
 
         public String getType() {
-                return type;
+                return usertype;
         }
         public void setType(String type) {
                 if( ADMIN.equalsIgnoreCase(type))
-                        this.type = type;
+                        this.usertype = type;
                 else
-                        this.type = PUBLIC;
+                        this.usertype = PUBLIC;
         }
      
         public String getPassword() {
@@ -136,11 +129,11 @@ public class User extends com.fingerbook.rest.domain.entities.Entity {
         }
         
         public boolean isPublic() {
-            return PUBLIC.equalsIgnoreCase(type);
+            return PUBLIC.equalsIgnoreCase(usertype);
         }
 
         public boolean isAdmin() {
-            return ADMIN.equalsIgnoreCase(type);
+            return ADMIN.equalsIgnoreCase(usertype);
         }
 
         @Override
