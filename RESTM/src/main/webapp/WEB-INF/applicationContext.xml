@@ -11,7 +11,26 @@
 	<!-- Enable annotation scanning. -->
 	<context:component-scan base-package="com.fingerbook.rest.web" />
 	<context:component-scan base-package="com.fingerbook.rest.back" />
+	<context:component-scan base-package="com.fingerbook.rest.domain" />
+	
+	<bean id="properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+	            <value>classpath:database.properties</value>
+        	</list>
+		</property>
+	</bean>
 
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	<!-- Beans relacionados con Spring-Hibernate -->
+	<import resource="classpath:data.xml" />
 	<!--
 		Define the OXM marshaller which is used to convert the Objects <->
 		XML.
@@ -65,9 +84,11 @@
   	<bean id="fingerbookServices" class="com.fingerbook.rest.service.FingerbookServices" />
   	<bean id="fingerbooksController" class="com.fingerbook.rest.web.FingerbooksController">
   		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
+<!--   		<property name="userRepository"><ref bean="HibernateUserRepository"/></property> -->
   	</bean>
   	<bean id="fingerprintsController" class="com.fingerbook.rest.web.FingerprintsController">
   		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
   	</bean>
+  	 
   	 
 </beans>
