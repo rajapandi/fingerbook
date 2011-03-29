@@ -48,11 +48,11 @@ public class FingerbookClient {
 	@SuppressWarnings( "unchecked" )
 	public List<Fingerbook> getGroups(String hash)
 	{
-		return restTemplate.getForObject( baseUrl + "fingerbooks/" + hash, List.class );
+		return restTemplate.getForObject( baseUrl + "fingerbooks/authenticated/" + hash, List.class );
 	}
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
-		return restTemplate.postForObject(this.baseUrl + "fingerbooks/put", fb, Response.class);
+		return restTemplate.postForObject(this.baseUrl + "fingerbooks/authenticated/put", fb, Response.class);
 	}
 
 	public Response startHashTransaction(String ticket) {
@@ -62,7 +62,7 @@ public class FingerbookClient {
 		fb.setState(STATE.START);
 		fb.setUserInfo(ui);
 		
-		return restTemplate.postForObject(this.baseUrl + "fingerbooks/put", fb, Response.class);
+		return restTemplate.postForObject(this.baseUrl + "fingerbooks/authenticated/put", fb, Response.class);
 		
 	}	
 }

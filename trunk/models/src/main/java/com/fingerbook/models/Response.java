@@ -2,7 +2,17 @@ package com.fingerbook.models;
 
 public class Response {
 
-	// Error code null means success!
+	/*
+	 * Error responses from server:
+	 * 		1 - Fingerbooks: Missing arguments
+	 * 		2 - Transaction with fingerbook id: xx could not be finished
+	 * 		3 - Transaction: There was an unexpected error: Transaction start aborted
+	 * 		4 - Invalid fingerbook state
+	 * 		5 - Fingerbook could not be added to fingerbook id: xx
+	 * 		6 - Unimplemented method
+	 * 		null - Success!
+	 * */
+
 	private Integer errorCode;
 	private Long rid;
 	private String ticket;

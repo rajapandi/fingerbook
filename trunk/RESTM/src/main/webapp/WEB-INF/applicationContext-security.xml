@@ -10,7 +10,9 @@
     <http use-expressions="true" access-denied-page="/WEB-INF/jsp/access_denied.jsp">
     
     	<!-- <intercept-url pattern="/fingerbooks/**" access="hasRole('ROLE_USER')"/>  -->
-        <intercept-url pattern="/fingerbookRESTM/fingerbooks/**" access="hasRole('ROLE_USER')"/>
+    	<intercept-url pattern="/fingerbookRESTM/fingerbooks/anonymous/**" access="hasRole('ROLE_ANONYMOUS')"/>
+    	<intercept-url pattern="/fingerbookRESTM/fingerbooks/semiauthenticated/**" access="hasRole('ROLE_SEMIAUTHENTICATED')"/>
+        <intercept-url pattern="/fingerbookRESTM/fingerbooks/authenticated/**" access="hasRole('ROLE_USER')"/>
         <!-- <intercept-url pattern="/fingerbookRESTM/fingerbooks/**" access="hasRole('ROLE_USER')" requires-channel="https"/> -->
         <!-- <intercept-url pattern="/**" access="permitAll" /> -->
         
@@ -66,7 +68,7 @@
 	
 	<authentication-manager>
     	<authentication-provider> 
-    		<password-encoder hash="md5"/>
+    		<password-encoder hash="sha"/>
 			<jdbc-user-service data-source-ref="dataSource"
 				users-by-username-query="SELECT username, password, 'true' as enable FROM users WHERE username=?"/>      
 	    </authentication-provider>
