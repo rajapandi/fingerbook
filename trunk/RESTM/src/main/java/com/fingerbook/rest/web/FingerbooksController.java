@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
+import com.fingerbook.rest.domain.repository.UserRepository;
 
 @Controller
 @RequestMapping("/fingerbooks")
@@ -25,6 +27,8 @@ public class FingerbooksController {
     
     // DI
     private FingerbookServices fingerbookService;
+    @Autowired
+    private UserRepository userRepository;
     
     /** 
      * Returns de Fingerbook with the given fingerbookId when method is GET

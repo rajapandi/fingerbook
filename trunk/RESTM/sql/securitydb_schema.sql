@@ -8,11 +8,7 @@ create table users(username varchar(50) not null primary key, password varchar(5
 create table authorities (username varchar(50) not null,authority varchar(50) not null,constraint fk_authorities_users foreign key(username) references users(username));
 create unique index ix_auth_username on authorities (username,authority);
 
-// http://sha1-hash-online.waraxe.us/ to compute SHA-1 hash
-// scott - wombat
-insert into users(username, password, enabled) values ('scott', '74baa3bc21a1c85ef7f3d7efe7d75d297e2bc57e', true);
-// anonymous - anonymous
-insert into users(username, password, enabled) values ('anonymous', '0a92fab3230134cca6eadd9898325b9b2ae67998', true);
+insert into users(username, password, enabled) values ('scott', 'wombat', true);
 
 insert into authorities(username, authority) values ('scott', 'ROLE_USER');
-insert into authorities(username, authority) values ('anonymous', 'ROLE_USER');
+

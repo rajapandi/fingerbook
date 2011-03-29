@@ -7,5 +7,7 @@
 
   	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> 
   	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /> 
-
+	
+	<!-- Beans relacionados con Spring-Hibernate -->
+	<import resource="classpath:data.xml" />
 </beans>
