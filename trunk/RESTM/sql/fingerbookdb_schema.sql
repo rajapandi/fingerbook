@@ -31,5 +31,11 @@ create table authorities
 
 create unique index ix_auth_username on authorities (username,authority);
 
-insert into users(username, password, enabled) values ('scott', 'wombat', true);
+// http://sha1-hash-online.waraxe.us/ to compute SHA-1 hash
+// scott - wombat
+insert into users(username, password, enabled) values ('scott', '74baa3bc21a1c85ef7f3d7efe7d75d297e2bc57e', true);
+// anonymous - anonymous
+insert into users(username, password, enabled) values ('anonymous', '0a92fab3230134cca6eadd9898325b9b2ae67998', true);
+
 insert into authorities(username, authority) values ('scott', 'ROLE_USER');
+insert into authorities(username, authority) values ('anonymous', 'ANONYMOUS');
