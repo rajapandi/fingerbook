@@ -41,21 +41,23 @@ public class Task extends SwingWorker<Void, Void> {
 		setProgress(1);
 		Front.inProgress = false;
 
-		if (!canceled && (resp == null || resp.getErrorCode() != null))
+		if (!canceled && (resp == null || resp.getErrorCode() != null)) {
 			JOptionPane.showMessageDialog(
 					Client.front, Messages
 					.getString("Front.21")); //$NON-NLS-1$
-		else if (resp != null
-				&& !resp.getTicket().equals(Front.getConfiguration().get("ticket"))) {
-			// new Ticket(resp.getTicket());
-			logger.error("Erroneous server implementation: Tickets should be sent at the beginning of the transaction\n");
 		}
-			
-		else
+		else if (resp != null
+				&& !Client.getScanner().getTicket().equals(Front.getConfiguration().get("ticket"))) {
+			new Ticket(Client.getScanner().getTicket());
+			//logger.error("Erroneous server implementation: Tickets should be sent at the beginning of the transaction\n");
+		}			
+		else {
 			JOptionPane.showMessageDialog(
 					Client.front, Messages
 					.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
-					+ resp.getDesc());
+					+ resp.getDesc());			
+		}
+		
 		canceled = false;
 		return null;
 	}

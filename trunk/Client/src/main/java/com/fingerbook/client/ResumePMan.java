@@ -18,6 +18,9 @@ import com.fingerbook.client.marshalling.ConfigurationData;
 public class ResumePMan {
 	/* Configuration Items */
 	private static final String SCANDIR  = "scanDir";		//$NON-NLS-1$
+	private static final String CLOGIN  = "cLogin";		//$NON-NLS-1$
+	private static final String USER  = "user";		//$NON-NLS-1$
+	private static final String PASS  = "pass";		//$NON-NLS-1$
 	private static final String CTICKET  = "cTicket";		//$NON-NLS-1$
 	private static final String TICKET  = "ticket";			//$NON-NLS-1$
 	private static final String RECURSIVE  = "recursive";	//$NON-NLS-1$
@@ -158,12 +161,18 @@ public class ResumePMan {
 				paths.append(s + ";");
 			
 			/* Save parameters to Configuration Map */
+			configuration.put(CLOGIN, config.getAuth());
+			configuration.put(USER, config.getUser());
+			configuration.put(PASS, config.getPass());
 			configuration.put(RECURSIVE, config.getRecursive());
 			configuration.put(CTICKET, config.getSemiAuth());
 			configuration.put(TICKET, config.getTicket());
 			configuration.put(SCANDIR, paths.toString());			
 		} catch (Exception e) {
 			/* If error ocurrs, use default params */
+			configuration.put(CLOGIN, "false");
+			configuration.put(USER, "");
+			configuration.put(PASS, "");
 			configuration.put(SCANDIR, ".");
 			configuration.put(RECURSIVE, "false");
 			configuration.put(CTICKET, "false");
@@ -185,7 +194,9 @@ public class ResumePMan {
 			paths.add(scan.next());
 		
 		/* Set parameters before marshalling */
-		config.setAuth("false");
+		config.setAuth(configuration.get(CLOGIN));
+		config.setUser(configuration.get(USER));
+		config.setPass(configuration.get(PASS));
 		config.setSemiAuth(configuration.get(CTICKET));
 		config.setTicket(configuration.get(TICKET));
 		config.setRecursive(configuration.get(RECURSIVE));
