@@ -75,7 +75,7 @@ public class Front extends JFrame {
 
 	public static TrayIcon trayIcon;
 	public static Boolean minimizedNotice = false;
-
+	
 	public Front(boolean populate, boolean resume) {
 		/* Set initial stuff */
 		initialize();
@@ -231,10 +231,6 @@ public class Front extends JFrame {
 	private JCheckBox getCLogin() {
 		if (cLogin == null) {
 			cLogin = new JCheckBox(Messages.getString("Front.5")); //$NON-NLS-1$
-			/* Initially unselected. Currently disabled */
-			//TODO: Habilitar el Login
-			cLogin.setSelected(false);
-			cLogin.setEnabled(false);
 
 			/* When seleted, enable/disable user/pass inputs */
 			cLogin.addActionListener(new ActionListener() {
@@ -242,6 +238,8 @@ public class Front extends JFrame {
 					if (cLogin.isSelected()) {
 						tUser.setEnabled(true);
 						tPass.setEnabled(true);
+						cTicket.setSelected(false);
+						tTicket.setEnabled(false);
 					} else {
 						tUser.setEnabled(false);
 						tPass.setEnabled(false);
@@ -321,6 +319,9 @@ public class Front extends JFrame {
 					if (cTicket.isSelected()) {
 						tTicket.setEnabled(true);
 						bTicket.setEnabled(true);
+						cLogin.setSelected(false);
+						tUser.setEnabled(false);
+						tPass.setEnabled(false);
 					} else {
 						tTicket.setEnabled(false);
 						bTicket.setEnabled(false);
@@ -493,6 +494,15 @@ public class Front extends JFrame {
 		return bIni;
 	}
 
+	protected void setAuthMetod() {
+		/* Different ways of identification: Anonymous, Semi-authenticated, Authenticated */
+		if (getCLogin().isSelected())
+			configuration.put("authM", "auth");
+		else if (getCTicket().isSelected())
+			configuration.put("authM", "semi");
+		configuration.put("authM", "anon");
+	}
+
 	private boolean setConfig() {
 		/* If no directories selected, show error and return */
 		String dirs = tDir.getText().trim();
@@ -506,6 +516,22 @@ public class Front extends JFrame {
 			/* Get Files */
 			configuration.put("scanDir", dirs); //$NON-NLS-1$
 
+		/* Get cLogin */
+		if (getCLogin().isSelected())
+			configuration.put("cLogin", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		else
+			configuration.put("cLogin", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		/* Get Username & Password */
+		if (getCLogin().isSelected()) {
+			configuration.put("user", getTUser().getText()); //$NON-NLS-1$
+			configuration.put("pass", getTPass().getText()); //$NON-NLS-1$
+		}
+		else {
+			configuration.put("user", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			configuration.put("pass", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		}			
+		
 		/* Get cTicket */
 		if (getCTicket().isSelected())
 			configuration.put("cTicket", "true"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -524,12 +550,13 @@ public class Front extends JFrame {
 		else
 			configuration.put("recursive", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		/* Make configuration persistant */
+		/* Make configuration persistent */
 		Client.fMan.saveActualParams(configuration);
 		return true;
 	}
 
 	private void proceed(boolean auto) {
+		setAuthMetod();
 		try {
 			pBar = new ProgressBar(auto);
 		} catch (Exception ex) {

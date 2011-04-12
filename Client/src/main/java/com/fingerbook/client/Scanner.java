@@ -36,6 +36,8 @@ public class Scanner {
 	
 	private String userName;
 	private String password;
+	
+	private String ticket;
 
 	public Scanner() throws Exception {
 		this.logger = LoggerFactory.getLogger(Client.class);
@@ -64,7 +66,7 @@ public class Scanner {
 			e.printStackTrace();
 		}
 
-		String ticket = configuration.get("ticket");
+		ticket = configuration.get("ticket");
 		Fingerbook fb;
 		String transactionId = null;
 
@@ -156,5 +158,9 @@ public class Scanner {
 		if(producer != null) {
 			this.producer.cancel(true);
 		}
+	}
+
+	public String getTicket() {
+		return ticket;
 	}
 }
