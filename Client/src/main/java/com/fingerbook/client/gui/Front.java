@@ -500,7 +500,8 @@ public class Front extends JFrame {
 			configuration.put("authM", "auth");
 		else if (getCTicket().isSelected())
 			configuration.put("authM", "semi");
-		configuration.put("authM", "anon");
+		else
+			configuration.put("authM", "anon");
 	}
 
 	private boolean setConfig() {
