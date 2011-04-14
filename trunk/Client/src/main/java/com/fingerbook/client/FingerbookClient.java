@@ -16,6 +16,7 @@ public class FingerbookClient {
 	@Autowired
 	protected RestTemplate restTemplate;
 	private String baseUrl;
+	private String ticket;
 	
 	public FingerbookClient() {
 	}
@@ -47,10 +48,17 @@ public class FingerbookClient {
 	}
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
+		UserInfo ui = new UserInfo();
+		ui.setUser(Front.getConfiguration().get("user"));
+		ui.setTicket(ticket);
+		fb.setState(STATE.CONTENT);
+		fb.setUserInfo(ui);
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
 	}
 
 	public Response startHashTransaction(String ticket) {
+		ticket = new String(this.ticket);
+		
 		Fingerbook fb = new Fingerbook();
 		UserInfo ui = new UserInfo();
 		ui.setUser(Front.getConfiguration().get("user"));
@@ -63,6 +71,7 @@ public class FingerbookClient {
 	}
 	
 	private String getAuthM() {
+		System.out.println(Front.getConfiguration().get("authM"));
 		if (Front.getConfiguration().get("authM").equals("auth"))
 			return "authenticated";
 		if (Front.getConfiguration().get("authM").equals("semi"))
