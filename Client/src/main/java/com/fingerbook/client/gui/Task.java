@@ -44,7 +44,7 @@ public class Task extends SwingWorker<Void, Void> {
 		if (!canceled && (resp == null || resp.getErrorCode() != null)) {
 			JOptionPane.showMessageDialog(
 					Client.front, Messages
-					.getString("Front.21")); //$NON-NLS-1$
+					.getString("Front.21") + " " + resp.getDesc()); //$NON-NLS-1$
 		}
 		else if (resp != null
 				&& !Client.getScanner().getTicket().equals(Front.getConfiguration().get("ticket"))) {
