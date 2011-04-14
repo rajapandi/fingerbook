@@ -2,6 +2,7 @@ package com.fingerbook.persistencehbase.hbase;
 
 import java.io.IOException;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.HTable;
@@ -18,7 +19,11 @@ public class TransHTable {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+		
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		Configuration config = HbaseManager.getConfiguration();
 
 	    // This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.NavigableMap;
 import java.util.Vector;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
@@ -15,6 +16,7 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.ColumnPaginationFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
@@ -22,13 +24,21 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 public class HbaseManager {
 	
+	public static Configuration config;
+	
 	public static HTable getTable(String tableName) throws HbaseManagerException {
 		
 		// You need a configuration object to tell the client where to connect.
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+		
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 
 	    // This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -49,7 +59,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 
 	    // This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -88,7 +104,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 
 	    // This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -127,7 +149,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 
 	    // This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -167,7 +195,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 	    
 		// This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -195,7 +229,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 	    
 		// This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -212,6 +252,40 @@ public class HbaseManager {
 		return ret;
 	}
 	
+	public static NavigableMap<byte[],byte[]> getMembersMapPag(String tableName, byte[] rowId, String columnFamily, int limit, int offset) throws IOException {
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+		// Now, to retrieve the data we just wrote. The values that come back are
+	    // Result instances. Generally, a Result is an object that will package up
+	    // the hbase return into the form you find most palatable.
+	    Get g = new Get(rowId);
+	    
+	    g.setFilter(new ColumnPaginationFilter(limit,offset));
+	    
+	    g.addFamily(Bytes.toBytes(columnFamily));
+	    
+	    Result r = table.get(g);
+	    NavigableMap<byte[],byte[]> ret = r.getFamilyMap(Bytes.toBytes(columnFamily));
+	    
+		
+		return ret;
+	}
+	
 	public static Vector<String> scanTable(String tableName, String columnFamily, String columnName) throws IOException {
 		
 		Vector<String> ret = new Vector<String>();
@@ -220,7 +294,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 	    
 		// This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -272,7 +352,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 	    
 		// This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -324,7 +410,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 	    
 		// This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -370,7 +462,13 @@ public class HbaseManager {
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
 	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
 	    // be found on the CLASSPATH
-	    HBaseConfiguration config = new HBaseConfiguration();
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
 	    
 		// This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -410,7 +508,13 @@ public class HbaseManager {
 	
 	public static void createTable(String tableName, Vector<String> columnFamilies) throws IOException {
 		
-		HBaseConfiguration config = new HBaseConfiguration();
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+		
 		HTableDescriptor desc = new HTableDescriptor(Bytes.toBytes(tableName));
 		HBaseAdmin admin = new HBaseAdmin(config);
 		
@@ -423,7 +527,13 @@ public class HbaseManager {
 	
 	public static void deleteTable(String tableName) throws IOException {
 		
-		HBaseConfiguration config = new HBaseConfiguration();
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+		
 		HBaseAdmin admin = new HBaseAdmin(config);
 		
 		admin.disableTable(tableName);
@@ -432,7 +542,13 @@ public class HbaseManager {
 	
 	public static boolean tableExists(String tableName) throws IOException {
 		
-		HBaseConfiguration config = new HBaseConfiguration();
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+		
 		HBaseAdmin admin = new HBaseAdmin(config);
 		
 		boolean ret = admin.tableExists(tableName);
@@ -441,7 +557,13 @@ public class HbaseManager {
 	
 	public static byte[][] getEndingKeys(String tableName) throws IOException {
 		
-		HBaseConfiguration config = new HBaseConfiguration();
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+		
 	    HTable table = new HTable(config, tableName);
 	    
 	    return table.getEndKeys();
@@ -449,7 +571,13 @@ public class HbaseManager {
 	
 	public static void deleteRow(String tableName, byte[] rowId) throws IOException {
 		
-		HBaseConfiguration config = new HBaseConfiguration();
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+		
 	    HTable table = new HTable(config, tableName);
 		Delete delete = new Delete(rowId);
 		
@@ -457,11 +585,26 @@ public class HbaseManager {
 	}
 	
 	public static boolean rowExists(String tableName, byte[] rowId) throws IOException {
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
 		
-		HBaseConfiguration config = new HBaseConfiguration();
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+		
 	    HTable table = new HTable(config, tableName);
 	    Get g = new Get(rowId);
 	    
 	    return table.exists(g);
+	}
+	
+	public static Configuration getConfiguration() {
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+		
+		return config;
 	}
 }
