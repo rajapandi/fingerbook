@@ -58,13 +58,13 @@ public class FingerbookClient {
 	}
 
 	public Response startHashTransaction(String ticket) {
-		ticket = new String(this.ticket);
+		this.ticket = new String(ticket);
 		user = new String(Front.getConfiguration().get("user"));
 		
 		Fingerbook fb = new Fingerbook();
 		UserInfo ui = new UserInfo();
 		ui.setUser(user);
-		ui.setTicket(ticket);
+		ui.setTicket(this.ticket);
 		fb.setState(STATE.START);
 		fb.setUserInfo(ui);
 		

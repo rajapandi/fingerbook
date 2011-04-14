@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.swing.UIManager;
 
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -39,14 +38,14 @@ public class Client {
 		/* populate indicates if GUI must be populated with config file info */
 		boolean populate = false;
 		boolean resume;
-
+		
 		/* Init Logger */
 		Logger logger = LoggerFactory.getLogger(Client.class);
 		logger.debug("Application started.");
 
 		/* Spring Application context */
 		applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-
+		
 		/* Set client parameters passed through the arguments */
 		params = new ClientParams(args);
 		System.out.println(params.toString());

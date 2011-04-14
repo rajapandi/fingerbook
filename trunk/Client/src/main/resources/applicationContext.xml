@@ -51,9 +51,11 @@
 	</bean>
 	
 	<!-- Class necessary for adding basic authentication headers -->
+	<bean id="httpAuth" class="com.fingerbook.client.HttpClientExt"/>
+	
 	<bean id="commons" class="org.springframework.http.client.CommonsClientHttpRequestFactory">
 		<constructor-arg>
-			<bean class="com.fingerbook.client.HttpClientExt" init-method="init"/>
+			<ref bean="httpAuth"/>
 		</constructor-arg>
 	</bean>
 	

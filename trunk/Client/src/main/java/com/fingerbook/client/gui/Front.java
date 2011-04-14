@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.slf4j.Logger;
@@ -57,7 +58,7 @@ public class Front extends JFrame {
 	private JLabel lUser = null;
 	private JTextField tUser = null;
 	private JLabel lPass = null;
-	private JTextField tPass = null;
+	private JPasswordField tPass = null;
 
 	private JCheckBox cTicket = null;
 	private JLabel lTicket = null;
@@ -295,7 +296,7 @@ public class Front extends JFrame {
 	 */
 	private JTextField getTPass() {
 		if (tPass == null) {
-			tPass = new JTextField(20);
+			tPass = new JPasswordField(20);
 			/* Initially disabled */
 			tPass.setEnabled(false);
 		}
@@ -558,6 +559,10 @@ public class Front extends JFrame {
 
 	private void proceed(boolean auto) {
 		setAuthMetod();
+		
+		com.fingerbook.client.HttpClientExt applicationContext = Client.applicationContext.getBean(com.fingerbook.client.HttpClientExt.class);
+		applicationContext.setCredentials("scott", "wombat");
+
 		try {
 			pBar = new ProgressBar(auto);
 		} catch (Exception ex) {
