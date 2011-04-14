@@ -17,6 +17,7 @@ public class FingerbookClient {
 	protected RestTemplate restTemplate;
 	private String baseUrl;
 	private String ticket;
+	private String user;
 	
 	public FingerbookClient() {
 	}
@@ -49,7 +50,7 @@ public class FingerbookClient {
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
 		UserInfo ui = new UserInfo();
-		ui.setUser(Front.getConfiguration().get("user"));
+		ui.setUser(user);
 		ui.setTicket(ticket);
 		fb.setState(STATE.CONTENT);
 		fb.setUserInfo(ui);
@@ -58,10 +59,11 @@ public class FingerbookClient {
 
 	public Response startHashTransaction(String ticket) {
 		ticket = new String(this.ticket);
+		user = new String(Front.getConfiguration().get("user"));
 		
 		Fingerbook fb = new Fingerbook();
 		UserInfo ui = new UserInfo();
-		ui.setUser(Front.getConfiguration().get("user"));
+		ui.setUser(user);
 		ui.setTicket(ticket);
 		fb.setState(STATE.START);
 		fb.setUserInfo(ui);
