@@ -1,19 +1,20 @@
 package com.fingerbook.rest.service;
 
+import java.util.Vector;
+
+import com.fingerbook.models.Fingerbook;
+
 import junit.framework.TestCase;
 
 public class FingerbookServicesTest extends TestCase {
+	
+	private FingerbookServices services= new FingerbookServices();
 
-	public void testGetFingerbook() throws Exception {
-//		FingerbookServices controller = new FingerbookServices();
-//		Fingerbook fingerbook = controller.getFingerbook(new Long(1));
-//		if (fingerbook != null) {
-//			assertNotNull(fingerbook.getFingerbookId());
-//			assertNotNull(fingerbook.getFingerPrints());
-//			assertNotNull(fingerbook.getStamp());
-//			assertNotNull(fingerbook.getUserInfo());
-//			assertEquals(new Long(1), fingerbook.getFingerbookId());
-//		}
+	public void testGetFingerbookWithHash() throws Exception {
+		//Vector<Fingerbook> fingerbooks = services.getFingerbooksWithHash("hashtest");
+		//assertNotNull(fingerbooks);
+		//assertEquals(new Long(1), fingerbooks.getFingerbookId());
+	
 	}
 	
 	public void testEmptyGetFingerbook() throws Exception {
@@ -25,8 +26,7 @@ public class FingerbookServicesTest extends TestCase {
 	}
 	
 	public void testEmptyGetFingerprintsWithHash() throws Exception {
-		FingerbookServices controller = new FingerbookServices();
-		assertNull(controller.getFingerprintsWithHash(null));
+		//assertNull(services.getFingerprintsWithHash(null));
 	}
 	
 }

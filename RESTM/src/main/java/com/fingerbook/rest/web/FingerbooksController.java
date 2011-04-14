@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fingerbook.models.Fingerbook;
+import com.fingerbook.models.Fingerbook.STATE;
 import com.fingerbook.models.Response;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
@@ -24,6 +25,10 @@ import com.fingerbook.rest.domain.repository.UserRepository;
 public class FingerbooksController {
 
     protected final Log logger = LogFactory.getLog(getClass());
+    
+    private final String anonymous = "Anonymous";
+    private final String semiAuthenticated = "Semi-Authenticated";
+    private final String authenticated = "Authenticated";
     
     // DI
     private FingerbookServices fingerbookService;
@@ -50,19 +55,19 @@ public class FingerbooksController {
     @RequestMapping(value="/anonymous/put", method=RequestMethod.POST)
     @ResponseBody
     public Response anonymousPUT(@RequestBody Fingerbook fingerbook) {    
-    	return genericPUT(fingerbook, "Anonymous");
+    	return genericPUT(fingerbook, this.anonymous);
     }
     
     @RequestMapping(value="/semiauthenticated/put", method=RequestMethod.POST)
     @ResponseBody
     public Response semiauthenticatedPUT(@RequestBody Fingerbook fingerbook) {    
-    	return genericPUT(fingerbook, "Semi-Authenticated");
+    	return genericPUT(fingerbook, this.semiAuthenticated);
     }
     
     @RequestMapping(value="/authenticated/put", method=RequestMethod.POST)
     @ResponseBody
     public Response authenticatedPUT(@RequestBody Fingerbook fingerbook) {    
-    	return genericPUT(fingerbook, "Authenticated");
+    	return genericPUT(fingerbook, this.authenticated);
     }
     
     /**
@@ -82,14 +87,27 @@ public class FingerbooksController {
      */
     public Response genericPUT(Fingerbook fingerbook, String authenticationMethod) {    
     	
-    	logger.info(authenticationMethod + ": Received fingerbook xml with state: " + fingerbook.getState());
+    	STATE state = fingerbook.getState();
+    	logger.info(authenticationMethod + ": Received fingerbook xml with state: " + state);
+    	
+    	//Response ans;
+    	//if((ans = isValidRequest(fingerbook, authenticationMethod, state)) != null) {
+			//return ans;
+    	//}
+		
+    	// If resuming
+    	if(state == Fingerbook.STATE.RESUME) {
+    		return resumeTransaction(fingerbook, authenticationMethod);
+    	}
+    	
+    	// If we are not resuming
     	PersistentFingerbook pf = new PersistentFingerbook(fingerbook); 
     	
-    	if(fingerbook.getState() == Fingerbook.STATE.START) {
-    		return startTransaction(pf, authenticationMethod);
-    	} else if(fingerbook.getState() == Fingerbook.STATE.CONTENT) {
+    	if(state == Fingerbook.STATE.START) {
+    		return startTransaction(fingerbook, pf, authenticationMethod);
+    	} else if(state == Fingerbook.STATE.CONTENT) {
     		return addContent(fingerbook, pf, authenticationMethod);
-    	} else if(fingerbook.getState() == Fingerbook.STATE.FINISH) {
+    	} else if(state == Fingerbook.STATE.FINISH) {
     		return finishTransaction(fingerbook, pf, authenticationMethod);
     	} else {
     		String msg = "Invalid fingerbook state";
@@ -98,7 +116,16 @@ public class FingerbooksController {
     	}
     }
 
-	private Response startTransaction(PersistentFingerbook pf, String authenticationMethod) {
+	private Response resumeTransaction(Fingerbook fingerbook, String authenticationMethod) {
+		
+		logger.info(authenticationMethod + ": Resuming fingerbook with Transaction ID: " + fingerbook.getTransactionId());
+		
+		// TODO: Call function that receives transaction id + fingerbook and returnes fbId
+		// TODO: Implement. Should send a response with a fbId, transactionId and ticket
+		return null;
+	}
+
+	private Response startTransaction(Fingerbook fingerbook, PersistentFingerbook pf, String authenticationMethod) {
     	logger.info(authenticationMethod + ": Starting new transaction");
     	
     	// Save to HBASE. Get id to continue with transaction
@@ -107,10 +134,19 @@ public class FingerbooksController {
 		String transactionId = pf.createTransactionId(fbId);
 		
 		if(fbId >= 0) {
-			Response response = new Response(null, "Transaction succesfully started", fbId);   
-    		String ticket = PersistentFingerbook.createTicket(fbId);
-    		response.setTicket(ticket);
-    		response.setTransactionId(transactionId);
+			Response response = new Response(null, "Transaction succesfully started", fbId);  
+			
+			String ticket;
+			// If using semi-authenticated, provided ticket must be used
+			if(authenticationMethod.equals(this.semiAuthenticated)) {
+				ticket = fingerbook.getUserInfo().getTicket();
+				logger.info("Using ticket: " + ticket + " from semi authenticated user");
+			} else {
+				ticket = PersistentFingerbook.createTicket(fbId);
+			}
+			response.setTicket(ticket);
+			response.setTransactionId(transactionId);
+    		
     		logger.info(authenticationMethod + ": Returning Response object with fbId: " + fbId + "; ticket: " + ticket
     				+ "; transactionId: " + transactionId);
     		return response;
@@ -176,6 +212,53 @@ public class FingerbooksController {
     	return error;
 	}
 
+	private Response isValidRequest(Fingerbook fingerbook, String authenticationMethod, STATE state) {
+		
+		Response ans = null;
+		
+		// A transactionID is needed to resume
+		if(state == Fingerbook.STATE.RESUME && fingerbook.getTransactionId() == null) {
+			String msg = "Resume cancelled, no transaction ID was received";
+			logger.info(authenticationMethod + ": Returning error Response object: " + msg);
+			return new Response(new Integer(7), msg);
+		}
+		
+		// If an anonymous authentication is used, no ticket should be received
+		if(authenticationMethod.equals(this.anonymous)) {
+			
+			// If an anonymous authentication is used, no ticket should be received
+			if(fingerbook.getUserInfo().getTicket() != null) {
+				String msg = "Operation cancelled: Anonymous authentication is used, but a ticket was received";
+				logger.info(authenticationMethod + ": Returning error Response object: " + msg);
+				return new Response(new Integer(8), msg);
+				
+			// If an anonymous authentication is used, no user name should be received		
+			} else if(authenticationMethod.equals(this.anonymous) && fingerbook.getUserInfo().getUser() != null) {
+				String msg = "Operation cancelled: Anonymous authentication is used, but a user name was received";
+				logger.info(authenticationMethod + ": Returning error Response object: " + msg);
+				return new Response(new Integer(9), msg);
+			}
+			
+		} else if(authenticationMethod.equals(this.semiAuthenticated)) {
+			// If a semi-authentication is used, a ticket is expected
+			if(fingerbook.getUserInfo().getTicket() == null) {
+				String msg = "Operation cancelled: Semi-authentication is used, but no ticket was received";
+				logger.info(authenticationMethod + ": Returning error Response object: " + msg);
+				return new Response(new Integer(10), msg);
+			} 
+			
+		} else if(authenticationMethod.equals(this.authenticated)) {
+			// If authenticated is used, a username is expected
+			if(fingerbook.getUserInfo().getUser() == null) {
+				String msg = "Operation cancelled: Authentication is used, but no user name was received";
+				logger.info(authenticationMethod + ": Returning error Response object: " + msg);
+				return new Response(new Integer(11), msg);
+			}
+		}
+
+		return ans;
+	}
+	
 	public FingerbookServices getFingerbookService() {
 		return fingerbookService;
 	}

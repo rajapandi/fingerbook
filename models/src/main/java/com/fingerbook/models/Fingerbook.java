@@ -6,7 +6,7 @@ public class Fingerbook implements Serializable {
 	private static final long serialVersionUID = 3826603447160435399L;
 
 	public enum STATE {
-		START, CONTENT, FINISH, TIMEOUT_ERROR
+		START, CONTENT, FINISH, TIMEOUT_ERROR, RESUME
 	}
 	protected Long fingerbookId;
 	protected Fingerprints fingerPrints;
