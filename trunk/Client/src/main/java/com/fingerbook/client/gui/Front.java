@@ -357,7 +357,7 @@ public class Front extends JFrame {
 			/* Initially disabled */
 			tTicket.setEnabled(false);
 			/* Ticket can't be entered manually */
-			tTicket.setEditable(false);
+			tTicket.setEditable(true);
 		}
 		return tTicket;
 	}
@@ -559,15 +559,18 @@ public class Front extends JFrame {
 
 	private void proceed(boolean auto) {
 		setAuthMetod();
-		
-		com.fingerbook.client.HttpClientExt applicationContext = Client.applicationContext.getBean(com.fingerbook.client.HttpClientExt.class);
-		applicationContext.setCredentials("scott", "wombat");
-
+		setCredentials();
+	
 		try {
 			pBar = new ProgressBar(auto);
 		} catch (Exception ex) {
 			logger.error("An unexpected error happened: " + ex.getMessage()); //$NON-NLS-1$
 		}
+	}
+
+	private void setCredentials() {
+		com.fingerbook.client.HttpClientExt applicationContext = Client.applicationContext.getBean(com.fingerbook.client.HttpClientExt.class);
+		applicationContext.setCredentials(configuration.get("user"), configuration.get("pass"));		
 	}
 
 	private void addSysTrayIcon() {
