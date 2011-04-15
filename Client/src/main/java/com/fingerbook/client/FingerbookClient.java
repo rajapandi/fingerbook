@@ -15,6 +15,7 @@ import com.fingerbook.models.UserInfo;
 public class FingerbookClient {
 	@Autowired
 	protected RestTemplate restTemplate;
+	private UserInfo ui; 
 	private String baseUrl;
 	private String ticket;
 	private String user;
@@ -49,10 +50,6 @@ public class FingerbookClient {
 	}
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
-		UserInfo ui = new UserInfo();
-		ui.setUser(user);
-		ui.setTicket(ticket);
-		fb.setState(STATE.CONTENT);
 		fb.setUserInfo(ui);
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
 	}
@@ -62,7 +59,7 @@ public class FingerbookClient {
 		user = new String(Front.getConfiguration().get("user"));
 		
 		Fingerbook fb = new Fingerbook();
-		UserInfo ui = new UserInfo();
+		ui = new UserInfo();
 		ui.setUser(user);
 		ui.setTicket(this.ticket);
 		fb.setState(STATE.START);
