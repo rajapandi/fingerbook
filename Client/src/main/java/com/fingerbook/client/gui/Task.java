@@ -46,7 +46,7 @@ public class Task extends SwingWorker<Void, Void> {
 					Client.front, Messages
 					.getString("Front.21") + " " + resp.getDesc()); //$NON-NLS-1$
 		}
-		else if (resp != null
+		else if (resp != null && Front.getConfiguration().get("cLogin").equals(false)
 				&& !Client.getScanner().getTicket().equals(Front.getConfiguration().get("ticket"))) {
 			new Ticket(Client.getScanner().getTicket());
 			//logger.error("Erroneous server implementation: Tickets should be sent at the beginning of the transaction\n");
