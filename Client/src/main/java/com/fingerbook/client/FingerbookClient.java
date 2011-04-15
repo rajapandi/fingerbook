@@ -67,13 +67,10 @@ public class FingerbookClient {
 		ui.setTicket(this.ticket);
 		fb.setState(STATE.START);
 		fb.setUserInfo(ui);
-		
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
-		
 	}
 	
 	private String getAuthM() {
-		System.out.println(Front.getConfiguration().get("authM"));
 		if (Front.getConfiguration().get("authM").equals("auth"))
 			return "authenticated";
 		if (Front.getConfiguration().get("authM").equals("semi"))
