@@ -90,10 +90,10 @@ public class FingerbooksController {
     	STATE state = fingerbook.getState();
     	logger.info(authenticationMethod + ": Received fingerbook xml with state: " + state);
     	
-    	//Response ans;
-    	//if((ans = isValidRequest(fingerbook, authenticationMethod, state)) != null) {
-			//return ans;
-    	//}
+    	Response ans;
+    	if((ans = isValidRequest(fingerbook, authenticationMethod, state)) != null) {
+			return ans;
+    	}
 		
     	// If resuming
     	if(state == Fingerbook.STATE.RESUME) {
@@ -224,7 +224,7 @@ public class FingerbooksController {
 		}
 		
 		// If an anonymous authentication is used, no ticket should be received
-		if(authenticationMethod.equals(this.anonymous)) {
+		/*if(authenticationMethod.equals(this.anonymous)) {
 			
 			// If an anonymous authentication is used, no ticket should be received
 			if(fingerbook.getUserInfo().getTicket() != null) {
@@ -237,9 +237,10 @@ public class FingerbooksController {
 				String msg = "Operation cancelled: Anonymous authentication is used, but a user name was received";
 				logger.info(authenticationMethod + ": Returning error Response object: " + msg);
 				return new Response(new Integer(9), msg);
-			}
 			
-		} else if(authenticationMethod.equals(this.semiAuthenticated)) {
+			
+		} else */
+		if(authenticationMethod.equals(this.semiAuthenticated)) {
 			// If a semi-authentication is used, a ticket is expected
 			if(fingerbook.getUserInfo().getTicket() == null) {
 				String msg = "Operation cancelled: Semi-authentication is used, but no ticket was received";
