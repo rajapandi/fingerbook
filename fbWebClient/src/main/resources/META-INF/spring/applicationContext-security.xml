@@ -25,6 +25,10 @@
     </http>
 
 	<!-- Configure Authentication mechanism -->
+	<beans:bean name="userAuthenticationProvider"
+		class="com.fingerbook.security.UserAuthenticationProvider">
+	</beans:bean>
+	
     <authentication-manager alias="authenticationManager">
     	<!-- SHA-256 values can be produced using 'echo -n your_desired_password | sha256sum' (using normal *nix environments) 
     	<authentication-provider>
