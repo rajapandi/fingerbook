@@ -29,5 +29,9 @@
     <definition extends="public" name="fileHashExists">
         <put-attribute name="body" value="/WEB-INF/views/fileHashExists.jspx"/>
     </definition>
+    
+    <definition extends="public" name="authenticate">
+        <put-attribute name="body" value="/WEB-INF/views/authenticate.jspx"/>
+    </definition>
        
 </tiles-definitions>
