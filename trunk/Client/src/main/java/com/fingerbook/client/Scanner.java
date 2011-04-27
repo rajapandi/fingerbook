@@ -18,12 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fingerbook.client.gui.Front;
 import com.fingerbook.client.gui.Messages;
 import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.Response;
 import com.fingerbook.models.Fingerbook.STATE;
+import com.fingerbook.models.Response;
 
 public class Scanner {
 	private @Autowired FingerbookClient fiClient;
