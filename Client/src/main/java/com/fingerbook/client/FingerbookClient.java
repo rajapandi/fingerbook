@@ -55,6 +55,18 @@ public class FingerbookClient {
 	}
 
 	public Response startHashTransaction(String ticket) {
+		Fingerbook fb = setFB(STATE.START);
+
+		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
+	}
+	
+	public Response resumeHashTransaction(String ticket) {
+		Fingerbook fb = setFB(STATE.RESUME);
+		
+		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
+	}
+	
+	private Fingerbook setFB(STATE start) {
 		this.ticket = new String(ticket);
 		user = new String(Front.getConfiguration().get("user"));
 		
@@ -64,7 +76,7 @@ public class FingerbookClient {
 		ui.setTicket(this.ticket);
 		fb.setState(STATE.START);
 		fb.setUserInfo(ui);
-		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
+		return fb;
 	}
 	
 	private String getAuthM() {

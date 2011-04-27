@@ -18,9 +18,9 @@ import com.fingerbook.client.marshalling.ConfigurationData;
 public class ResumePMan {
 	/* Configuration Items */
 	private static final String SCANDIR  = "scanDir";		//$NON-NLS-1$
-	private static final String CLOGIN  = "cLogin";		//$NON-NLS-1$
-	private static final String USER  = "user";		//$NON-NLS-1$
-	private static final String PASS  = "pass";		//$NON-NLS-1$
+	private static final String CLOGIN  = "cLogin";			//$NON-NLS-1$
+	private static final String USER  = "user";				//$NON-NLS-1$
+	private static final String PASS  = "pass";				//$NON-NLS-1$
 	private static final String CTICKET  = "cTicket";		//$NON-NLS-1$
 	private static final String TICKET  = "ticket";			//$NON-NLS-1$
 	private static final String RECURSIVE  = "recursive";	//$NON-NLS-1$
@@ -65,7 +65,7 @@ public class ResumePMan {
 				scan.useDelimiter("\n");
 			} catch (FileNotFoundException e) { continue; }
 			if (scan.hasNext()) {
-				/* Read last path scaned */
+				/* Read last path scanned */
 				l = new File(scan.next());
 				if(l.exists())
 					return l;
