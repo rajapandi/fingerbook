@@ -59,6 +59,7 @@ public class Scanner {
 		Integer connectionTimeout = 600;
 		Boolean error = false; 
 		Boolean timeout = false;
+		Response resp;
 
 		try {
 			actual = new String(configuration.get("scanDir"));
@@ -70,7 +71,11 @@ public class Scanner {
 		Fingerbook fb;
 		String transactionId = null;
 
-		Response resp = fiClient.startHashTransaction(ticket);
+		if(resume)
+			resp = fiClient.resumeHashTransaction(ticket);
+		else {
+			resp = fiClient.startHashTransaction(ticket);
+		}
 		if (resp == null) {
 			logger.error("Error: null response");
 			return null;
