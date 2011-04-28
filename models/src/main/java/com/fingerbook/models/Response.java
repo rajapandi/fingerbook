@@ -70,8 +70,4 @@ public class Response {
 		return transactionId;
 	}
 
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
-	
 }
