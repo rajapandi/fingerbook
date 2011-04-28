@@ -30,6 +30,10 @@ public class ConfigurationData {
 	@Element
 	private String recursive;
 	
+	/* Transaction ID */
+	@Element
+	private String transID;
+	
 	public ConfigurationData() {
 		/* Set default values */
 		auth = "false";
@@ -39,6 +43,7 @@ public class ConfigurationData {
 		ticket = "";
 		paths = new ArrayList<String>();
 		recursive = "false";
+		transID = "";
 	}
 	
 	/* Getters and Setters */
@@ -83,5 +88,11 @@ public class ConfigurationData {
 	}
 	public List<String> getPaths() {
 		return paths;
+	}
+	public void setTransId(String id) {
+		transID = id;
 	}	
+	public String getTransId() {
+		return transID;
+	}
 }

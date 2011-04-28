@@ -93,7 +93,7 @@ public class Scanner {
 		
 		// Get transactionId
 		if (resp.getTransactionId() != null) {
-			transactionId = resp.getTransactionId();
+			configuration.put("transactionId", resp.getTransactionId());
 		} else {
 			logger.error("Error: null transaction ID");
 			return resp;

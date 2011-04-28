@@ -75,6 +75,8 @@ public class FingerbookClient {
 		ui.setTicket(this.ticket);
 		fb.setState(state);
 		fb.setUserInfo(ui);
+		if (state.equals(STATE.RESUME))
+			fb.setTransactionId(Front.getConfiguration().get("transactionId"));
 		return fb;
 	}
 	
