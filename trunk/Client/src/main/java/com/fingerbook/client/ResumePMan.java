@@ -24,7 +24,7 @@ public class ResumePMan {
 	private static final String CTICKET  = "cTicket";		//$NON-NLS-1$
 	private static final String TICKET  = "ticket";			//$NON-NLS-1$
 	private static final String RECURSIVE  = "recursive";	//$NON-NLS-1$
-	private static final String TRANSID = "transactionId";
+	private static final String TRANSID = "transactionId";	//$NON-NLS-1$
 	
 	/* Recovery files */
 	private static File fileA = null;
