@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fingerbook.models.Auth;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerbook.STATE;
 import com.fingerbook.models.Response;
@@ -26,9 +27,9 @@ public class FingerbooksController {
 
     protected final Log logger = LogFactory.getLog(getClass());
     
-    private final String anonymous = "Anonymous";
-    private final String semiAuthenticated = "Semi-Authenticated";
-    private final String authenticated = "Authenticated";
+    private static final String anonymous = "Anonymous";
+    private static final String semiAuthenticated = "Semi-Authenticated";
+    private static final String authenticated = "Authenticated";
     
     // DI
     private FingerbookServices fingerbookService;
@@ -55,19 +56,19 @@ public class FingerbooksController {
     @RequestMapping(value="/anonymous/put", method=RequestMethod.POST)
     @ResponseBody
     public Response anonymousPUT(@RequestBody Fingerbook fingerbook) {    
-    	return genericPUT(fingerbook, this.anonymous);
+    	return genericPUT(fingerbook, anonymous);
     }
     
     @RequestMapping(value="/semiauthenticated/put", method=RequestMethod.POST)
     @ResponseBody
     public Response semiauthenticatedPUT(@RequestBody Fingerbook fingerbook) {    
-    	return genericPUT(fingerbook, this.semiAuthenticated);
+    	return genericPUT(fingerbook, semiAuthenticated);
     }
     
     @RequestMapping(value="/authenticated/put", method=RequestMethod.POST)
     @ResponseBody
     public Response authenticatedPUT(@RequestBody Fingerbook fingerbook) {    
-    	return genericPUT(fingerbook, this.authenticated);
+    	return genericPUT(fingerbook, authenticated);
     }
     
     /**
@@ -121,15 +122,36 @@ public class FingerbooksController {
 		logger.info(authenticationMethod + ": Resuming fingerbook with Transaction ID: " + fingerbook.getTransactionId());
 		
 		// TODO: Call function that receives transaction id + fingerbook and returnes fbId
+		
+		Response response = null;
+		boolean isValid = false;
+//		long fbId = -1;
+//		String ticket = null;
+		
+		if(fingerbook != null) {
+//			fbId = PersistentFingerbook.getFingerbookIdByTransactionId(fingerbook.getTransactionId());
+			
+			isValid = PersistentFingerbook.validateResume(fingerbook, authMethodIdByName(authenticationMethod));
+			
+			if(isValid) {
+				response = new Response(null, "Transaction succesfully started", fingerbook.getFingerbookId());
+				response.setTransactionId(fingerbook.getTransactionId());
+				response.setTicket(fingerbook.getUserInfo().getTicket());
+			}
+		}
+		
 		// TODO: Implement. Should send a response with a fbId, transactionId and ticket
-		return null;
+		return response;
 	}
 
 	private Response startTransaction(Fingerbook fingerbook, PersistentFingerbook pf, String authenticationMethod) {
     	logger.info(authenticationMethod + ": Starting new transaction");
     	
+    	int authMethod = authMethodIdByName(authenticationMethod);
+    	
+    	
     	// Save to HBASE. Get id to continue with transaction
-		Long fbId = pf.saveMe();   	
+		Long fbId = pf.saveMe(authMethod);   	
 		// Get Transaction ID
 		String transactionId = pf.createTransactionId(fbId);
 		
@@ -138,7 +160,7 @@ public class FingerbooksController {
 			
 			String ticket;
 			// If using semi-authenticated, provided ticket must be used
-			if(authenticationMethod.equals(this.semiAuthenticated)) {
+			if(authenticationMethod.equals(semiAuthenticated)) {
 				ticket = fingerbook.getUserInfo().getTicket();
 				logger.info("Using ticket: " + ticket + " from semi authenticated user");
 			} else {
@@ -167,6 +189,7 @@ public class FingerbooksController {
 	    	fingerbook.setFingerbookId(fbId);
 	    	String msg = "Fingerbook succesfully added to fingerbook id: " +  fingerbook.getFingerbookId();
 	    	Response response = new Response(null, msg);
+	    	response.setTransactionId(fingerbook.getTransactionId());
 	    	logger.info(authenticationMethod + ": Returning response object: " + msg);
 			return response;
      	} else {
@@ -186,6 +209,7 @@ public class FingerbooksController {
 	    	fingerbook.setFingerbookId(fbId);
 	    	String msg = "Transaction succefully finished with fingerbook id: " +  fingerbook.getFingerbookId();
 	    	Response response = new Response(null, msg);
+	    	response.setTransactionId(fingerbook.getTransactionId());
 	    	logger.info(authenticationMethod + ": Returning response object: " + msg);
 			return response;
      	} else {
@@ -240,7 +264,7 @@ public class FingerbooksController {
 			
 			
 		} else */
-		if(authenticationMethod.equals(this.semiAuthenticated)) {
+		if(authenticationMethod.equals(semiAuthenticated)) {
 			// If a semi-authentication is used, a ticket is expected
 			if(fingerbook.getUserInfo().getTicket() == null) {
 				String msg = "Operation cancelled: Semi-authentication is used, but no ticket was received";
@@ -248,7 +272,7 @@ public class FingerbooksController {
 				return new Response(new Integer(10), msg);
 			} 
 			
-		} else if(authenticationMethod.equals(this.authenticated)) {
+		} else if(authenticationMethod.equals(authenticated)) {
 			// If authenticated is used, a username is expected
 			if(fingerbook.getUserInfo().getUser() == null) {
 				String msg = "Operation cancelled: Authentication is used, but no user name was received";
@@ -277,6 +301,23 @@ public class FingerbooksController {
 
         return new ModelAndView("setFingerprint.jsp");
     }*/
+	
+	public static int authMethodIdByName(String authenticationMethod) {
+		
+		int authId = 0;
+		
+		if(authenticationMethod.equals(authenticated)) {
+			authId = Auth.AUTH_AUTHENTICATED;
+    	}
+    	else if(authenticationMethod.equals(semiAuthenticated)) {
+    		authId = Auth.AUTH_SEMI_AUTHENTICATED;
+    	}
+    	else {
+    		authId = Auth.AUTH_ANONYMOUS;
+    	}
+		
+		return authId;
+	}
     
     
 }

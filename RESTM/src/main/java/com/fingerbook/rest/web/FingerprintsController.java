@@ -52,7 +52,7 @@ public class FingerprintsController {
     	
     	// TODO add to persistence
     	PersistentFingerbook pf = new PersistentFingerbook(fingerbook);    	
-    	fingerbook.setFingerbookId(pf.saveMe());
+//    	fingerbook.setFingerbookId(pf.saveMe());
     	
     	//TODO send response
     	Response response = new Response(null, "Fingerprints succesfully added to Fingerbook with ID: " 
