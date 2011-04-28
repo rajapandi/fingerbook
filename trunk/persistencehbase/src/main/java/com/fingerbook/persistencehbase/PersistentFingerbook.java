@@ -14,6 +14,7 @@ import java.util.Vector;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.util.Bytes;
 
+import com.fingerbook.models.Auth;
 import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
@@ -51,8 +52,11 @@ public class PersistentFingerbook extends Fingerbook{
 	/* RowId = TransactionId */
 	public static String TMP_TABLE_NAME = "ttmp";
 	public static String TTMP_STATE_FAMILY = "state";
-	public static String COLUMN_LAST_ACTION = "last_action";
-	public static String COLUMN_GROUP_ID = "group_id";
+	public static String TTMP_INFO_FAMILY = "info";
+	public static String TTMP_COLUMN_LAST_ACTION = "last_action";
+	public static String TTMP_COLUMN_GROUP_ID = "group_id";
+	public static String TTMP_COLUMN_USER = "user";
+	public static String TTMP_COLUMN_TICKET = "ticket";
 	
 	public static String GENERAL_TABLE_NAME = "tgeneral";
 	public static String TGENERAL_INFO_FAMILY = "general";
@@ -137,18 +141,19 @@ public class PersistentFingerbook extends Fingerbook{
 		}
 	}
 	
-	public long saveMe() {
+	public long saveMe(int authMethod) {
 		
 		try {
 //			this.groupTable = new TransHTable(GROUP_TABLE_NAME);
 //			this.fingerTable = new TransHTable(FINGER_TABLE_NAME);
-			this.fingerbookId = insertGroupInfo(this);
+			this.fingerbookId = insertGroupInfo(this, authMethod);
 		
 			if(this.fingerbookId < 0) {
 				return -1;
 			}
-			updateTmpState(this.fingerbookId);
-//			this.groupRowLock = groupTable.lockRow(groupIdB);
+			
+//			updateTmpState(this.fingerbookId);
+			createTmpState(this, authMethod);
 			
 			if(this.fingerPrints != null) {
 				saveFingerprints(this);
@@ -1004,6 +1009,7 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 		/* TTMP table */
 		families = new Vector<String>();
 		families.add(TTMP_STATE_FAMILY);
+		families.add(TTMP_INFO_FAMILY);
 		HbaseManager.createTable(TMP_TABLE_NAME, families);
 		
 		/* TGENERAL table */
@@ -1022,7 +1028,7 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 		HbaseManager.createTable(USER_TABLE_NAME, families);
 	}
 	
-	private static synchronized long insertGroupInfo(Fingerbook fingerbook) {
+	private static synchronized long insertGroupInfo(Fingerbook fingerbook, int authMethod) {
 		
 		try {
 			long auxFingerbookId = getNextGroupId();
@@ -1039,16 +1045,27 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 			/* Insert stamp in group table */
 			HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_STAMP), stampB);
 			if(userInfo != null) {
-				//TODO:DEBUG: descomentar cuando se pueda diferenciar autenticado de no-autenticado
-//				user = userInfo.getUser();
-				System.out.println("\n\n\nUSER: " + userInfo.getUser());
-				ticket = userInfo.getTicket();
-			}
-			if(user != null && !user.isEmpty()) {
-				userB = Bytes.toBytes(userInfo.getUser());
-				HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_USER), userB);
+				
+				if(authMethod == Auth.AUTH_AUTHENTICATED) {
+					user = userInfo.getUser();
+					System.out.println("\n\n\nUSER: " + userInfo.getUser());
+					
+					if(user != null && !user.isEmpty()) {
+						userB = Bytes.toBytes(userInfo.getUser());
+						HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_USER), userB);
+					}
+				}
+				else if(authMethod == Auth.AUTH_SEMI_AUTHENTICATED) {
+					ticket = userInfo.getTicket();
+				}
+				
 			}
 			else {
+				userInfo = new UserInfo();
+				fingerbook.setUserInfo(userInfo);
+			}
+			
+			if(authMethod != Auth.AUTH_AUTHENTICATED) {
 				boolean isValidTicket = isValidTicket(ticket);
 				if(!isValidTicket) {
 					ticket = createTicket(auxFingerbookId);
@@ -1056,6 +1073,7 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 				HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_INFO_FAMILY, Bytes.toBytes(COLUMN_TICKET), Bytes.toBytes(ticket));
 				userInfo.setTicket(ticket);
 			}
+			
 			
 			return auxFingerbookId;
 		} catch (IOException e) {
@@ -1264,11 +1282,35 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 		
 		byte[] auxTransIdB = Bytes.toBytes(auxTransId);
 		
-		/* Agregar TransactionID para cuando se quiere resumir obtener el FBID */
+		/* Insert stamp in tmp table */
+		HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_STATE_FAMILY, Bytes.toBytes(TTMP_COLUMN_LAST_ACTION), nowStampB);
+//		HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_INFO_FAMILY, Bytes.toBytes(TTMP_COLUMN_GROUP_ID), groupIdB);
+	}
+	
+	private static void createTmpState(Fingerbook fingerbook, int authMethod) throws IOException {
+		
+		long fingerbookId = fingerbook.getFingerbookId();
+		String auxTransId = createTransactionId(fingerbookId);
+		
+		long nowStamp = System.currentTimeMillis();
+		byte[] groupIdB = Bytes.toBytes(fingerbookId);
+		byte[] nowStampB = Bytes.toBytes(nowStamp);
+		
+		byte[] auxTransIdB = Bytes.toBytes(auxTransId);
 		
 		/* Insert stamp in tmp table */
-		HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_STATE_FAMILY, Bytes.toBytes(COLUMN_LAST_ACTION), nowStampB);
-		HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_STATE_FAMILY, Bytes.toBytes(COLUMN_GROUP_ID), groupIdB);
+		HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_STATE_FAMILY, Bytes.toBytes(TTMP_COLUMN_LAST_ACTION), nowStampB);
+		HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_INFO_FAMILY, Bytes.toBytes(TTMP_COLUMN_GROUP_ID), groupIdB);
+		
+		if(authMethod == Auth.AUTH_AUTHENTICATED) {
+			
+			byte[] userB = Bytes.toBytes(fingerbook.getUserInfo().getUser());
+			HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_INFO_FAMILY, Bytes.toBytes(TTMP_COLUMN_USER), userB);
+		}
+		else {
+			byte[] ticketB = Bytes.toBytes(fingerbook.getUserInfo().getTicket());
+			HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_INFO_FAMILY, Bytes.toBytes(TTMP_COLUMN_TICKET), ticketB);
+		}
 	}
 	
 	public static Vector<Long> getExpiredFingerbooksIds(long timeout) throws IOException {
@@ -1281,7 +1323,8 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 //		Vector<byte[]> rows = HbaseManager.filterRows(TMP_TABLE_NAME, Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(COLUMN_LAST_ACTION), expStampB, CompareOp.LESS);
 //		SingleColumnValueFilter filter = new SingleColumnValueFilter(Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(COLUMN_LAST_ACTION), CompareOp.LESS, expStampB);
 		
-		Vector<byte[]> rows = HbaseManager.getColumnValuesFromFilteredRows(TMP_TABLE_NAME, Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(COLUMN_LAST_ACTION), expStampB, CompareOp.LESS, Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(COLUMN_GROUP_ID));
+//		Vector<byte[]> rows = HbaseManager.getColumnValuesFromFilteredRows(TMP_TABLE_NAME, Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(TTMP_COLUMN_LAST_ACTION), expStampB, CompareOp.LESS, Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(TTMP_COLUMN_GROUP_ID));
+		Vector<byte[]> rows = HbaseManager.getColumnValuesFromFilteredRows(TMP_TABLE_NAME, Bytes.toBytes(TTMP_STATE_FAMILY), Bytes.toBytes(TTMP_COLUMN_LAST_ACTION), expStampB, CompareOp.LESS, Bytes.toBytes(TTMP_INFO_FAMILY), Bytes.toBytes(TTMP_COLUMN_GROUP_ID));
 		
 		for(byte[] row: rows) {
 			ids.add(Bytes.toLong(row));
@@ -1320,6 +1363,88 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 		}
 		
 		return 0;
+	}
+	
+	public static boolean validateResume(Fingerbook fingerbook, int authMethod) {
+		
+		boolean ret = true;
+		NavigableMap<byte[],NavigableMap<byte[],byte[]>> tmpData = null;
+		
+		NavigableMap<byte[],byte[]> familyMapState = null;
+		NavigableMap<byte[],byte[]> familyMapInfo = null;
+		
+		String transactionId = null;
+		String ticket = null;
+		String user = null;
+		long fingerbookId = -1;
+		
+		if(fingerbook != null && fingerbook.getTransactionId() != null) {
+			transactionId = fingerbook.getTransactionId();
+			
+			tmpData = getTmpDataByTransactionId(transactionId);
+			
+			if(tmpData != null) {
+				familyMapInfo = tmpData.get(Bytes.toBytes(TTMP_INFO_FAMILY));
+				
+				if(familyMapInfo != null) {
+					byte[] groupIdB = familyMapInfo.get(Bytes.toBytes(TTMP_COLUMN_GROUP_ID));
+					byte[] ticketB = familyMapInfo.get(Bytes.toBytes(TTMP_COLUMN_TICKET));
+					byte[] userB = familyMapInfo.get(Bytes.toBytes(TTMP_COLUMN_USER));
+					
+					if(groupIdB != null && groupIdB.length > 0) {
+						fingerbookId = Bytes.toLong(groupIdB);
+					}
+					if(ticketB != null && ticketB.length > 0) {
+						ticket = Bytes.toString(ticketB);
+					}
+					if(userB != null && userB.length > 0) {
+						user = Bytes.toString(userB);
+					}
+				}
+			}
+			
+			if(fingerbookId < 0) {
+				/* Invalid or expired Transaction id */
+				ret = false;
+			}
+			else {
+				if(authMethod == Auth.AUTH_AUTHENTICATED) {
+					/* Autenticated: validate user */
+					if(user == null || fingerbook.getUserInfo() == null || !user.equals(fingerbook.getUserInfo().getUser())) {
+						ret = false;
+					}
+				}
+				else if(authMethod == Auth.AUTH_SEMI_AUTHENTICATED) {
+					/* Semi-Autenticated: validate ticket */
+					if(ticket == null || fingerbook.getUserInfo() == null || !ticket.equals(fingerbook.getUserInfo().getTicket())) {
+						ret = false;
+					}
+				}
+				else {
+					/* Anonymous: Stored ticket should match a new ticket created using fingerbookId */
+					if(ticket == null || !ticket.equals(createTicket(fingerbookId))) {
+						ret = false;
+					}
+					else {
+						UserInfo userInfo = fingerbook.getUserInfo();
+						if(userInfo == null) {
+							userInfo = new UserInfo();
+						}
+						userInfo.setTicket(ticket);
+						fingerbook.setUserInfo(userInfo);
+					}
+				}
+			}
+		}
+		else {
+			ret = false;
+		}
+		
+		if(ret == true) {
+			fingerbook.setFingerbookId(fingerbookId);
+		}
+		
+		return ret;
 	}
 	
 	private static boolean fingerprintsSaveAllowed(Fingerbook fingerbook) throws IOException {
@@ -1389,7 +1514,8 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 		long fingerbookId = -1;
 		
 		try {
-			byte[] groupIdB = HbaseManager.getValue(TMP_TABLE_NAME, Bytes.toBytes(transactionId), TTMP_STATE_FAMILY, Bytes.toBytes(COLUMN_GROUP_ID));
+//			byte[] groupIdB = HbaseManager.getValue(TMP_TABLE_NAME, Bytes.toBytes(transactionId), TTMP_STATE_FAMILY, Bytes.toBytes(TTMP_COLUMN_GROUP_ID));
+			byte[] groupIdB = HbaseManager.getValue(TMP_TABLE_NAME, Bytes.toBytes(transactionId), TTMP_INFO_FAMILY, Bytes.toBytes(TTMP_COLUMN_GROUP_ID));
 			if(groupIdB != null) {
 				fingerbookId = Bytes.toLong(groupIdB);
 			}
@@ -1399,6 +1525,22 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 		}
 		
 		return fingerbookId;
+	}
+	
+	public static NavigableMap<byte[],NavigableMap<byte[],byte[]>> getTmpDataByTransactionId(String transactionId) {
+		
+		NavigableMap<byte[],NavigableMap<byte[],byte[]>> tmpData = null;
+		
+		try {
+			
+			tmpData = HbaseManager.getFullRowMap(TMP_TABLE_NAME, Bytes.toBytes(transactionId));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return tmpData;
 	}
 	
 	private static boolean isValidTicket(String ticket) throws IOException {

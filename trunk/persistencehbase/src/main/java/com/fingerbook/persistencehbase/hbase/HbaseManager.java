@@ -223,6 +223,37 @@ public class HbaseManager {
 		return value;
 	}
 	
+	public static NavigableMap<byte[],NavigableMap<byte[],byte[]>> getFullRowMap(String tableName, byte[] rowId) throws IOException {
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+		// Now, to retrieve the data we just wrote. The values that come back are
+	    // Result instances. Generally, a Result is an object that will package up
+	    // the hbase return into the form you find most palatable.
+	    Get g = new Get(rowId);
+	    Result r = table.get(g);
+	    
+//	    NavigableMap<byte[],byte[]> ret = r.getFamilyMap(Bytes.toBytes(columnFamily));
+	    NavigableMap<byte[],NavigableMap<byte[],byte[]>> ret = r.getNoVersionMap();
+	    
+		
+		return ret;
+	}
+	
 	public static NavigableMap<byte[],byte[]> getMembersMap(String tableName, byte[] rowId, String columnFamily) throws IOException {
 		
 		// You need a configuration object to tell the client where to connect.
