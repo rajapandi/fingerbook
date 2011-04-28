@@ -24,6 +24,7 @@ public class ResumePMan {
 	private static final String CTICKET  = "cTicket";		//$NON-NLS-1$
 	private static final String TICKET  = "ticket";			//$NON-NLS-1$
 	private static final String RECURSIVE  = "recursive";	//$NON-NLS-1$
+	private static final String TRANSID = "transactionId";
 	
 	/* Recovery files */
 	private static File fileA = null;
@@ -167,7 +168,8 @@ public class ResumePMan {
 			configuration.put(RECURSIVE, config.getRecursive());
 			configuration.put(CTICKET, config.getSemiAuth());
 			configuration.put(TICKET, config.getTicket());
-			configuration.put(SCANDIR, paths.toString());			
+			configuration.put(SCANDIR, paths.toString());	
+			configuration.put(TRANSID, config.getTransId());	
 		} catch (Exception e) {
 			/* If error ocurrs, use default params */
 			configuration.put(CLOGIN, "false");
@@ -177,6 +179,7 @@ public class ResumePMan {
 			configuration.put(RECURSIVE, "false");
 			configuration.put(CTICKET, "false");
 			configuration.put(TICKET, "");
+			configuration.put(TRANSID, "");
 		}
 		return configuration;
 	}
@@ -201,6 +204,7 @@ public class ResumePMan {
 		config.setTicket(configuration.get(TICKET));
 		config.setRecursive(configuration.get(RECURSIVE));
 		config.setPaths(paths);
+		config.setTransId(configuration.get(TRANSID));
 
 		try {
 			/* write xml persistent configuration file */
