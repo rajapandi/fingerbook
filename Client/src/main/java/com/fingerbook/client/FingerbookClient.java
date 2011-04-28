@@ -46,7 +46,7 @@ public class FingerbookClient {
 	@SuppressWarnings( "unchecked" )
 	public List<Fingerbook> getGroups(String hash)
 	{
-		return restTemplate.getForObject( baseUrl + "fingerbooks/" + getAuthM() + "/" + hash, List.class );
+		return restTemplate.getForObject( baseUrl + "fingerbooks/" + "/" + hash, List.class );
 	}
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
@@ -55,18 +55,17 @@ public class FingerbookClient {
 	}
 
 	public Response startHashTransaction(String ticket) {
-		Fingerbook fb = setFB(STATE.START);
-
+		Fingerbook fb = setFB(ticket, STATE.START);
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
 	}
 	
 	public Response resumeHashTransaction(String ticket) {
-		Fingerbook fb = setFB(STATE.RESUME);
+		Fingerbook fb = setFB(ticket, STATE.RESUME);
 		
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
 	}
 	
-	private Fingerbook setFB(STATE start) {
+	private Fingerbook setFB(String ticket, STATE state) {
 		this.ticket = new String(ticket);
 		user = new String(Front.getConfiguration().get("user"));
 		
@@ -74,7 +73,7 @@ public class FingerbookClient {
 		ui = new UserInfo();
 		ui.setUser(user);
 		ui.setTicket(this.ticket);
-		fb.setState(STATE.START);
+		fb.setState(state);
 		fb.setUserInfo(ui);
 		return fb;
 	}
