@@ -70,11 +70,11 @@ public class Scanner {
 		Fingerbook fb;
 		String transactionId = null;
 
-		if(resume)
-			resp = fiClient.resumeHashTransaction(ticket);
-		else {
+		//if(resume)
+		//	resp = fiClient.resumeHashTransaction(ticket);
+		//else {
 			resp = fiClient.startHashTransaction(ticket);
-		}
+		//}
 		if (resp == null) {
 			logger.error("Error: null response");
 			return null;
@@ -93,7 +93,8 @@ public class Scanner {
 		
 		// Get transactionId
 		if (resp.getTransactionId() != null) {
-			configuration.put("transactionId", resp.getTransactionId());
+			transactionId = resp.getTransactionId();
+			configuration.put("transactionId", transactionId);
 		} else {
 			logger.error("Error: null transaction ID");
 			return resp;
