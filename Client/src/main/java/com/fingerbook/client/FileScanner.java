@@ -239,6 +239,8 @@ public class FileScanner implements Runnable {
 								throw new ResponseException(Messages.getString("ResponseException.1"), null);
 							}
 							if(resp != null && resp.getErrorCode() != null) {
+								System.out.println("hola");
+								System.out.println(resp.getErrorCode());
 								throw new ResponseException(Messages.getString("ResponseException.1"), resp);
 							}
 							count = 0;
