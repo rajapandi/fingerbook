@@ -169,7 +169,8 @@ public class ResumePMan {
 			configuration.put(CTICKET, config.getSemiAuth());
 			configuration.put(TICKET, config.getTicket());
 			configuration.put(SCANDIR, paths.toString());	
-			configuration.put(TRANSID, config.getTransId());	
+			configuration.put(TRANSID, config.getTransId());
+			
 		} catch (Exception e) {
 			/* If error ocurrs, use default params */
 			configuration.put(CLOGIN, "false");

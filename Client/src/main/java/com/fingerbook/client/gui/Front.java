@@ -237,14 +237,10 @@ public class Front extends JFrame {
 			cLogin.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (cLogin.isSelected()) {
-						tUser.setEnabled(true);
-						tPass.setEnabled(true);
-						cTicket.setSelected(false);
-						tTicket.setEnabled(false);
-					} else {
-						tUser.setEnabled(false);
-						tPass.setEnabled(false);
-					}
+						enableLogin();
+						disableTicket();
+					} else
+						disableLogin();
 				}
 			});
 		}
@@ -318,14 +314,10 @@ public class Front extends JFrame {
 			cTicket.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (cTicket.isSelected()) {
-						tTicket.setEnabled(true);
-						bTicket.setEnabled(true);
-						cLogin.setSelected(false);
-						tUser.setEnabled(false);
-						tPass.setEnabled(false);
+						disableLogin();
+						enableTicket();
 					} else {
-						tTicket.setEnabled(false);
-						bTicket.setEnabled(false);
+						disableTicket();
 					}
 				}
 			});
@@ -494,6 +486,29 @@ public class Front extends JFrame {
 		}
 		return bIni;
 	}
+	
+	/* Enablers & Disablers */
+	private void enableLogin() {
+		tUser.setEnabled(true);
+		tPass.setEnabled(true);
+	}
+	
+	private void disableLogin() {
+		cLogin.setSelected(false);
+		tUser.setEnabled(false);
+		tPass.setEnabled(false);					
+	}
+	
+	private void enableTicket() {
+		tTicket.setEnabled(true);
+		bTicket.setEnabled(true);		
+	}
+
+	private void disableTicket() {
+		cTicket.setSelected(false);
+		tTicket.setEnabled(false);
+		bTicket.setEnabled(false);					
+	}
 
 	protected void setAuthMetod() {
 		/* Different ways of identification: Anonymous, Semi-authenticated, Authenticated */
@@ -552,8 +567,6 @@ public class Front extends JFrame {
 		else
 			configuration.put("recursive", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		/* Make configuration persistent */
-		Client.fMan.saveActualParams(configuration);
 		return true;
 	}
 

@@ -24,15 +24,17 @@ public class ConfigurationData {
 	@Element (required=false)
 	private String ticket;
 	
+	/* Transaction ID */
+	@Element
+	private String transID;
+	
 	/* Paths Info */
 	@ElementList (required=false, entry="path")
 	private List<String> paths;
 	@Element
 	private String recursive;
 	
-	/* Transaction ID */
-	@Element
-	private String transID;
+
 	
 	public ConfigurationData() {
 		/* Set default values */
