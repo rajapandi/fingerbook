@@ -37,7 +37,7 @@ public class FileScanner implements Runnable {
 	private Integer consumerAmount;
 	private Integer timeout;
 	private Logger logger; 
-	private final int FILE_INFO_AMOUNT = 50;
+	private final int FILE_INFO_AMOUNT = 3;
 	private boolean resume = false;
 	private String transactionId;
 	
@@ -85,7 +85,6 @@ public class FileScanner implements Runnable {
 		synchronized (this) {
 			this.scanHasEnded = true;			
 		}
-		Client.fMan.clean();
 		
 		try {
 	        consumers.get(timeout, TimeUnit.SECONDS);
@@ -180,11 +179,7 @@ public class FileScanner implements Runnable {
 				queue.put(new FileInfo(f.getAbsolutePath(), f.getName(), fhc.getFileHash(f), f.length()));
 			}
 			else if (f.isDirectory() && (recursive.equals("true") || first)) {
-				try {
-					Client.fMan.save(f.getAbsolutePath());
-				} catch(Exception e) {}
-				
-				System.out.println(f.getAbsolutePath());
+				logger.debug(f.getAbsolutePath());
 
 				if (search)
 					doAddFiles(Arrays.asList(f.listFiles()), resume, false);
@@ -235,14 +230,21 @@ public class FileScanner implements Runnable {
 							try {
 								 resp = fiClient.postHashes(fb); 
 							} catch (RestClientException ex){
-								System.out.println("EXCEPTION!!!");
 								throw new ResponseException(Messages.getString("ResponseException.1"), null);
 							}
 							if(resp != null && resp.getErrorCode() != null) {
-								System.out.println("hola");
-								System.out.println(resp.getErrorCode());
 								throw new ResponseException(Messages.getString("ResponseException.1"), resp);
 							}
+							else if(recursive.equals("true")) {
+								List<FileInfo> fs = fb.getFingerPrints().getFiles();
+								if(fs != null && fs.size() > 0) {
+									String path = fs.get(fs.size()-1).getPath();
+									try {
+										Client.fMan.save(path.substring(0, path.lastIndexOf("/")));
+									} catch(Exception e) {}
+								}
+							}
+
 							count = 0;
 							files.clear();
 						}

@@ -95,6 +95,8 @@ public class Scanner {
 		if (resp.getTransactionId() != null) {
 			transactionId = resp.getTransactionId();
 			configuration.put("transactionId", transactionId);
+			/* Make configuration persistent */
+			Client.fMan.saveActualParams(configuration);
 		} else {
 			logger.error("Error: null transaction ID");
 			return resp;
@@ -141,6 +143,8 @@ public class Scanner {
 		} else if(!error) {
 			fb.setState(STATE.FINISH);
 			resp = fiClient.postHashes(fb);
+			if (resp != null && resp.getErrorCode() == null)
+				Client.fMan.clean();
 		} 
 		return resp;
 	}
