@@ -18,7 +18,6 @@ public class AuthenticateController {
     protected final Log logger = LogFactory.getLog(getClass());
 
     // TODO: username and password should be sent with POST
-    // TODO: always succesful login
     @RequestMapping(value="/{username}/{password}", method=RequestMethod.GET)
     @ResponseBody
 	public Response authenticate(@PathVariable("username") String username, 
