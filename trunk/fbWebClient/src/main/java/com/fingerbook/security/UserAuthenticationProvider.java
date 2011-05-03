@@ -2,6 +2,7 @@ package com.fingerbook.security;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.dao.AbstractUserDetailsAuthen
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.codec.Base64;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
@@ -66,11 +68,23 @@ public class UserAuthenticationProvider extends
 	
 	private void authenticateAgainstRESTM(String username, String password) throws EmptyResultDataAccessException, 
 	BadCredentialsException, Exception {
-    		
+    	
 		// TODO: Hardwired URL
-		URL url = new URL("http://localhost:8080/fingerbookRESTM/authenticate/"+ username + "/" + password);
-		URLConnection conn = url.openConnection ();
+		String urlString = "http://localhost:8080/fingerbookRESTM/authenticate/"+ username + "/" + password;		
+		URL url = new URL(urlString);
+		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+		conn.setRequestMethod("GET");
+		// Setting Auth Creds
+        conn.setRequestProperty("Authorization", "Basic " +
+          new String(Base64.encode(new String(username + ":" + password).getBytes())));
 
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+		conn.setUseCaches(false);
+		conn.setAllowUserInteraction(true);
+		
+		
+		conn.connect();
 		// Get the response
 		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		StringBuffer sb = new StringBuffer();
