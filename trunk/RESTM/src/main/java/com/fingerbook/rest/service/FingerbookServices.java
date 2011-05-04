@@ -21,6 +21,34 @@ public class FingerbookServices {
 			return null;
 		}
 	}
+	
+	public Vector<Fingerbook> getFingerbooksByTicket(String ticket) {	
+		if(ticket != null) {
+			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByTicket(ticket);
+			return fingerbooks;
+		} else {
+			return null;
+		}
+	}
+	
+	public Vector<Fingerbook> getFingerbooksByTicket(String ticket, int limit, int offset) {	
+		if(ticket != null) {
+//			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByTicket(ticket);
+			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbooksByTicketPag(ticket, limit, offset);
+			return fingerbooks;
+		} else {
+			return null;
+		}
+	}
+	
+	public Vector<Fingerbook> getFingerbooksByUser(String user) {	
+		if(user != null) {
+			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByUser(user);
+			return fingerbooks;
+		} else {
+			return null;
+		}
+	}
 
 	public List<Fingerprints> getFingerprintsWithHash(String hash) {
 		
