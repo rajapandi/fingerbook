@@ -86,17 +86,6 @@ privileged aspect MyClassController_Roo_Controller {
         return "redirect:/myclasses";
     }
     
-    @RequestMapping(params = { "find=ByCodeEquals", "form" }, method = RequestMethod.GET)
-    public String MyClassController.findMyClassesByCodeEqualsForm(Model uiModel) {
-        return "myclasses/findMyClassesByCodeEquals";
-    }
-    
-    @RequestMapping(params = "find=ByCodeEquals", method = RequestMethod.GET)
-    public String MyClassController.findMyClassesByCodeEquals(@RequestParam("code") String code, Model uiModel) {
-        uiModel.addAttribute("myclasses", MyClass.findMyClassesByCodeEquals(code).getResultList());
-        return "myclasses/list";
-    }
-    
     @ModelAttribute("myclasses")
     public Collection<MyClass> MyClassController.populateMyClasses() {
         return MyClass.findAllMyClasses();

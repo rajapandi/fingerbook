@@ -16,10 +16,17 @@
             <menu:item id="i_controller__publicmyclassindex_id" messageCode="global_generic" url="/publicmyclass/index" z="sL5MZtlHYI9pOGmi5udduq5RZ0k="/>
         <menu:item id="i_controller__authenticateindex_id" messageCode="global_generic" url="/authenticate/index" z="MizmV4bHiQFK8ScTXcSi6G6Aj5E="/>
         <menu:item id="i_controller__filehashexistsindex_id" messageCode="global_generic" url="/filehashexists/index" z="j94tvYN3FkX4visOi6QMR9o2/wk="/>
+        <menu:item id="i_controller__listfingerbooksindex_id" messageCode="global_generic" url="/listfingerbooks/index" z="wyo228M3JsFinlpdETUtUAG5uhU="/>
         </menu:category>
     <menu:category id="c_fbuser" z="FsvQK5umsufdcUyEmfaAoa6rrvs=">
             <menu:item id="i_fbuser_new" messageCode="global_menu_new" url="/fbusers?form" z="XbYd9ll3qc9QjCQEk1QK+52rNtQ="/>
         <menu:item id="i_fbuser_list" messageCode="global_menu_list" url="/fbusers?page=1&amp;size=${empty param.size ? 10 : param.size}" z="xdG/rMq9wfP6H9NmXTERJotM3is="/>
+        </menu:category>
+    <menu:category id="c_view" z="HjmI4Chx/kBYfS/6HjBLbCA+XpU=">
+            <menu:item id="i_view__listfingerbooksticketform_id" messageCode="global_generic" url="/listfingerbooks/ticketform" z="HPJ9i2VI+KH5WMCuOLPT6VQ3wEQ="/>
+        <menu:item id="i_view__listfingerbookslist_id" messageCode="global_generic" url="/listfingerbooks/list" z="/79wVR0K/BVlsHhnu+uXdcANGdo="/>
+        <menu:item id="i_view__listfingerbooksuserform_id" messageCode="global_generic" url="/listfingerbooks/userform" z="qVO8WFrveXBMG2UC3mWUdVRNRHk="/>
+        <menu:item id="i_view__listfingerbookshashform_id" messageCode="global_generic" url="/listfingerbooks/hashform" z="8pfDP3Dg2C5cpFVomjqV/ggWqO8="/>
         </menu:category>
     </menu:menu>
 </div>

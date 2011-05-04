@@ -23,7 +23,11 @@
 	</mvc:interceptors>
 	
 	<!-- selects a static view for rendering without the need for an explicit controller -->
-	<mvc:view-controller path="/login"/>
+	<mvc:view-controller path="/listfingerbooks/hashform"/>
+    <mvc:view-controller path="/listfingerbooks/userform"/>
+    <mvc:view-controller path="/listfingerbooks/list"/>
+    <mvc:view-controller path="/listfingerbooks/ticketform"/>
+    <mvc:view-controller path="/login"/>
     <mvc:view-controller path="/" view-name="index"/>
 	<mvc:view-controller path="/uncaughtException"/>
 	<mvc:view-controller path="/resourceNotFound"/>
