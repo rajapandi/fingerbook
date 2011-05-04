@@ -42,13 +42,57 @@ public class FingerbooksController {
      * @param model
      * @return A Fingerbook
      */
-    @RequestMapping(value="/{hash}", method=RequestMethod.GET)
+//    @RequestMapping(value="/{hash}", method=RequestMethod.GET)
+//    @ResponseBody
+//    public Vector<Fingerbook> fileHashExists(@PathVariable("hash") String hash, Model model) {    
+//    	Vector<Fingerbook> fingerbooks = fingerbookService.getFingerbooksWithHash(hash);
+//    	model.addAttribute("fingerbooks", fingerbooks);
+//    	
+//    	logger.info("Returning fingerbooks which contain hash: " + hash);
+//    	
+//    	return fingerbooks;
+//    }
+    
+    @RequestMapping(value="/hash/{hash}", method=RequestMethod.GET)
     @ResponseBody
     public Vector<Fingerbook> fileHashExists(@PathVariable("hash") String hash, Model model) {    
     	Vector<Fingerbook> fingerbooks = fingerbookService.getFingerbooksWithHash(hash);
     	model.addAttribute("fingerbooks", fingerbooks);
     	
     	logger.info("Returning fingerbooks which contain hash: " + hash);
+    	
+    	return fingerbooks;
+    }
+    
+    @RequestMapping(value="/ticket/{ticket}", method=RequestMethod.GET)
+    @ResponseBody
+    public Vector<Fingerbook> fingerbooksByTicket(@PathVariable("ticket") String ticket, Model model) {    
+    	Vector<Fingerbook> fingerbooks = fingerbookService.getFingerbooksByTicket(ticket);
+    	model.addAttribute("fingerbooks", fingerbooks);
+    	
+    	logger.info("Returning fingerbooks for ticket: " + ticket);
+    	
+    	return fingerbooks;
+    }
+    
+    @RequestMapping(value="/ticket/{ticket}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public Vector<Fingerbook> fingerbooksByTicket(@PathVariable("ticket") String ticket, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {    
+    	Vector<Fingerbook> fingerbooks = fingerbookService.getFingerbooksByTicket(ticket, limit, offset);
+    	model.addAttribute("fingerbooks", fingerbooks);
+    	
+    	logger.info("Returning fingerbooks for ticket: " + ticket);
+    	
+    	return fingerbooks;
+    }
+    
+    @RequestMapping(value="/user/{user}", method=RequestMethod.GET)
+    @ResponseBody
+    public Vector<Fingerbook> fingerbooksByUser(@PathVariable("user") String user, Model model) {    
+    	Vector<Fingerbook> fingerbooks = fingerbookService.getFingerbooksByUser(user);
+    	model.addAttribute("fingerbooks", fingerbooks);
+    	
+    	logger.info("Returning fingerbooks for user: " + user);
     	
     	return fingerbooks;
     }
@@ -193,7 +237,7 @@ public class FingerbooksController {
 	    	logger.info(authenticationMethod + ": Returning response object: " + msg);
 			return response;
      	} else {
-     		String msg = "Fingerbook could not be added to fingerbook id: " + fingerbook.getFingerbookId();
+     		String msg = "Fingerbook could not be added to fingerbook id: " + fingerbook.getFingerbookId() + " Error: " + fbId;
 			Response response = new Response(new Integer(5), msg);   		
     		logger.info(authenticationMethod + ": Returning error Response object: " + msg);
     		return response;
