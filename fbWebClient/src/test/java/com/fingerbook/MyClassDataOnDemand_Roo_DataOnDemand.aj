@@ -18,13 +18,22 @@ privileged aspect MyClassDataOnDemand_Roo_DataOnDemand {
     
     public MyClass MyClassDataOnDemand.getNewTransientMyClass(int index) {
         com.fingerbook.MyClass obj = new com.fingerbook.MyClass();
-        obj.setMessage("message_" + index);
+        setMessage(obj, index);
+        setCode(obj, index);
+        return obj;
+    }
+    
+    private void MyClassDataOnDemand.setMessage(MyClass obj, int index) {
+        java.lang.String message = "message_" + index;
+        obj.setMessage(message);
+    }
+    
+    private void MyClassDataOnDemand.setCode(MyClass obj, int index) {
         java.lang.String code = "code_" + index;
         if (code.length() > 30) {
-            code  = code.substring(0, 30);
+            code = code.substring(0, 30);
         }
         obj.setCode(code);
-        return obj;
     }
     
     public MyClass MyClassDataOnDemand.getSpecificMyClass(int index) {

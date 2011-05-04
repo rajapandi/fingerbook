@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="listfingerbooks/index">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/index.jspx"/>
+    </definition>
+<definition extends="default" name="listfingerbooks/ticketform">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/ticketform.jspx"/>
+    </definition>
+<definition extends="default" name="listfingerbooks/list">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/list.jspx"/>
+    </definition>
+<definition extends="default" name="listfingerbooks/userform">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/userform.jspx"/>
+    </definition>
+<definition extends="default" name="listfingerbooks/hashform">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/hashform.jspx"/>
+    </definition>
+</tiles-definitions>
