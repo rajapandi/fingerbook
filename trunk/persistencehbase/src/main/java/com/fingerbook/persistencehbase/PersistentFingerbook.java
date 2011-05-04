@@ -180,19 +180,19 @@ public class PersistentFingerbook extends Fingerbook{
 		Fingerprints fingerprints = fingerbook.getFingerPrints();
 		
 		if(fingerprints == null) {
-			return -1;
+			return -2;
 		}
 		try {
 			
 			if(!fingerprintsSaveAllowed(fingerbook)) {
-				return -2;
+				return -3;
 			}
 			TransHTable groupTable = new TransHTable(GROUP_TABLE_NAME);
 			byte[] groupIdB = Bytes.toBytes(fingerbookId);
 			List<FileInfo> files = fingerprints.getFiles();
 			
 			if(files == null) {
-				return -1;
+				return -4;
 			}
 			for(FileInfo fileInfo: files) {
 			
@@ -219,7 +219,7 @@ public class PersistentFingerbook extends Fingerbook{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-				return -1;
+				return -5;
 		}
 		return fingerbookId;
 	}
@@ -459,10 +459,16 @@ public class PersistentFingerbook extends Fingerbook{
 	
 	public Fingerbook loadMe() {
 		
+		return loadMe(true);
+	}
+	
+	public Fingerbook loadMe(boolean loadFingerPrints) {
+		
 		Fingerbook fingerBook = new Fingerbook();
 		fingerBook.setFingerbookId(fingerbookId);
 		
-		Fingerprints auxFingerPrints = new Fingerprints();
+//		Fingerprints auxFingerPrints = new Fingerprints();
+		Fingerprints auxFingerPrints = null;
 		byte[] fingerbookIdB = Bytes.toBytes(fingerbookId);
 		
 		try {
@@ -481,8 +487,11 @@ public class PersistentFingerbook extends Fingerbook{
 			userInfo = loadUserInfoByFingerbookId(fingerbookId);
 			fingerBook.setUserInfo(userInfo);
 			
-			/* Get the fingerprints by this fingerbook id */
-			auxFingerPrints = loadFingerPrintsByFingerBook(fingerbookId);
+			if(loadFingerPrints) {
+				/* Get the fingerprints by this fingerbook id */
+				auxFingerPrints = loadFingerPrintsByFingerBook(fingerbookId);
+			}
+			
 			fingerBook.setFingerPrints(auxFingerPrints);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -609,6 +618,48 @@ public class PersistentFingerbook extends Fingerbook{
 		}
 		
 		return nextOffset;
+	}
+	
+	public static Vector<Fingerbook> getFingerbooksByTicketPag(String ticket, int limit, int offset) {
+		
+		Vector<Fingerbook> fingerbooks = new Vector<Fingerbook>();
+//		Vector<Long> fingerbooksIds = new Vector<Long>();
+//		long nextId = -1;
+		
+		NavigableMap<byte[],byte[]> familyMapTicketGroup = null;
+		try {
+			
+//			familyMapTicketGroup = HbaseManager.getMembersMap(TICKET_TABLE_NAME, Bytes.toBytes(ticket), TTICKET_GROUP_ID_FAMILY);
+			familyMapTicketGroup = HbaseManager.getMembersMapPag(TICKET_TABLE_NAME, Bytes.toBytes(ticket), TTICKET_GROUP_ID_FAMILY, limit, offset);
+			
+			if(familyMapTicketGroup == null) {
+				return fingerbooks;
+			}
+			
+//			Vector<Long> loaded = new Vector<Long>();
+			
+//			boolean isNextId = false;
+			
+			for(byte[] fingerbookIdB: familyMapTicketGroup.keySet()) {
+				
+				long fingerbookId = Bytes.toLong(fingerbookIdB);
+//				fingerbooksIds.add(new Long(fingerbookId));
+				
+				Fingerbook auxFingerbook = new Fingerbook();
+				auxFingerbook.setFingerbookId(fingerbookId);
+				
+				PersistentFingerbook persFingerbook = new PersistentFingerbook(auxFingerbook);
+				auxFingerbook = persFingerbook.loadMe(false);
+				
+				fingerbooks.add(auxFingerbook);
+				
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return fingerbooks;
 	}
 	
 public static Vector<Fingerbook> getFingerbookByUser(String user) {
@@ -1035,8 +1086,13 @@ public static Vector<Fingerbook> getFingerbookByUser(String user) {
 			if(auxFingerbookId < 0) {
 				return -1;
 			}
+			
+			long nowStamp = System.currentTimeMillis();
+			
 			byte[] groupIdB = Bytes.toBytes(auxFingerbookId);
-			byte[] stampB = Bytes.toBytes(fingerbook.getStamp());
+//			byte[] stampB = Bytes.toBytes(fingerbook.getStamp());
+			byte[] stampB = Bytes.toBytes(nowStamp);
+			
 			byte[] userB = null;
 			UserInfo userInfo = fingerbook.getUserInfo();
 			String ticket = null;
