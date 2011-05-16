@@ -1,6 +1,7 @@
 package com.fingerbook.models;
 
 import java.io.Serializable;
+import java.util.Vector;
 
 public class Fingerbook implements Serializable {
 	private static final long serialVersionUID = 3826603447160435399L;
@@ -14,6 +15,8 @@ public class Fingerbook implements Serializable {
 	protected long stamp;
 	protected STATE state;
 	protected String transactionId;
+	protected Vector<String> tags;
+	protected String comment;
 	
 	public Long getFingerbookId() {
 		return fingerbookId;
@@ -53,7 +56,22 @@ public class Fingerbook implements Serializable {
 		if(this.userInfo != null) {
 			ret.append("Username: " + this.userInfo.getUser() + "\n");
 		}
-	//	ret.append("Email: " + this.userInfo.getMail() + "\n");
+		if(this.comment != null) {
+			ret.append("Comment: " + this.comment + "\n");
+		}
+
+		if(this.tags != null) {
+			ret.append("Tags: {");
+			boolean first = true;
+			for (String tag : this.tags) {
+				if(!first) {
+					ret.append(", ");
+				}
+				ret.append(tag);
+				first = false;
+			}
+			ret.append("}\n");
+		}
 		if(this.fingerPrints != null) {
 			for (FileInfo fi : this.fingerPrints.getFiles()) {
 				ret.append("\nFile: ");
@@ -72,6 +90,18 @@ public class Fingerbook implements Serializable {
 	}
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
+	}
+	public Vector<String> getTags() {
+		return tags;
+	}
+	public void setTags(Vector<String> tags) {
+		this.tags = tags;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 }
