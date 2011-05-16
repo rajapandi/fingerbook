@@ -16,4 +16,7 @@
 <definition extends="default" name="listfingerbooks/hashform">
         <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/hashform.jspx"/>
     </definition>
+<definition extends="default" name="listfingerbooks/show">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/show.jspx"/>
+    </definition>
 </tiles-definitions>

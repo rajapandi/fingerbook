@@ -23,7 +23,8 @@
 	</mvc:interceptors>
 	
 	<!-- selects a static view for rendering without the need for an explicit controller -->
-	<mvc:view-controller path="/listfingerbooks/hashform"/>
+	<mvc:view-controller path="/listfingerbooks/show"/>
+    <mvc:view-controller path="/listfingerbooks/hashform"/>
     <mvc:view-controller path="/listfingerbooks/userform"/>
     <mvc:view-controller path="/listfingerbooks/list"/>
     <mvc:view-controller path="/listfingerbooks/ticketform"/>

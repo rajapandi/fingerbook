@@ -26,6 +26,7 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fingerbook.models.Fingerbook;
+import com.fingerbook.models.transfer.FingerbookList;
 
 
 
@@ -41,7 +42,11 @@ public class ListFingerbooksController {
     }
 	
 	@RequestMapping(value="/userform", method = RequestMethod.GET)
-	public String searchByUser() {
+	public String searchByUser(ModelMap modelMap) {
+		
+		modelMap.put("page", 1);
+		modelMap.put("size", LIMIT_PAG);
+		
         return "listfingerbooks/userform";
     }
 	
@@ -105,25 +110,49 @@ public class ListFingerbooksController {
 		
         return "listfingerbooks/list";
     }
+
 	
 	@RequestMapping(value="/user", method = RequestMethod.GET)
-	public String listByUser(@RequestParam("user_input") String user, ModelMap modelMap) {
+	public String listByUser(@RequestParam("user_input") String user, ModelMap modelMap, HttpServletRequest request) {
 		
-		List<Fingerbook> fbs = null;
+		int size = LIMIT_PAG;
+		int page = 1;
+		int maxPages = 1;
+		
+		FingerbookList fingerbookList = null;
+		Vector<Fingerbook> fbs = null;
 		String result = "";
     	try {
     		
     		String urlStr = "http://localhost:8080/fingerbookRESTM/fingerbooks/user/";
     		urlStr = urlStr + user;
+    		
+    		if(request.getParameter("page") != null) {
+    			page = Integer.parseInt(request.getParameter("page"));
+    		}
+    		if(request.getParameter("size") != null) {
+    			size = Integer.parseInt(request.getParameter("size"));
+    		}
+    		
+    		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
 
     		WebApplicationContext wap = ContextLoaderListener.getCurrentWebApplicationContext();
     		
     		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
-    		fbs = (List<Fingerbook>) restTemplate.getForObject(urlStr, List.class);
-    		    		
-    		for(Fingerbook fb: fbs) {
-    			result = result + "<br />" + fb.toString();
-    			System.out.println(fb.toString());
+    		
+//    		fbs = (List<Fingerbook>) restTemplate.getForObject(urlStr, List.class);
+    		fingerbookList = (FingerbookList) restTemplate.getForObject(urlStr, FingerbookList.class);
+
+    		
+    		if(fingerbookList != null) {
+    			
+    			maxPages = (int) Math.ceil((double)fingerbookList.getTotalFbs() / (double)size);
+    			
+    			fbs = fingerbookList.getFbs();
+	    		for(Fingerbook fb: fbs) {
+	    			result = result + "<br />" + fb.toString();
+	    			System.out.println(fb.toString());
+	    		}
     		}
     		
     	} catch (Exception e) {
@@ -132,9 +161,55 @@ public class ListFingerbooksController {
     	
     	modelMap.put("result", result);
     	modelMap.put("fbs", fbs);
+    	
+    	modelMap.put("maxPages", maxPages);
 		
         return "listfingerbooks/list";
     }
+	
+//	@RequestMapping(value="/user", method = RequestMethod.GET)
+//	public String listByUser(@RequestParam("user_input") String user, ModelMap modelMap, HttpServletRequest request) {
+//		
+//		int size = LIMIT_PAG;
+//		int page = 1;
+//		
+//		List<Fingerbook> fbs = null;
+//		String result = "";
+//    	try {
+//    		
+//    		String urlStr = "http://localhost:8080/fingerbookRESTM/fingerbooks/user/";
+//    		urlStr = urlStr + user;
+//    		
+//    		if(request.getParameter("page") != null) {
+//    			page = Integer.parseInt(request.getParameter("page"));
+//    		}
+//    		if(request.getParameter("size") != null) {
+//    			size = Integer.parseInt(request.getParameter("size"));
+//    		}
+//    		
+//    		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
+//
+//    		WebApplicationContext wap = ContextLoaderListener.getCurrentWebApplicationContext();
+//    		
+//    		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
+//    		fbs = (List<Fingerbook>) restTemplate.getForObject(urlStr, List.class);
+//    		    		
+//    		for(Fingerbook fb: fbs) {
+//    			result = result + "<br />" + fb.toString();
+//    			System.out.println(fb.toString());
+//    		}
+//    		
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    	
+//    	modelMap.put("result", result);
+//    	modelMap.put("fbs", fbs);
+//    	
+//    	modelMap.put("maxPages", 3);
+//		
+//        return "listfingerbooks/list";
+//    }
 	
 	@RequestMapping(value="/hash", method = RequestMethod.GET)
 	public String listByHash(@RequestParam("hash_input") String hash, ModelMap modelMap) {
@@ -162,9 +237,124 @@ public class ListFingerbooksController {
     	
     	modelMap.put("result", result);
     	modelMap.put("fbs", fbs);
+    	
+    	modelMap.put("maxPages", 3);
+//    	modelMap.put("fbs", fbs);
+//    	modelMap.put("fbs", fbs);
+    	
 		
         return "listfingerbooks/list";
     }
+	
+	
+	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+	public String get(@PathVariable("id") Long id, ModelMap modelMap, HttpServletRequest request) {
+		
+		Fingerbook fb = null;
+		String result = "";
+		
+		int size = LIMIT_PAG;
+		int page = 1;
+		
+    	try {
+    		
+    		String urlStr = "http://localhost:8080/fingerbookRESTM/fingerbooks/fingerbook/";
+    		urlStr = urlStr + id;
+    		
+    		if(request.getParameter("page") != null) {
+    			page = Integer.parseInt(request.getParameter("page"));
+    		}
+    		if(request.getParameter("size") != null) {
+    			size = Integer.parseInt(request.getParameter("size"));
+    		}
+    		
+    		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
+
+    		WebApplicationContext wap = ContextLoaderListener.getCurrentWebApplicationContext();
+    		
+    		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
+    		fb = (Fingerbook) restTemplate.getForObject(urlStr, Fingerbook.class);
+
+    		result = result + "<br />" + fb.toString();
+    		System.out.println(fb.toString());
+    		
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	modelMap.put("result", result);
+    	modelMap.put("fb", fb);
+    	
+    	modelMap.put("maxPages", 3);
+		
+		return "listfingerbooks/show";
+	}
+	
+	
+//	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+//	public String get(@PathVariable("id") Long id, ModelMap modelMap) {
+//		
+//		Fingerbook fb = null;
+//		String result = "";
+//    	try {
+//    		
+//    		String urlStr = "http://localhost:8080/fingerbookRESTM/fingerbooks/fingerbook/";
+//    		urlStr = urlStr + id;
+//
+//    		WebApplicationContext wap = ContextLoaderListener.getCurrentWebApplicationContext();
+//    		
+//    		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
+//    		fb = (Fingerbook) restTemplate.getForObject(urlStr, Fingerbook.class);
+//
+//    		result = result + "<br />" + fb.toString();
+//    		System.out.println(fb.toString());
+//    		
+//    		
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    	
+//    	modelMap.put("result", result);
+//    	modelMap.put("fb", fb);
+//    	
+//    	modelMap.put("maxPages", 3);
+//		
+//		return "listfingerbooks/show";
+//	}
+//	
+//	@RequestMapping(value="/pag/{id}", method = RequestMethod.GET)
+//	public String get(@PathVariable("id") Long id, @RequestParam("page") int page, @RequestParam("size") int size, ModelMap modelMap) {
+//		
+//		Fingerbook fb = null;
+//		String result = "";
+//    	try {
+//    		
+//    		String urlStr = "http://localhost:8080/fingerbookRESTM/fingerbooks/fingerbook/";
+//    		urlStr = urlStr + id;
+//    		
+//    		urlStr = urlStr + "/limit/" + size + "/offset/" + page * size;
+//
+//    		WebApplicationContext wap = ContextLoaderListener.getCurrentWebApplicationContext();
+//    		
+//    		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
+//    		fb = (Fingerbook) restTemplate.getForObject(urlStr, Fingerbook.class);
+//
+//    		result = result + "<br />" + fb.toString();
+//    		System.out.println(fb.toString());
+//    		
+//    		
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    	
+//    	modelMap.put("result", result);
+//    	modelMap.put("fb", fb);
+//    	
+//    	modelMap.put("maxPages", 3);
+//		
+//		return "listfingerbooks/show";
+//	}
 	
     @RequestMapping
     public void get(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
