@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
+import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 
 
@@ -41,10 +42,54 @@ public class FingerbookServices {
 		}
 	}
 	
+	public FingerbookList getFingerbookListByUser(String user, int limit, int offset) {	
+		if(user != null) {
+			FingerbookList fingerbookList = PersistentFingerbook.getFingerbookListByUserPag(user, limit, offset);
+			return fingerbookList;
+		} else {
+			return null;
+		}
+	}
+	
+	public Vector<Fingerbook> getFingerbooksByUser(String user, int limit, int offset) {	
+		if(user != null) {
+			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbooksByUserPag(user, limit, offset);
+			return fingerbooks;
+		} else {
+			return null;
+		}
+	}
+	
 	public Vector<Fingerbook> getFingerbooksByUser(String user) {	
 		if(user != null) {
 			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByUser(user);
 			return fingerbooks;
+		} else {
+			return null;
+		}
+	}
+	
+	public Fingerbook getFingerbookById(Long id) {	
+		if(id != null) {
+			
+			Fingerbook fingerbook = new Fingerbook();
+			fingerbook.setFingerbookId(id);
+			PersistentFingerbook pf = new PersistentFingerbook(fingerbook);
+			fingerbook = pf.loadMe(true);
+			return fingerbook;
+		} else {
+			return null;
+		}
+	}
+	
+	public Fingerbook getFingerbookById(Long id, int size, int offset ) {	
+		if(id != null) {
+			
+			Fingerbook fingerbook = new Fingerbook();
+			fingerbook.setFingerbookId(id);
+			PersistentFingerbook pf = new PersistentFingerbook(fingerbook);
+			fingerbook = pf.loadMe(true, size, offset);
+			return fingerbook;
 		} else {
 			return null;
 		}
