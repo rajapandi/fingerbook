@@ -77,6 +77,7 @@
 				<prop key="FileInfo">com.fingerbook.models.FileInfo</prop>
 				<prop key="UserInfo">com.fingerbook.models.UserInfo</prop>
 				<prop key="Response">com.fingerbook.models.Response</prop>
+				<prop key="FingerbookList">com.fingerbook.models.transfer.FingerbookList</prop>
 			</props>
 		</property>
 	</bean>

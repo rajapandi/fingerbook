@@ -27,6 +27,7 @@
         <menu:item id="i_view__listfingerbookslist_id" messageCode="global_generic" url="/listfingerbooks/list" z="/79wVR0K/BVlsHhnu+uXdcANGdo="/>
         <menu:item id="i_view__listfingerbooksuserform_id" messageCode="global_generic" url="/listfingerbooks/userform" z="qVO8WFrveXBMG2UC3mWUdVRNRHk="/>
         <menu:item id="i_view__listfingerbookshashform_id" messageCode="global_generic" url="/listfingerbooks/hashform" z="8pfDP3Dg2C5cpFVomjqV/ggWqO8="/>
+        <menu:item id="i_view__listfingerbooksshow_id" messageCode="global_generic" url="/listfingerbooks/show" z="78g6LvsRMUC2tA08DOR7udDuULs="/>
         </menu:category>
     </menu:menu>
 </div>

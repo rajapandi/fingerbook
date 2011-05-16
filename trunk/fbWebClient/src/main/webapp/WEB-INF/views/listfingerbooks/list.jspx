@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0">
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0">
   <jsp:directive.page contentType="text/html;charset=UTF-8"/>
   <jsp:output omit-xml-declaration="yes"/>
   <spring:message code="label_listfingerbooks_list" htmlEscape="false" var="title"/>
@@ -10,6 +10,18 @@
     </h3>
   </util:panel>
   <h2>Fingerbooks found:</h2>
+  <br />
+  
+	<page:list id="pl_com_fingerbook_models_Fingerbook" items="${fbs}" z="">
+        <table:table typeIdFieldName="fingerbookId" data="${fbs}" id="l_com_fingerbook_models_Fingerbook" path="/listfingerbooks" z="" create="false" update="false" delete="false" requiredParams="user_input">
+            <table:column id="c_com_fingerbook_models_Fingerbook_fingerbookId" property="fingerbookId" z=""/>
+        	<table:column id="c_com_fingerbook_models_Fingerbook_stamp" property="stamp" z=""/>
+        	<table:column id="c_com_fingerbook_models_Fingerbook_tags" property="tags" z=""/>
+        	<table:column id="c_com_fingerbook_models_Fingerbook_comment" property="comment" z=""/>
+        </table:table>
+    </page:list>
+
+  
   <br />
   <p>
   	${result}
