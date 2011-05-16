@@ -11,7 +11,7 @@ public class ScheduledProcessor {
 	
     public void process() {
     	// Transactions timeout after 5 minutes
-    	logger.info("Running scheduled transaction cleaner..");
+//    	logger.info("Running scheduled transaction cleaner..");
 //        PersistentFingerbook.cleanExpired(1*60*1000);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fingerbook.models.Auth;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerbook.STATE;
+import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.Response;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
@@ -86,6 +87,28 @@ public class FingerbooksController {
     	return fingerbooks;
     }
     
+//    @RequestMapping(value="/user/{user}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+//    @ResponseBody
+//    public Vector<Fingerbook> fingerbooksByUser(@PathVariable("user") String user, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {    
+//    	Vector<Fingerbook> fingerbooks = fingerbookService.getFingerbooksByUser(user, limit, offset);
+//    	model.addAttribute("fingerbooks", fingerbooks);
+//    	
+//    	logger.info("Returning fingerbooks for user: " + user);
+//    	
+//    	return fingerbooks;
+//    }
+    
+    @RequestMapping(value="/user/{user}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookList fingerbooksByUser(@PathVariable("user") String user, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {    
+    	FingerbookList fingerbookList = fingerbookService.getFingerbookListByUser(user, limit, offset);
+    	model.addAttribute("fingerbookList", fingerbookList);
+    	
+    	logger.info("Returning fingerbookList for user: " + user);
+    	
+    	return fingerbookList;
+    }
+    
     @RequestMapping(value="/user/{user}", method=RequestMethod.GET)
     @ResponseBody
     public Vector<Fingerbook> fingerbooksByUser(@PathVariable("user") String user, Model model) {    
@@ -95,6 +118,29 @@ public class FingerbooksController {
     	logger.info("Returning fingerbooks for user: " + user);
     	
     	return fingerbooks;
+    }
+    
+    @RequestMapping(value="/fingerbook/{id}", method=RequestMethod.GET)
+    @ResponseBody
+    public Fingerbook fingerbookById(@PathVariable("id") Long id, Model model) {    
+    	Fingerbook fingerbook = fingerbookService.getFingerbookById(id);
+    	model.addAttribute("fingerbooks", fingerbook);
+    	
+    	logger.info("Returning fingerbook for id: " + id);
+    	
+    	return fingerbook;
+    }
+    
+    @RequestMapping(value="/fingerbook/{id}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public Fingerbook fingerbookById(@PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {    
+    	Fingerbook fingerbook = fingerbookService.getFingerbookById(id, limit, offset);
+    	
+    	model.addAttribute("fingerbooks", fingerbook);
+    	
+    	logger.info("Returning fingerbook for id: " + id);
+    	
+    	return fingerbook;
     }
     
     @RequestMapping(value="/anonymous/put", method=RequestMethod.POST)
