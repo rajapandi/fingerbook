@@ -36,6 +36,9 @@ create unique index ix_auth_username on authorities (username,authority);
 insert into users(username, password, enabled) values ('scott', '74baa3bc21a1c85ef7f3d7efe7d75d297e2bc57e', true);
 -- anonymous - anonymous
 insert into users(username, password, enabled) values ('anonymous', '0a92fab3230134cca6eadd9898325b9b2ae67998', true);
+-- admin - admin
+insert into users(username, password, enabled) values ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', true);
 
 insert into authorities(username, authority) values ('scott', 'ROLE_USER');
 insert into authorities(username, authority) values ('anonymous', 'ANONYMOUS');
+insert into authorities(username, authority) values ('admin', 'ROLE_ADMIN');
