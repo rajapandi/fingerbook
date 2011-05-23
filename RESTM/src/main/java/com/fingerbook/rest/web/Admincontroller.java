@@ -12,24 +12,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fingerbook.models.Response;
 
 @Controller
-@RequestMapping("/authenticate")
-public class AuthenticateController {
+@RequestMapping("/admin")
+public class Admincontroller {
 	
-    protected final Log logger = LogFactory.getLog(getClass());
-
-    // TODO: username and password should be sent with POST
-    @RequestMapping(value="/{username}/{password}", method=RequestMethod.GET)
+	protected final Log logger = LogFactory.getLog(getClass());
+	
+    @RequestMapping(value="/createUser/{username}/{password}", method=RequestMethod.GET)
     @ResponseBody
-	public Response authenticate(@PathVariable("username") String username, 
+	public Response createUser(@PathVariable("username") String username, 
 			@PathVariable("password") String password,
 			Model model) {
     	
-    	// If Spring security allowed to access this resource, then authentication
-    	// is already succesful
-    	String msg = "Authentication succesful for user: " +  username + ", password: " + password;
+    	String msg = "Creating user: " +  username + ", password: " + password;
     	Response response = new Response(null, msg);
     	logger.info(msg);
     	
 		return response;
 	}
+
 }
