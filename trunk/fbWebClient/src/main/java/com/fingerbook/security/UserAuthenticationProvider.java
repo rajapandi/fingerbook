@@ -46,7 +46,7 @@ public class UserAuthenticationProvider extends
         }
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         try {
-            // TODO: Authenticate using fingerbookRESTM
+            // TODO: RESTM should return the role assigned to the user
         	authenticateAgainstRESTM(username, password);
         	
         	// Speaker speaker = Speaker.findSpeakersByEmailAndPasswordEquals(username, password).getSingleResult();
