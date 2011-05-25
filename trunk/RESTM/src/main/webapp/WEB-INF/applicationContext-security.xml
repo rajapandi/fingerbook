@@ -8,24 +8,13 @@
 
 	<!-- <http use-expressions="true" access-denied-page="/accessDenied.jsp" entry-point-ref="authenticationEntryPointImpl"> -->
     <http use-expressions="true" access-denied-page="/WEB-INF/jsp/access_denied.jsp">
-    
-    	<!-- 
-    	<intercept-url pattern="/fingerbookRESTM/fingerbooks/anonymous/**" access="hasRole('ROLE_ANONYMOUS')"/>
-    	<intercept-url pattern="/fingerbookRESTM/fingerbooks/semiauthenticated/**" access="hasRole('ROLE_SEMIAUTHENTICATED')"/>
-        <intercept-url pattern="/fingerbookRESTM/fingerbooks/authenticated/**" access="hasRole('ROLE_USER')"/>
-        -->
+
         <intercept-url pattern="/fingerbooks/anonymous/**" access="permitAll"/>
     	<intercept-url pattern="/fingerbooks/semiauthenticated/**" access="permitAll"/>
         <intercept-url pattern="/fingerbooks/authenticated/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/authenticate/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
-        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <!-- <intercept-url pattern="/fingerbookRESTM/fingerbooks/**" access="hasRole('ROLE_USER')" requires-channel="https"/> -->
-        <!-- <intercept-url pattern="/**" access="permitAll" /> -->
-        
-        <!-- 
-        <access-denied-handler ref="accessDeniedHandlerImpl"/> 
-        -->
-        
+        <!-- <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/> -->
+        <intercept-url pattern="/admin/**" access="permitAll"/>
         
         <http-basic/>
 
