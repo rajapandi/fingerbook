@@ -91,5 +91,8 @@
   		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
   	</bean>
   	 
+  	<bean id="adminController" class="com.fingerbook.rest.web.AdminController">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
   	 
 </beans>
