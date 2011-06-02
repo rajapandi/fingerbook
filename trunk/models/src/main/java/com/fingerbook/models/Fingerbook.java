@@ -1,7 +1,7 @@
 package com.fingerbook.models;
 
 import java.io.Serializable;
-import java.util.Vector;
+import java.util.Set;
 
 public class Fingerbook implements Serializable {
 	private static final long serialVersionUID = 3826603447160435399L;
@@ -15,7 +15,7 @@ public class Fingerbook implements Serializable {
 	protected long stamp;
 	protected STATE state;
 	protected String transactionId;
-	protected Vector<String> tags;
+	protected Set<String> tags;
 	protected String comment;
 	
 	public Long getFingerbookId() {
@@ -74,12 +74,8 @@ public class Fingerbook implements Serializable {
 		}
 		if(this.fingerPrints != null) {
 			for (FileInfo fi : this.fingerPrints.getFiles()) {
-				ret.append("\nFile: ");
-				ret.append(fi.getName());
 				ret.append(" \nHash: ");
 				ret.append(fi.getShaHash());
-				ret.append(" \nSize: ");
-				ret.append(fi.getSizeInBytes());
 				ret.append(" \n\n");
 			}
 		}
@@ -91,10 +87,10 @@ public class Fingerbook implements Serializable {
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
 	}
-	public Vector<String> getTags() {
+	public Set<String> getTags() {
 		return tags;
 	}
-	public void setTags(Vector<String> tags) {
+	public void setTags(Set<String> tags) {
 		this.tags = tags;
 	}
 	public String getComment() {
