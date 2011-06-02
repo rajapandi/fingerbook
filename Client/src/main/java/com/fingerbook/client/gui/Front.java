@@ -69,6 +69,8 @@ public class Front extends JFrame {
 	private JTextField tDir = null;
 	private JButton bBrowse = null;
 	private JCheckBox cRecursive = null;
+	private JCheckBox cTray = null;
+	private JButton bTags = null;
 	private JButton bIni = null;
 
 	private ProgressBar pBar = null;
@@ -208,6 +210,12 @@ public class Front extends JFrame {
 			// ... Next Row
 			/* Recursive CheckBox */
 			jContentPane.add(getCRecursive(), pos.nextRow());
+			/* GAP */
+			//jContentPane.add(new Gap(GAP * 1), pos.nextCol());
+			/* SendToTray CheckBox */
+			getCTray().setHorizontalAlignment(JCheckBox.RIGHT);
+			jContentPane.add(getCTray(), pos.nextCol());
+			jContentPane.add(getBTags(), pos.nextCol());
 
 			// ... Next Row
 			/* GAP */
@@ -233,6 +241,8 @@ public class Front extends JFrame {
 		if (cLogin == null) {
 			cLogin = new JCheckBox(Messages.getString("Front.5")); //$NON-NLS-1$
 
+			/* Add Tooltip */
+			cLogin.setToolTipText(Messages.getString("Front.18")); //$NON-NLS-1$
 			/* When seleted, enable/disable user/pass inputs */
 			cLogin.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -310,6 +320,8 @@ public class Front extends JFrame {
 			/* Initially unselected */
 			cTicket.setSelected(false);
 
+			/* Add Tooltip */
+			cTicket.setToolTipText(Messages.getString("Front.20")); //$NON-NLS-1$
 			/* When selected, enable/disable ticket input and button */
 			cTicket.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -464,6 +476,39 @@ public class Front extends JFrame {
 		}
 		return cRecursive;
 	}
+	
+	/**
+	 * This method initializes cTray JCheckBox
+	 * 
+	 * @return javax.swing.JCheckBox
+	 */
+	private JCheckBox getCTray() {
+		if (cTray == null) {
+			cTray = new JCheckBox(Messages.getString("Front.23")); //$NON-NLS-1$
+			/* Initially unselected */
+			cTray.setSelected(false);
+		}
+		return cTray;
+	}
+	
+	/**
+	 * This method initializes bTags JButton
+	 * 
+	 * @return javax.swing.JButton
+	 */
+	private JButton getBTags() {
+		if (bTags == null) {
+			bTags = new JButton(Messages.getString("Front.29")); //$NON-NLS-1$
+
+			/* When clicked, open tag window */
+			bTags.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					new Tags();
+				}
+			});
+		}
+		return bTags;
+	}
 
 	/**
 	 * This method initializes bIni JButton
@@ -513,11 +558,11 @@ public class Front extends JFrame {
 	protected void setAuthMetod() {
 		/* Different ways of identification: Anonymous, Semi-authenticated, Authenticated */
 		if (getCLogin().isSelected())
-			configuration.put("authM", "auth");
+			configuration.put("authM", "auth"); //$NON-NLS-1$ //$NON-NLS-2$
 		else if (getCTicket().isSelected())
-			configuration.put("authM", "semi");
+			configuration.put("authM", "semi"); //$NON-NLS-1$ //$NON-NLS-2$
 		else
-			configuration.put("authM", "anon");
+			configuration.put("authM", "anon"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private boolean setConfig() {
@@ -571,11 +616,15 @@ public class Front extends JFrame {
 	}
 
 	private void proceed(boolean auto) {
+		boolean tray = false;
+		
 		setAuthMetod();
 		setCredentials();
-	
+		
+		if (getCTray().isSelected())
+			tray = true;
 		try {
-			pBar = new ProgressBar(auto);
+			pBar = new ProgressBar(auto, tray);
 		} catch (Exception ex) {
 			logger.error("An unexpected error happened: " + ex.getMessage()); //$NON-NLS-1$
 		}
@@ -583,7 +632,7 @@ public class Front extends JFrame {
 
 	private void setCredentials() {
 		com.fingerbook.client.HttpClientExt applicationContext = Client.applicationContext.getBean(com.fingerbook.client.HttpClientExt.class);
-		applicationContext.setCredentials(configuration.get("user"), configuration.get("pass"));		
+		applicationContext.setCredentials(configuration.get("user"), configuration.get("pass"));		 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void addSysTrayIcon() {

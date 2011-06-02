@@ -176,7 +176,7 @@ public class FileScanner implements Runnable {
 
 			if (!search && f.isFile()) {
 				System.out.println("FILE: " + f.getAbsolutePath());
-				queue.put(new FileInfo(f.getAbsolutePath(), f.getName(), fhc.getFileHash(f), f.length()));
+				queue.put(new FileInfo(f.getAbsolutePath(), fhc.getFileHash(f)));
 			}
 			else if (f.isDirectory() && (recursive.equals("true") || first)) {
 				logger.debug(f.getAbsolutePath());

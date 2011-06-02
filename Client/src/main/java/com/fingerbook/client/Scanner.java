@@ -3,8 +3,10 @@ package com.fingerbook.client;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -73,7 +75,8 @@ public class Scanner {
 		//if(resume)
 		//	resp = fiClient.resumeHashTransaction(ticket);
 		//else {
-			resp = fiClient.startHashTransaction(ticket);
+			resp = fiClient.startHashTransaction(ticket,
+					getTags(configuration.get("tags")), "comment");
 		//}
 		if (resp == null) {
 			logger.error("Error: null response");
@@ -147,6 +150,21 @@ public class Scanner {
 				Client.fMan.clean();
 		} 
 		return resp;
+	}
+
+	private Set<String> getTags(String tagsS) {
+		if (tagsS == null)
+			tagsS = "";
+		
+		/* Build List from String */
+		List<String> tagList = new ArrayList<String>();
+		java.util.Scanner scan = new java.util.Scanner(tagsS);
+		scan.useDelimiter(",");
+		while (scan.hasNext())
+			tagList.add(scan.next().trim());
+		Set<String> tags = new HashSet<String>(tagList);
+		
+		return tags;
 	}
 
 	public Response getResponse() {
