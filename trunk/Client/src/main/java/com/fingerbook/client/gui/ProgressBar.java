@@ -35,7 +35,7 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 	private JProgressBar pBar = null;
 	private JButton bCancel = null;
 
-	public ProgressBar(boolean resume) {
+	public ProgressBar(boolean resume, boolean tray) {
 		// Center window
 		setLocationRelativeTo(null);
 		
@@ -47,6 +47,17 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 		this.setLocationRelativeTo(null);
 
 		this.setContentPane(getJContentPane());
+		
+		if (tray) {
+			Client.front.setVisible(false);
+			setVisible(false);
+			if (!Front.minimizedNotice) {
+				Front.trayIcon.displayMessage(Messages.getString("Front.10"), //$NON-NLS-1$
+						Messages.getString("Front.11"), //$NON-NLS-1$
+						TrayIcon.MessageType.INFO);
+				Front.minimizedNotice = true;
+			}
+		}
 		
         //Instances of javax.swing.SwingWorker are not reusable, so
         //we create new instances as needed.
@@ -69,7 +80,8 @@ public class ProgressBar extends JDialog implements PropertyChangeListener {
 		});
 
 		this.pack();
-		this.setVisible(true);
+		if (!tray)
+			this.setVisible(true);
 	}
 
 	/**

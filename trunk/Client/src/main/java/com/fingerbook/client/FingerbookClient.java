@@ -1,6 +1,7 @@
 package com.fingerbook.client;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestClientException;
@@ -54,27 +55,30 @@ public class FingerbookClient {
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
 	}
 
-	public Response startHashTransaction(String ticket) {
-		Fingerbook fb = setFB(ticket, STATE.START);
+	public Response startHashTransaction(String ticket, Set<String> tags, String comment) {
+		Fingerbook fb = setFB(ticket, tags, comment, STATE.START);
+		System.out.println(fb.getTags());
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
 	}
 	
 	public Response resumeHashTransaction(String ticket) {
-		Fingerbook fb = setFB(ticket, STATE.RESUME);
+		Fingerbook fb = setFB(ticket, null, null, STATE.RESUME);
 		
 		return restTemplate.postForObject(this.baseUrl + "fingerbooks/" + getAuthM() + "/put", fb, Response.class);
 	}
 	
-	private Fingerbook setFB(String ticket, STATE state) {
+	private Fingerbook setFB(String ticket, Set<String> tags, String comment, STATE state) {
 		this.ticket = new String(ticket);
 		user = new String(Front.getConfiguration().get("user"));
-		
+
 		Fingerbook fb = new Fingerbook();
 		ui = new UserInfo();
 		ui.setUser(user);
 		ui.setTicket(this.ticket);
 		fb.setState(state);
 		fb.setUserInfo(ui);
+		fb.setTags(tags);
+		fb.setComment(comment);
 		if (state.equals(STATE.RESUME))
 			fb.setTransactionId(Front.getConfiguration().get("transactionId"));
 		return fb;

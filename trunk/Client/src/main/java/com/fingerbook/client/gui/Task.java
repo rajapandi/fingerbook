@@ -26,6 +26,8 @@ public class Task extends SwingWorker<Void, Void> {
 	 */
 	@Override
 	public Void doInBackground() throws Exception {
+		String msg;
+		
 		Front.inProgress = true;
 		// Initialize progress property.
 		setProgress(0);
@@ -33,6 +35,7 @@ public class Task extends SwingWorker<Void, Void> {
 		try {
 			resp = Client.getScanner().scanDirectory(Front.getConfiguration(), resume);			
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e.getMessage());
 			Client.getScanner().stopScanning();
 			resp = null; //TODO: ver si esta bien setear resp en null o habria que hacer otra cosa
@@ -40,22 +43,33 @@ public class Task extends SwingWorker<Void, Void> {
 
 		setProgress(1);
 		Front.inProgress = false;
-
-		if (!canceled && (resp == null || resp.getErrorCode() != null)) {
-			JOptionPane.showMessageDialog(
-					Client.front, Messages
-					.getString("Front.21") + " " + resp.getDesc()); //$NON-NLS-1$
+		
+		try {
+			if (!canceled && (resp == null || resp.getErrorCode() != null)) {
+				if (resp == null) {
+					msg = "Unexpected error!";
+				}
+				else {
+					msg = resp.getDesc();
+				}
+				JOptionPane.showMessageDialog(
+						Client.front, Messages
+						.getString("Front.21") + " " + msg); //$NON-NLS-1$
+			}
+			else if (resp != null && Front.getConfiguration().get("cLogin").equals("false")
+					&& !Client.getScanner().getTicket().equals(Front.getConfiguration().get("ticket"))) {
+				new Ticket(Client.getScanner().getTicket());
+				//logger.error("Erroneous server implementation: Tickets should be sent at the beginning of the transaction\n");
+			}			
+			else {
+				JOptionPane.showMessageDialog(
+						Client.front, Messages
+						.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
+						+ resp.getDesc());			
+			}
 		}
-		else if (resp != null && Front.getConfiguration().get("cLogin").equals("false")
-				&& !Client.getScanner().getTicket().equals(Front.getConfiguration().get("ticket"))) {
-			new Ticket(Client.getScanner().getTicket());
-			//logger.error("Erroneous server implementation: Tickets should be sent at the beginning of the transaction\n");
-		}			
-		else {
-			JOptionPane.showMessageDialog(
-					Client.front, Messages
-					.getString("Front.22") + ":\n" //$NON-NLS-1$ //$NON-NLS-2$
-					+ resp.getDesc());			
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 		canceled = false;
