@@ -28,14 +28,8 @@ public class Fingerprints implements Serializable {
 	public String toString() {
 		StringBuffer ret = new StringBuffer();
 		for (FileInfo fi : this.files) {
-			ret.append("File: ");
-			ret.append(fi.getName());
-			ret.append(" \n");
 			ret.append("Hash: ");
 			ret.append(fi.getShaHash());
-			ret.append(" \n");
-			ret.append("Size: ");
-			ret.append(fi.getSizeInBytes());
 			ret.append(" \n\n");
 		}
 		return ret.toString();
