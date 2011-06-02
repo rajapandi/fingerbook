@@ -4,13 +4,12 @@ package com.fingerbook.persistencehbase;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NavigableMap;
+import java.util.Set;
 import java.util.Vector;
 
-//import org.apache.hadoop.hbase.HBaseConfiguration;
-//import org.apache.hadoop.hbase.client.HTable;
-//import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -384,7 +383,7 @@ public class PersistentFingerbook extends Fingerbook{
 			userInfo = loadUserInfoByFingerbookId(fingerbookId);
 			fingerBook.setUserInfo(userInfo);
 			
-			Vector<String> tags = loadTagsByFingerbookId(fingerbookId);
+			Set<String> tags = loadTagsByFingerbookId(fingerbookId);
 			fingerBook.setTags(tags);
 			
 			String comment = "";
@@ -433,7 +432,7 @@ public class PersistentFingerbook extends Fingerbook{
 			userInfo = loadUserInfoByFingerbookId(fingerbookId);
 			fingerBook.setUserInfo(userInfo);
 			
-			Vector<String> tags = loadTagsByFingerbookId(fingerbookId);
+			Set<String> tags = loadTagsByFingerbookId(fingerbookId);
 			fingerBook.setTags(tags);
 			
 			String comment = "";
@@ -489,9 +488,9 @@ public class PersistentFingerbook extends Fingerbook{
 		return userInfo;
 	}
 	
-	public static Vector<String> loadTagsByFingerbookId(long fingerbookId) {
+	public static Set<String> loadTagsByFingerbookId(long fingerbookId) {
 		
-		Vector<String> tags = new Vector<String>();
+		Set<String> tags = new HashSet<String>();
 		
 		NavigableMap<byte[],byte[]> familyMapTag = null;
 		
@@ -1213,7 +1212,7 @@ public class PersistentFingerbook extends Fingerbook{
 				userInfo.setTicket(ticket);
 			}
 			
-			Vector<String> tags = fingerbook.getTags();
+			Set<String> tags = fingerbook.getTags();
 			int tagsInserted = insertTags(auxFingerbookId, tags);
 			
 			String comment = fingerbook.getComment();
@@ -1230,14 +1229,17 @@ public class PersistentFingerbook extends Fingerbook{
 		
 	}
 	
-	public static int insertTags(long fingerbookId, Vector<String> tags) {
+	public static int insertTags(long fingerbookId, Set<String> tags) {
 		
 		byte[] groupIdB = Bytes.toBytes(fingerbookId);
 		
+		System.out.println("InsertTags");
+
 		try {
 			if(tags != null) {
 				
 				for(String tag: tags) {
+					System.out.println("Tag: " + tag);
 					HbaseManager.putValue(GROUP_TABLE_NAME, groupIdB, TGROUP_TAG_FAMILY, Bytes.toBytes(tag), Bytes.toBytes(0));
 				}
 			}
