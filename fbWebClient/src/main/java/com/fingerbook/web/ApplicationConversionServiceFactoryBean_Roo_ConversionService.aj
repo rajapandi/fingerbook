@@ -10,20 +10,21 @@ import org.springframework.format.FormatterRegistry;
 
 privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService {
     
+    Converter<MyClass, String> ApplicationConversionServiceFactoryBean.getMyClassConverter() {
+        return new Converter<MyClass, String>() {
+            public String convert(MyClass myclass) {
+                return new StringBuilder().append(myclass.getMessage()).append(" ").append(myclass.getCode()).toString();
+            }
+        };
+    }
+    
     public void ApplicationConversionServiceFactoryBean.installLabelConverters(FormatterRegistry registry) {
-        registry.addConverter(new MyClassConverter());
+        registry.addConverter(getMyClassConverter());
     }
     
     public void ApplicationConversionServiceFactoryBean.afterPropertiesSet() {
         super.afterPropertiesSet();
         installLabelConverters(getObject());
-    }
-    
-    static class com.fingerbook.web.ApplicationConversionServiceFactoryBean.MyClassConverter implements Converter<MyClass, String>  {
-        public String convert(MyClass myClass) {
-        return new StringBuilder().append(myClass.getMessage()).append(" ").append(myClass.getCode()).toString();
-        }
-        
     }
     
 }

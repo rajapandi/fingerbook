@@ -13,8 +13,7 @@
     	<intercept-url pattern="/fingerbooks/semiauthenticated/**" access="permitAll"/>
         <intercept-url pattern="/fingerbooks/authenticated/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/authenticate/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
-        <!-- <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/> -->
-        <intercept-url pattern="/admin/**" access="permitAll"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/> 
         
         <http-basic/>
 

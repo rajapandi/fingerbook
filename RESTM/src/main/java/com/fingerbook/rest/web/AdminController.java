@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fingerbook.models.Response;
 import com.fingerbook.rest.back.FingerbookUtils;
@@ -22,10 +23,10 @@ public class AdminController {
 	
 	protected final Log logger = LogFactory.getLog(getClass());
 	
-    @RequestMapping(value="/createUser/{username}/{password}/{role}", method=RequestMethod.GET)
+    @RequestMapping(value="/createUser", method=RequestMethod.POST)
     @ResponseBody
-	public Response createUser(@PathVariable("username") String username, 
-			@PathVariable("password") String password, @PathVariable("role") String role,
+	public Response createUser(@RequestParam("username") String username, 
+			@RequestParam("password") String password, @RequestParam("role") String role,
 			Model model) {
     	
     	String msg = "Creating user: " +  username + " with role: " + role;
@@ -70,9 +71,10 @@ public class AdminController {
 		return response;
 	}
     
-    @RequestMapping(value="/deleteUser/{username}", method=RequestMethod.GET)
+    // TODO: Deleting an unexistant user throws a succesfull operation message
+    @RequestMapping(value="/deleteUser", method=RequestMethod.POST)
     @ResponseBody
-	public Response deleteUser(@PathVariable("username") String username,
+	public Response deleteUser(@RequestParam("username") String username,
 			Model model) {
     	
     	String msg = "Deleting user: " +  username;
@@ -106,11 +108,11 @@ public class AdminController {
 		return response;
 	}    
 
-    @RequestMapping(value="/modifyUser/{username}/{password}/{role}/{enabled}", method=RequestMethod.GET)
+    @RequestMapping(value="/modifyUser", method=RequestMethod.POST)
     @ResponseBody
-	public Response modifyUser(@PathVariable("username") String username, 
-			@PathVariable("password") String password, @PathVariable("role") String role,
-			@PathVariable("enabled") String enabled,
+	public Response modifyUser(@RequestParam("username") String username, 
+			@RequestParam("password") String password, @RequestParam("role") String role,
+			@RequestParam("enabled") String enabled,
 			Model model) {
     	
     	String msg = "Modifying user: " +  username + " with values: (role, " + role + 
