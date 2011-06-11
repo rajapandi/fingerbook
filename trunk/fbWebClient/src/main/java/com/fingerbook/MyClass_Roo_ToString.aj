@@ -9,8 +9,8 @@ privileged aspect MyClass_Roo_ToString {
     
     public String MyClass.toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Code: ").append(getCode()).append(", ");
-        sb.append("Message: ").append(getMessage());
+        sb.append("Message: ").append(getMessage()).append(", ");
+        sb.append("Code: ").append(getCode());
         return sb.toString();
     }
     

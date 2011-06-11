@@ -13,7 +13,7 @@ privileged aspect MyClass_Roo_Finder {
     public static TypedQuery<MyClass> MyClass.findMyClassesByCodeEquals(String code) {
         if (code == null || code.length() == 0) throw new IllegalArgumentException("The code argument is required");
         EntityManager em = MyClass.entityManager();
-        TypedQuery<MyClass> q = em.createQuery("SELECT o FROM MyClass AS o WHERE o.code = :code", MyClass.class);
+        TypedQuery<MyClass> q = em.createQuery("SELECT MyClass FROM MyClass AS myclass WHERE myclass.code = :code", MyClass.class);
         q.setParameter("code", code);
         return q;
     }

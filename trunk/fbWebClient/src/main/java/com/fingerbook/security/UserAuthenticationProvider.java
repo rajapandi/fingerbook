@@ -1,16 +1,9 @@
 package com.fingerbook.security;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.NonUniqueResultException;
-
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,10 +11,11 @@ import org.springframework.security.authentication.dao.AbstractUserDetailsAuthen
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
-import org.springframework.security.core.codec.Base64;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
+
+import com.fingerbook.web.FingerbookWebClientUtils;
 
 public class UserAuthenticationProvider extends
 		AbstractUserDetailsAuthenticationProvider {
@@ -46,11 +40,10 @@ public class UserAuthenticationProvider extends
         }
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         try {
-            // TODO: RESTM should return the role assigned to the user
-        	authenticateAgainstRESTM(username, password);
-        	
-        	// Speaker speaker = Speaker.findSpeakersByEmailAndPasswordEquals(username, password).getSingleResult();
-            authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
+       
+        	String role = authenticateAgainstRESTM(username, password);       	
+            authorities.add(new GrantedAuthorityImpl(role));
+            
         } catch (EmptyResultDataAccessException e) {
             throw new BadCredentialsException("Invalid username or password");
         } catch (NonUniqueResultException e) {
@@ -66,38 +59,25 @@ public class UserAuthenticationProvider extends
 	}
 
 	
-	private void authenticateAgainstRESTM(String username, String password) throws EmptyResultDataAccessException, 
+	private String authenticateAgainstRESTM(String username, String password) throws EmptyResultDataAccessException, 
 	BadCredentialsException, Exception {
     	
-		// TODO: Hardwired URL
-		String urlString = "http://localhost:8080/fingerbookRESTM/authenticate/"+ username + "/" + password;		
-		URL url = new URL(urlString);
-		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-		conn.setRequestMethod("GET");
-		// Setting Auth Creds
-        conn.setRequestProperty("Authorization", "Basic " +
-          new String(Base64.encode(new String(username + ":" + password).getBytes())));
+		// Construct parameters
+	    String parameters = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
+	    parameters += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
 
-		conn.setDoOutput(true);
-		conn.setDoInput(true);
-		conn.setUseCaches(false);
-		conn.setAllowUserInteraction(true);
+		// TODO: Hardwired URL
+		String urlString = "http://localhost:8080/fingerbookRESTM/authenticate";	
 		
-		
-		conn.connect();
-		// Get the response
-		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		StringBuffer sb = new StringBuffer();
-		String line;
-		// TODO: Use xml marshalling and unmarshalling instead of parsing the lines
-		line = rd.readLine();
-		
-		rd.close();
+		StringBuffer sb = FingerbookWebClientUtils.makeBasicPostRequest(urlString, parameters, username, password);	
 		
 		// TODO: Ugly succesful login checking
-		if(!line.contains("Authentication succesful for user")) {
+		if(!sb.toString().contains("Authentication succesful for user")) {
 			throw new BadCredentialsException("Invalid credentials");
 		}
+		
+		// Return the assigned role
+		return sb.substring(sb.toString().indexOf("[")+1, sb.toString().indexOf("]"));
 	}
 
 }

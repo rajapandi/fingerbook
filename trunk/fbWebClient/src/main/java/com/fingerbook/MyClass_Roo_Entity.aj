@@ -93,11 +93,11 @@ privileged aspect MyClass_Roo_Entity {
     }
     
     public static long MyClass.countMyClasses() {
-        return entityManager().createQuery("SELECT COUNT(o) FROM MyClass o", Long.class).getSingleResult();
+        return entityManager().createQuery("select count(o) from MyClass o", Long.class).getSingleResult();
     }
     
     public static List<MyClass> MyClass.findAllMyClasses() {
-        return entityManager().createQuery("SELECT o FROM MyClass o", MyClass.class).getResultList();
+        return entityManager().createQuery("select o from MyClass o", MyClass.class).getResultList();
     }
     
     public static MyClass MyClass.findMyClass(Long id) {
@@ -106,7 +106,7 @@ privileged aspect MyClass_Roo_Entity {
     }
     
     public static List<MyClass> MyClass.findMyClassEntries(int firstResult, int maxResults) {
-        return entityManager().createQuery("SELECT o FROM MyClass o", MyClass.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+        return entityManager().createQuery("select o from MyClass o", MyClass.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
 }

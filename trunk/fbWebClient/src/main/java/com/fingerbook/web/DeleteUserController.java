@@ -8,17 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping("/createUser/**")
+@RequestMapping("/deleteUser/**")
 @Controller
-public class CreateUsercontroller {
+public class DeleteUserController {
 
-    @RequestMapping(method = RequestMethod.POST)
-    public String post(@RequestParam("username") String username, 
-    		@RequestParam("password") String password, @RequestParam("role") String role,
+	@RequestMapping(method = RequestMethod.POST)
+    public String post(@RequestParam("username") String username,
 			ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
     	
     	String result = "\"";
@@ -29,11 +29,9 @@ public class CreateUsercontroller {
     		
     		// Construct parameters
     	    String parameters = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
-    	    parameters += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
-    	    parameters += "&" + URLEncoder.encode("role", "UTF-8") + "=" + URLEncoder.encode(role, "UTF-8");
     	    
     		//TODO: HardWired URL
-    		String urlString = "http://localhost:8080/fingerbookRESTM/admin/createUser";
+    		String urlString = "http://localhost:8080/fingerbookRESTM/admin/deleteUser";
     		
     		StringBuffer sb = FingerbookWebClientUtils.makeBasicPostRequest(urlString, parameters, 
     				authenticatedUser, authenticatedUserPasswword);	
@@ -46,16 +44,17 @@ public class CreateUsercontroller {
     	}
     	
     	modelMap.put("result", result);
-    	return "createUser";
+    	return "deleteUser";
     }
+
 
     @RequestMapping(method = RequestMethod.GET)
     public String get(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
-    	return "createUser";
+    	return "deleteUser";
     }
-
+    
     @RequestMapping
     public String index() {
-        return "createUser";
+        return "deleteUser";
     }
 }

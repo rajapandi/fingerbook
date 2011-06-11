@@ -2,11 +2,13 @@ package com.fingerbook.rest.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fingerbook.models.Response;
@@ -17,16 +19,17 @@ public class AuthenticateController {
 	
     protected final Log logger = LogFactory.getLog(getClass());
 
-    // TODO: username and password should be sent with POST
-    @RequestMapping(value="/{username}/{password}", method=RequestMethod.GET)
+    @RequestMapping(method=RequestMethod.POST)
     @ResponseBody
-	public Response authenticate(@PathVariable("username") String username, 
-			@PathVariable("password") String password,
+	public Response authenticate(@RequestParam("username") String username, 
+			@RequestParam("password") String password,
 			Model model) {
     	
     	// If Spring security allowed to access this resource, then authentication
     	// is already succesful
-    	String msg = "Authentication succesful for user: " +  username + ", password: " + password;
+    	String role = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
+    	String msg = "Authentication succesful for user: " +  username + ", password: " + password + ", role: "
+    		+ role;
     	Response response = new Response(null, msg);
     	logger.info(msg);
     	
