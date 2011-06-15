@@ -1,5 +1,6 @@
 package com.fingerbook.rest.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 import org.apache.commons.logging.Log;
@@ -128,6 +129,14 @@ public class FingerbookServices {
 		return "FSGFGS32432fDSG";
 	}
 
+	public boolean isValidTicket(String ticket) {
+		try {
+			return PersistentFingerbook.isValidTicket(ticket);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	/*public Fingerbook getFingerbook(Fingerprints fingerprints) {
 		Fingerbook fingerbook = new Fingerbook();
 		fingerbook.setFingerPrints(fingerprints);

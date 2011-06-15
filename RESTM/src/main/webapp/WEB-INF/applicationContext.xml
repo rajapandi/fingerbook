@@ -83,14 +83,20 @@
 	
 	<!-- DI of fingerbookServices --> 
   	<bean id="fingerbookServices" class="com.fingerbook.rest.service.FingerbookServices" />
+  	
   	<bean id="fingerbooksController" class="com.fingerbook.rest.web.FingerbooksController">
   		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
 <!--   		<property name="userRepository"><ref bean="HibernateUserRepository"/></property> -->
   	</bean>
+  	
   	<bean id="fingerprintsController" class="com.fingerbook.rest.web.FingerprintsController">
   		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
   	</bean>
   	 
+  	<bean id="ticketAuthenticateController" class="com.fingerbook.rest.web.TicketAuthenticateController">
+  		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
+  	</bean>
+  	
   	<bean id="adminController" class="com.fingerbook.rest.web.AdminController">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>

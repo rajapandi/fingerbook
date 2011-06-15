@@ -15,6 +15,7 @@ public class Response {
 	 * 		9  -  Operation cancelled: Aonymous authentication is used, but a user name was received
 	 * 		10 -  Operation cancelled: Semi-authentication is used, but no ticket was received
 	 * 		11 -  Operation cancelled: Authentication is used, but no user name was received
+	 * 		12 -  Permission denied for ticket
 	 * 		null - Success!
 	 * */
 

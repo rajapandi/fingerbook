@@ -1728,7 +1728,7 @@ public class PersistentFingerbook extends Fingerbook{
 		return tmpData;
 	}
 	
-	private static boolean isValidTicket(String ticket) throws IOException {
+	public static boolean isValidTicket(String ticket) throws IOException {
 		
 		boolean ret = false;
 		
