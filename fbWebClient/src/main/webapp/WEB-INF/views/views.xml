@@ -45,5 +45,8 @@
     <definition extends="public" name="modifyUser">
         <put-attribute name="body" value="/WEB-INF/views/modifyUser.jspx"/>
     </definition>    
-    
+ 
+    <definition extends="public" name="ticketLogin">
+        <put-attribute name="body" value="/WEB-INF/views/ticketLogin.jspx"/>
+    </definition>       
 </tiles-definitions>

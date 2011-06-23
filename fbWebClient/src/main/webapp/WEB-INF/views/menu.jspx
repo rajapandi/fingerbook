@@ -19,6 +19,7 @@
         <menu:item id="i_controller__listfingerbooksindex_id" messageCode="global_generic" url="/listfingerbooks/index" z="wyo228M3JsFinlpdETUtUAG5uhU="/>
         <menu:item id="i_controller__deleteuserindex_id" messageCode="global_generic" url="/deleteuser/index" z="1x+pQfO5QkPbzBnnPTggfYI6KH0="/>
         <menu:item id="i_controller__modifyuserindex_id" messageCode="global_generic" url="/modifyuser/index" z="L1lafhPB9xVV9YKl9gJqD0zktBE="/>
+        <menu:item id="i_controller__ticketloginindex_id" messageCode="global_generic" url="/ticketlogin/index" z="entHEvZP5pi8ZSll7PNRdg1TRes="/>
         </menu:category>
     <menu:category id="c_fbuser" z="FsvQK5umsufdcUyEmfaAoa6rrvs=">
             <menu:item id="i_fbuser_new" messageCode="global_menu_new" url="/fbusers?form" z="XbYd9ll3qc9QjCQEk1QK+52rNtQ="/>
