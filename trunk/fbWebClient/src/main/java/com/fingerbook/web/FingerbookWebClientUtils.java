@@ -49,4 +49,40 @@ public class FingerbookWebClientUtils {
 		
 		return sb;
 	}
+
+	public static StringBuffer makeBasicPostRequest(String urlString,
+			String parameters) throws
+			EmptyResultDataAccessException, BadCredentialsException, Exception {
+		
+		URL url = new URL(urlString);
+		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+		conn.setRequestMethod("POST");
+		 
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		conn.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
+		conn.setRequestProperty("Content-Language", "en-US"); 
+
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+		conn.setUseCaches(false);
+		conn.setAllowUserInteraction(true);
+		
+		//Send request
+	    DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+	    wr.writeBytes(parameters);
+	    wr.flush();
+	    wr.close();
+	      
+		// Get the response
+		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		
+		StringBuffer sb = new StringBuffer();
+		String line;
+		while ((line = rd.readLine()) != null) {
+			sb.append(line);
+		}
+		rd.close();
+		
+		return sb;
+	}
 }

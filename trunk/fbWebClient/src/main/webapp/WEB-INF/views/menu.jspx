@@ -4,7 +4,8 @@
 	<jsp:output omit-xml-declaration="yes"/>
 
 <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
-        <menu:category id="c_myclass" z="64XwcGytg/1o8CVU6/5pgffi7M0=">
+	<!--  
+    <menu:category id="c_myclass" z="64XwcGytg/1o8CVU6/5pgffi7M0=">
             <menu:item id="i_myclass_new" messageCode="global_menu_new" url="/myclasses?form" z="zznUV0nzSSAlOlUR5fDqI7EMzYs="/>
         <menu:item id="i_myclass_list" messageCode="global_menu_list" url="/myclasses?page=1&amp;size=${empty param.size ? 10 : param.size}" z="3Bu2W+wTylq41GPj2wmzRlxPyds="/>
         <menu:item id="fi_myclass_codeequals" messageCode="global_menu_find" url="/myclasses?find=ByCodeEquals&amp;form" z="cgiEdtv7lsPMJSuaSwNJnE7rztk="/>
@@ -12,19 +13,21 @@
     <menu:category id="c_seleniumtests" z="PPLMd2yNB6/LSbjIWogAacRPU+Q=">
             <menu:item id="si_seleniumtests_test" messageCode="selenium_menu_test_suite" url="/resources/selenium/test-suite.xhtml" z="wwunW/IPDcunN97u41MvMJZQ2to="/>
         </menu:category>
+    -->
     <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
-            <menu:item id="i_controller__publicmyclassindex_id" messageCode="global_generic" url="/publicmyclass/index" z="sL5MZtlHYI9pOGmi5udduq5RZ0k="/>
-        <menu:item id="i_controller__authenticateindex_id" messageCode="global_generic" url="/authenticate/index" z="MizmV4bHiQFK8ScTXcSi6G6Aj5E="/>
-        <menu:item id="i_controller__filehashexistsindex_id" messageCode="global_generic" url="/filehashexists/index" z="j94tvYN3FkX4visOi6QMR9o2/wk="/>
+        <menu:item id="i_controller__filehashexistsindex_id" messageCode="global_generic" url="/filehashexists" z="j94tvYN3FkX4visOi6QMR9o2/wk="/>
         <menu:item id="i_controller__listfingerbooksindex_id" messageCode="global_generic" url="/listfingerbooks/index" z="wyo228M3JsFinlpdETUtUAG5uhU="/>
-        <menu:item id="i_controller__deleteuserindex_id" messageCode="global_generic" url="/deleteuser/index" z="1x+pQfO5QkPbzBnnPTggfYI6KH0="/>
-        <menu:item id="i_controller__modifyuserindex_id" messageCode="global_generic" url="/modifyuser/index" z="L1lafhPB9xVV9YKl9gJqD0zktBE="/>
-        <menu:item id="i_controller__ticketloginindex_id" messageCode="global_generic" url="/ticketlogin/index" z="entHEvZP5pi8ZSll7PNRdg1TRes="/>
+        <menu:item id="i_controller__createuserindex_id" messageCode="global_generic" url="/createUser"/>
+        <menu:item id="i_controller__deleteuserindex_id" messageCode="global_generic" url="/deleteUser" z="1x+pQfO5QkPbzBnnPTggfYI6KH0="/>
+        <menu:item id="i_controller__modifyuserindex_id" messageCode="global_generic" url="/modifyUser" z="L1lafhPB9xVV9YKl9gJqD0zktBE="/>
+        <menu:item id="i_controller__ticketloginindex_id" messageCode="global_generic" url="/ticketLogin" z="entHEvZP5pi8ZSll7PNRdg1TRes="/>
         </menu:category>
+    <!--  
     <menu:category id="c_fbuser" z="FsvQK5umsufdcUyEmfaAoa6rrvs=">
             <menu:item id="i_fbuser_new" messageCode="global_menu_new" url="/fbusers?form" z="XbYd9ll3qc9QjCQEk1QK+52rNtQ="/>
         <menu:item id="i_fbuser_list" messageCode="global_menu_list" url="/fbusers?page=1&amp;size=${empty param.size ? 10 : param.size}" z="xdG/rMq9wfP6H9NmXTERJotM3is="/>
         </menu:category>
+    -->
     <menu:category id="c_view" z="HjmI4Chx/kBYfS/6HjBLbCA+XpU=">
             <menu:item id="i_view__listfingerbooksticketform_id" messageCode="global_generic" url="/listfingerbooks/ticketform" z="HPJ9i2VI+KH5WMCuOLPT6VQ3wEQ="/>
         <menu:item id="i_view__listfingerbookslist_id" messageCode="global_generic" url="/listfingerbooks/list" z="/79wVR0K/BVlsHhnu+uXdcANGdo="/>

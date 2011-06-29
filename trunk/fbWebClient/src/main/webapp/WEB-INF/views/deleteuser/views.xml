@@ -4,4 +4,8 @@
     <definition extends="default" name="deleteuser/index">
         <put-attribute name="body" value="/WEB-INF/views/deleteuser/index.jspx"/>
     </definition>
+    
+    <definition extends="public" name="deleteuser/deleteUserForm">
+        <put-attribute name="body" value="/WEB-INF/views/deleteuser/deleteUserForm.jspx"/>
+    </definition>    
 </tiles-definitions>
