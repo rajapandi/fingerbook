@@ -9,20 +9,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/filehashexists/**")
 @Controller
 public class FileHashExistsController {
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String get(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(method = RequestMethod.POST)
+    public String post(@RequestParam("hash") String hash, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
     	String result = "\"";
     	try {
     		
-    		URL url = new URL("http://localhost:8080/fingerbookRESTM/fingerbooks/132143");
+    		URL url = new URL("http://localhost:8080/fingerbookRESTM/fingerbooks/hash/" + hash);
     		URLConnection conn = url.openConnection ();
 
     		// Get the response
@@ -42,13 +42,14 @@ public class FileHashExistsController {
     	modelMap.put("result", result);
     	return "fileHashExists";
     }
-
-    @RequestMapping(method = RequestMethod.POST, value = "{id}")
-    public void post(@PathVariable Long id, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
+    
+    @RequestMapping(method = RequestMethod.GET)
+    public String get(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
+    	return "fileHashExists";
     }
-
+    
     @RequestMapping
     public String index() {
-        return "filehashexists/index";
+        return "fileHashExists";
     }
 }

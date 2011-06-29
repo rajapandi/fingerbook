@@ -33,18 +33,6 @@
     <definition extends="public" name="authenticate">
         <put-attribute name="body" value="/WEB-INF/views/authenticate.jspx"/>
     </definition>
-
-    <definition extends="public" name="createUser">
-        <put-attribute name="body" value="/WEB-INF/views/createUser.jspx"/>
-    </definition>    
-    
-    <definition extends="public" name="deleteUser">
-        <put-attribute name="body" value="/WEB-INF/views/deleteUser.jspx"/>
-    </definition>    
-    
-    <definition extends="public" name="modifyUser">
-        <put-attribute name="body" value="/WEB-INF/views/modifyUser.jspx"/>
-    </definition>    
  
     <definition extends="public" name="ticketLogin">
         <put-attribute name="body" value="/WEB-INF/views/ticketLogin.jspx"/>
