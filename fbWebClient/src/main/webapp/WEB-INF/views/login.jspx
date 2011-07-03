@@ -17,7 +17,7 @@
         <spring:message code="security_login_message" />
       </p>
     </c:if>
-    <spring:url value="/resources/j_spring_security_check" var="form_url" />
+    <spring:url value="/j_spring_security_check" var="form_url" />
     <form name="f" action="${fn:escapeXml(form_url)}" method="POST">
       <div>
         <label for="j_username">
@@ -45,6 +45,14 @@
           </c:set>
           Spring.addDecoration(new Spring.ElementDecoration({elementId : "j_password", widgetType : "dijit.form.ValidationTextBox", widgetAttrs : {promptMessage: "${sec_pwd_msg}", required : true}})); 
         </script>
+      </div>
+      <br />
+      <div>
+        <label for="j_ticket">
+          <spring:message code="security_login_form_ticket" />
+        </label>
+        <input id="j_password" type='password' name='j_ticket' style="width:150px" />
+        <spring:message code="security_login_form_ticket_message" var="pwd_msg" htmlEscape="false" />
       </div>
       <br />
       <div class="submit">

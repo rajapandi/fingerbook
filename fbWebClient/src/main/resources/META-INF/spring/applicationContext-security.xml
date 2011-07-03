@@ -7,9 +7,8 @@
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
 	<!-- HTTP security configurations -->
-    <http auto-config="true" use-expressions="true">
-    	<form-login login-processing-url="/resources/j_spring_security_check" login-page="/login" authentication-failure-url="/login?login_error=t"/>
-        <logout logout-url="/resources/j_spring_security_logout"/>
+    <http auto-config="false" use-expressions="true" entry-point-ref="entryPoint">
+        <logout logout-url="/j_spring_security_logout"/>
         
         <!-- Configure these elements to secure URIs in your application -->
         
@@ -26,15 +25,32 @@
        	<intercept-url pattern="/modifyUser/**" access="hasRole('ROLE_ADMIN')" />
        	<intercept-url pattern="/deleteUser/**" access="hasRole('ROLE_ADMIN')" />
        	<intercept-url pattern="/**" access="isAuthenticated()" />
+       	
+       	<custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
+       	
     </http>
+
+	<beans:bean id="myFilter" class="com.fingerbook.security.MyAuthenticationFilter">
+		<beans:property name="authenticationManager" ref="authenticationManager"/>
+	</beans:bean>
+	
+	<beans:bean id="entryPoint" class="com.fingerbook.security.MyEntryPoint">
+		<beans:property name="loginFormUrl" value="/login"/>
+	</beans:bean>
 
 	<!-- Configure Authentication mechanism -->
 	<beans:bean name="userAuthenticationProvider"
 		class="com.fingerbook.security.UserAuthenticationProvider">
 	</beans:bean>
 	
+	<!-- Configure Authentication mechanism -->
+	<beans:bean name="ticketAuthenticationProvider"
+		class="com.fingerbook.security.TicketAuthenticationProvider">
+	</beans:bean>
+	
     <authentication-manager alias="authenticationManager">
     	<authentication-provider ref="userAuthenticationProvider"/>
+    	<authentication-provider ref="ticketAuthenticationProvider"/>
 	</authentication-manager>
 
 </beans:beans>

@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,26 +21,21 @@ public class TicketAuthenticateController {
     private FingerbookServices fingerbookService;
     
 	protected final Log logger = LogFactory.getLog(getClass());
-
-	/*
-    @RequestMapping(method=RequestMethod.POST)
+	
+	@RequestMapping(method=RequestMethod.POST)
     @ResponseBody
 	public Response ticketAuthenticate(@RequestParam("ticket") String ticket, 
-			Model model) {
-    */	
-	@RequestMapping(value="/{ticket}", method=RequestMethod.GET)
-    @ResponseBody
-	public Response ticketAuthenticate(@PathVariable("ticket") String ticket, 
-			Model model) {
-    	
+			Model model) {	
 		Response response;
-		String msg;
+		
 		if(fingerbookService.isValidTicket(ticket)) {
-	    	msg = "Authentication succesful for ticket: " +  ticket;
+			String role = "[ROLE_SEMIAUTH]";
+	    	String msg = "Authentication succesful for ticket: " +  ticket + ", role: "
+	    		+ role;
 	    	response = new Response(null, msg);
 	    	logger.info(msg);
 		} else {
-			msg = "Permission denied for ticket: " +  ticket;
+			String msg = "Permission denied for ticket: " +  ticket;
 	    	response = new Response(new Integer(12), msg);
 	    	logger.info(msg);
 		}

@@ -10,10 +10,10 @@
     <http use-expressions="true" access-denied-page="/WEB-INF/jsp/access_denied.jsp">
 
         <intercept-url pattern="/fingerbooks/anonymous/**" access="permitAll"/>
-    	<intercept-url pattern="/fingerbooks/semiauthenticated/**" access="permitAll"/>
+    	<intercept-url pattern="/fingerbooks/semiauthenticated/**" access="hasRole('ROLE_SEMIAUTH')"/>
         <intercept-url pattern="/fingerbooks/authenticated/**" access="hasRole('ROLE_USER')"/>
         <intercept-url pattern="/ticketAuthenticate/**" access="permitAll"/>
-        <intercept-url pattern="/authenticate/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+        <intercept-url pattern="/authenticate/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN', 'ROLE_SEMIAUTH')"/>
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/> 
         
         <http-basic/>
