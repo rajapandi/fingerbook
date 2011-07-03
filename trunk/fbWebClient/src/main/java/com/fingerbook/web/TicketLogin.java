@@ -25,7 +25,6 @@ public class TicketLogin {
     		// Construct parameters
     	    String parameters = URLEncoder.encode("ticket", "UTF-8") + "=" + URLEncoder.encode(ticket, "UTF-8");
     	    
-    		//TODO: HardWired URL
     		String urlString = "http://localhost:8080/fingerbookRESTM/ticketAuthenticate";
     		
     		StringBuffer sb = FingerbookWebClientUtils.makeBasicPostRequest(urlString, parameters);	
