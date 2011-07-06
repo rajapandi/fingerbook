@@ -69,8 +69,7 @@ public class Front extends JFrame {
 	private JTextField tDir = null;
 	private JButton bBrowse = null;
 	private JCheckBox cRecursive = null;
-	private JCheckBox cTray = null;
-	private JButton bTags = null;
+	private JButton bOptions = null;
 	private JButton bIni = null;
 
 	private ProgressBar pBar = null;
@@ -211,11 +210,8 @@ public class Front extends JFrame {
 			/* Recursive CheckBox */
 			jContentPane.add(getCRecursive(), pos.nextRow());
 			/* GAP */
-			//jContentPane.add(new Gap(GAP * 1), pos.nextCol());
-			/* SendToTray CheckBox */
-			getCTray().setHorizontalAlignment(JCheckBox.RIGHT);
-			jContentPane.add(getCTray(), pos.nextCol());
-			jContentPane.add(getBTags(), pos.nextCol());
+			jContentPane.add(new Gap(GAP), pos.nextCol());
+			jContentPane.add(getBOptions(), pos.nextCol());
 
 			// ... Next Row
 			/* GAP */
@@ -478,36 +474,22 @@ public class Front extends JFrame {
 	}
 	
 	/**
-	 * This method initializes cTray JCheckBox
-	 * 
-	 * @return javax.swing.JCheckBox
-	 */
-	private JCheckBox getCTray() {
-		if (cTray == null) {
-			cTray = new JCheckBox(Messages.getString("Front.23")); //$NON-NLS-1$
-			/* Initially unselected */
-			cTray.setSelected(false);
-		}
-		return cTray;
-	}
-	
-	/**
-	 * This method initializes bTags JButton
+	 * This method initializes bOptions JButton
 	 * 
 	 * @return javax.swing.JButton
 	 */
-	private JButton getBTags() {
-		if (bTags == null) {
-			bTags = new JButton(Messages.getString("Front.29")); //$NON-NLS-1$
+	private JButton getBOptions() {
+		if (bOptions == null) {
+			bOptions = new JButton(Messages.getString("Front.29")); //$NON-NLS-1$
 
 			/* When clicked, open tag window */
-			bTags.addActionListener(new ActionListener() {
+			bOptions.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					new Tags();
+					new Options();
 				}
 			});
 		}
-		return bTags;
+		return bOptions;
 	}
 
 	/**
@@ -621,7 +603,9 @@ public class Front extends JFrame {
 		setAuthMetod();
 		setCredentials();
 		
-		if (getCTray().isSelected())
+		if (configuration.get("tray") == null || !configuration.get("tray").equals("true"))
+			tray = false;
+		else
 			tray = true;
 		try {
 			pBar = new ProgressBar(auto, tray);
