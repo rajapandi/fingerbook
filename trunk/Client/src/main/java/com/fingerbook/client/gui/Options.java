@@ -12,15 +12,18 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.fingerbook.client.Client;
 import com.fingerbook.client.gui.helpers.GBHelper;
+import com.fingerbook.client.gui.helpers.Gap;
 
-public class Tags extends JDialog{
+public class Options extends JDialog{
 	private static final long serialVersionUID = 997L;
 
 	/* GUI DEFINES */
@@ -29,12 +32,18 @@ public class Tags extends JDialog{
 
 	/* Swing Components */
 	private JPanel jContentPane = null;
+	
+	private JLabel lTags = null;
+	private JLabel lComments = null;
 
+	private JScrollPane sComments = null;
 	private JTextField tTags = null;
+	private JTextArea tComments = null;
+	private JCheckBox cTray = null;
 	private JButton bOk = null;
 	private JButton bCancel = null;
 
-	public Tags() {
+	public Options() {
 		/* Set initial stuff */
 		initialize();
 		populate();
@@ -48,7 +57,7 @@ public class Tags extends JDialog{
 		this.setContentPane(getJContentPane());
 
 		/* Default Close Operation = do nothing */
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		//this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		this.pack();
 
@@ -83,8 +92,28 @@ public class Tags extends JDialog{
 			GBHelper pos = new GBHelper();
 			
 			// ... Next Row
-			jContentPane.add(getTTags(), pos.width(2));
+			jContentPane.add(getLTags(), pos.width(2));
+			// ... Next Row
+			jContentPane.add(getTTags(), pos.nextRow().width(2));
+			
+			// ... Next Row
+			/* GAP */
+			jContentPane.add(new Gap(GAP * 2), pos.nextRow().width(2));
+			
+			// ... Next Row
+			jContentPane.add(getLComments(), pos.nextRow().width(2));
+			// ... Next Row
+			jContentPane.add(getSComments(), pos.nextRow().width(2));
+			
+			// ... Next Row
+			/* SendToTray CheckBox */
+			//getCTray().setHorizontalAlignment(JCheckBox.RIGHT);
+			jContentPane.add(getCTray(), pos.nextRow().width(2));
 
+			// ... Next Row
+			/* GAP */
+			jContentPane.add(new Gap(GAP * 2), pos.nextRow().width(2));
+			
 			// ... Next Row
 			jContentPane.add(getBOk(), pos.nextRow().expandW());
 			jContentPane.add(getBCancel(), pos.nextCol().expandW());
@@ -93,6 +122,56 @@ public class Tags extends JDialog{
 		return jContentPane;
 	}
 
+	/**
+	 * This method initializes lTags JLabel
+	 * 
+	 * @return javax.swing.JLabel
+	 */
+	private JLabel getLTags() {
+		if (lTags == null)
+			lTags = new JLabel("Tags");
+
+		return lTags;
+	}
+	
+	/**
+	 * This method initializes lComments JLabel
+	 * 
+	 * @return javax.swing.JLabel
+	 */
+	private JLabel getLComments() {
+		if (lComments == null)
+			lComments = new JLabel("Comments");
+
+		return lComments;
+	}
+	
+	/**
+	 * This method initializes sComments JScrollPane
+	 * 
+	 * @return javax.swing.JScrollPane
+	 */
+	private JScrollPane getSComments() {
+		if (sComments == null)
+			sComments = new JScrollPane(getTComments());
+
+		return sComments;
+	}
+	
+	/**
+	 * This method initializes tComments JTextArea
+	 * 
+	 * @return javax.swing.JTextArea
+	 */
+	private JTextArea getTComments() {
+		if (tComments == null) {
+			tComments = new JTextArea(5, 20);
+			tComments.setLineWrap(true);
+		}
+
+		return tComments;
+	}
+	
 	/**
 	 * This method initializes tTags JTextField
 	 * 
@@ -103,6 +182,20 @@ public class Tags extends JDialog{
 			tTags = new JTextField(20);
 		}
 		return tTags;
+	}
+	
+	/**
+	 * This method initializes cTray JCheckBox
+	 * 
+	 * @return javax.swing.JCheckBox
+	 */
+	private JCheckBox getCTray() {
+		if (cTray == null) {
+			cTray = new JCheckBox(Messages.getString("Front.23")); //$NON-NLS-1$
+			/* Initially unselected */
+			cTray.setSelected(false);
+		}
+		return cTray;
 	}
 	
 	/**
@@ -117,6 +210,10 @@ public class Tags extends JDialog{
 				public void actionPerformed(ActionEvent e) {
 					Set<String> tags = new HashSet<String>(getTags());
 					Front.getConfiguration().put("tags", tags.toString().substring(1, tags.toString().length()-1));
+					if (getCTray().isSelected())
+						Front.getConfiguration().put("tray","true");
+					else
+						Front.getConfiguration().put("tray","false");
 					dispose();
 				}
 
