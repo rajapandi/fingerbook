@@ -51,7 +51,7 @@ public class FingerprintsController {
     	logger.info("Sending fingerbook to HBASE");
     	
     	// TODO add to persistence
-    	PersistentFingerbook pf = new PersistentFingerbook(fingerbook);    	
+//    	PersistentFingerbook pf = new PersistentFingerbook(fingerbook);    	
 //    	fingerbook.setFingerbookId(pf.saveMe());
     	
     	//TODO send response
