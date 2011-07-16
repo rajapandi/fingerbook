@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0" xmlns:c="http://java.sun.com/jsp/jstl/core" >
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <jsp:output omit-xml-declaration="yes"/>
+  <spring:message code="label_listfingerbooks_update" htmlEscape="false" var="title"/>
+  
+  <util:panel id="title" title="${title}">
+    <spring:message code="application_name" htmlEscape="false" var="app_name"/>
+    <h3>
+      <spring:message arguments="${app_name}" code="welcome_titlepane"/>
+    </h3>
+  </util:panel>
+  <form action="update" method="get">
+  <script type="text/javascript" language="javascript">
+//<![CDATA[
+
+
+  	var maxTags = 10;
+
+      function addRow(tableID) {
+
+          var table = document.getElementById(tableID);
+
+          var rowCount = table.rows.length;
+
+          if(rowCount > parseInt(maxTags)) {
+              //                    alert('Max forwards limit');
+              return;
+          }
+          var prevId = '0';
+          var rowId = 0;
+
+          if(rowCount > 1) {
+              var prevRow = table.rows[rowCount - 1];
+              prevId = prevRow.id;
+              rowId = parseInt(prevId) + 1;
+          }
+
+          //                var rowId = parseInt(prevId) + 1;
+
+          var row = table.insertRow(rowCount);
+          row.id = rowId.toString();
+
+          var cell1 = row.insertCell(0);
+          var element1 = document.createElement("input");
+          element1.type = "text";
+          element1.name = "tags_input";
+          cell1.appendChild(element1);
+
+//           var cell2 = row.insertCell(1);
+//           var element2 = document.createElement("input");
+//           element2.type = "text";
+//           element2.name = "txt_fname";
+//           cell2.appendChild(element2);
+
+//           var cell3 = row.insertCell(2);
+//           var element3 = document.createElement("input");
+//           element3.type = "text";
+//           element3.name = "txt_lname";
+//           cell3.appendChild(element3);
+
+          var cell4 = row.insertCell(1);
+          var myLink = document.createElement('a');
+          var href = document.createAttribute('href');
+//           var img = document.createElement('img');
+//           img.setAttribute('src', '${tManImagePath}forward/remove.png');
+//           img.setAttribute('border', '0');
+//           img.setAttribute('height', '16');
+//           img.setAttribute('width', '16');
+//           img.setAttribute('title', 'Eliminar Contacto');
+
+          myLink.setAttribute('href','#');
+          myLink.innerText ="Delete";
+//           myLink.appendChild(img);
+          //                myLink.onclick = "deleteRow(rowId); return false;";
+          myLink.onclick = function(){deleteRow(rowId); return false;}
+          cell4.appendChild(myLink);
+
+      }
+
+      function deleteRow(rowID) {
+          try {
+              var table = document.getElementById("tags_table");
+              var rowCount = table.rows.length;
+
+              for(var i=0; i<rowCount; i++) {
+                  var row = table.rows[i];
+                  //                            var chkbox = row.cells[0].childNodes[0];
+                  if(row.id != null && row.id != '' && row.id == rowID) {
+                      table.deleteRow(i);
+                      break;
+                      //                                    rowCount--;
+                      //                                    i--;
+                  }
+
+              }
+          }catch(e) {
+              alert(e);
+          }
+      }
+    //]]>
+  </script>
+  	<table>
+  		<tr>
+  			<td>Fingerbook:</td>
+  			<td>${fb.fingerbookId}</td>
+  		</tr>
+  		<tr>
+  			<td>Date:</td>
+  			<td>${fb.stampDate}</td>
+  		</tr>
+  		<tr>
+  			<td>Tags:</td>
+  			<td>
+  				<table id="tags_table">
+  					<c:forEach var="tag" items="${fb.tags}" varStatus="rIndex">
+  						<tr id="${ rIndex.index }">
+  							<td><input type="text" name="tags_input" value="${tag}"/></td>
+  							<td><a href="#" onclick="deleteRow('${ rIndex.index }'); return false;">Delete tag</a></td>
+  						</tr>
+  					</c:forEach>
+  				</table>
+  			</td>
+  			<td><a onclick="addRow('tags_table'); return false;" href="#" >Add tag</a></td>
+  		</tr>
+  		<tr>
+  			<td>Comment:</td>
+  			<td><input type="text" name="comment_input" value="${fb.comment}"/></td>
+  		</tr>
+  	</table>
+  	<br />
+  	<input type="hidden" name="fbId" value="${fb.fingerbookId}"/>
+  	<input type="submit" value="Submit" />
+  </form>
+</div>

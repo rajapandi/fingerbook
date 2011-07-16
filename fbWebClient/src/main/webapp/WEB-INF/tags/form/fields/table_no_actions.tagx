@@ -6,9 +6,11 @@
   <jsp:directive.attribute name="data" type="java.util.Collection" required="true" rtexprvalue="true" description="The collection to be displayed in the table" />
   <jsp:directive.attribute name="path" type="java.lang.String" required="true" rtexprvalue="true" description="Specify the URL path" />
   <jsp:directive.attribute name="typeIdFieldName" type="java.lang.String" required="false" rtexprvalue="true" description="The identifier field name for the type (defaults to 'id')" />
-  <jsp:directive.attribute name="create" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'create' link into table (default true)" />
-  <jsp:directive.attribute name="update" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'update' link into table (default true)" />
-  <jsp:directive.attribute name="delete" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'delete' link into table (default true)" />
+  <jsp:directive.attribute name="actions" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'show', 'update', 'delete', 'create' link into table (default false)" />
+  <jsp:directive.attribute name="show" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'show' link into table (default false)" />
+  <jsp:directive.attribute name="create" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'create' link into table (default false)" />
+  <jsp:directive.attribute name="update" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'update' link into table (default false)" />
+  <jsp:directive.attribute name="delete" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'delete' link into table (default false)" />
   <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
   <jsp:directive.attribute name="z" type="java.lang.String" required="false" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
   <jsp:directive.attribute name="requiredParams" type="java.lang.String" required="false" rtexprvalue="true" description="If this is a finder List, then we should take care, that all necessary Parameters are listed."/>
@@ -26,18 +28,37 @@
       <c:set var="typeIdFieldName" value="id" />
     </c:if>
 
+    <c:if test="${empty actions}">
+      <c:set var="actions" value="false" />
+    </c:if>
+
+    <c:if test="${empty show}">
+      <c:set var="show" value="false" />
+    </c:if>
+
+    <c:if test="${empty create}">
+      <c:set var="create" value="false" />
+    </c:if>
+
     <c:if test="${empty update}">
-      <c:set var="update" value="true" />
+      <c:set var="update" value="false" />
     </c:if>
 
     <c:if test="${empty delete}">
-      <c:set var="delete" value="true" />
+      <c:set var="delete" value="false" />
+    </c:if>
+    
+    <c:if test="${!actions}">
+      <c:set var="show" value="false" />
+      <c:set var="create" value="false" />
+      <c:set var="update" value="false" />
+      <c:set var="delete" value="false" />
     </c:if>
 
     <c:set var="typeName" value="${fn:split(id,'_')[fn:length(fn:split(id,'_')) - 1]}" />
     <c:set var="lengths" value="${fn:split(columnMaxLengths, ',')}" scope="request" />
     
-    <spring:eval var="colCounter" expression="1" />
+    <spring:eval var="colCounter" expression="0" />
     
     <table>
       <thead>
@@ -48,7 +69,10 @@
               <spring:eval var="colCounter" expression="colCounter  + 1" />
             </th>
           </c:forTokens>
-          <th></th>
+          <c:if test="${show}">
+            <th></th>
+            <spring:eval var="colCounter" expression="colCounter  + 1" />
+          </c:if>
           <c:if test="${update}">
             <th></th>
             <spring:eval var="colCounter" expression="colCounter  + 1" />
@@ -75,14 +99,16 @@
               </c:choose>
             </td>
           </c:forTokens>
-          <td class="utilbox">
-            <spring:url value="${path}/${item[typeIdFieldName]}" var="show_form_url" />
-            <spring:url value="/resources/images/show.png" var="show_image_url" />
-            <spring:message arguments="${typeName}" code="entity_show" var="show_label" htmlEscape="false" />
-            <a href="${fn:escapeXml(show_form_url)}" alt="${fn:escapeXml(show_label)}" title="${fn:escapeXml(show_label)}">
-              <img alt="${fn:escapeXml(show_label)}" class="image" src="${fn:escapeXml(show_image_url)}" title="${fn:escapeXml(show_label)}" />
-            </a>
-          </td>
+          <c:if test="${show}">
+	          <td class="utilbox">
+	            <spring:url value="${path}/${item[typeIdFieldName]}" var="show_form_url" />
+	            <spring:url value="/resources/images/show.png" var="show_image_url" />
+	            <spring:message arguments="${typeName}" code="entity_show" var="show_label" htmlEscape="false" />
+	            <a href="${fn:escapeXml(show_form_url)}" alt="${fn:escapeXml(show_label)}" title="${fn:escapeXml(show_label)}">
+	              <img alt="${fn:escapeXml(show_label)}" class="image" src="${fn:escapeXml(show_image_url)}" title="${fn:escapeXml(show_label)}" />
+	            </a>
+	          </td>
+          </c:if>
           <c:if test="${update}">
             <td class="utilbox">
               <spring:url value="${path}/${item[typeIdFieldName]}" var="update_form_url">

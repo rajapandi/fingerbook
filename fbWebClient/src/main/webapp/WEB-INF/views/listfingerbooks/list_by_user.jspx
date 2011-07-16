@@ -13,7 +13,7 @@
   <br />
   
 	<page:list id="pl_com_fingerbook_models_Fingerbook" items="${fbs}" z="">
-        <table:table typeIdFieldName="fingerbookId" data="${fbs}" id="l_com_fingerbook_models_Fingerbook" path="/listfingerbooks" z="" create="false" update="false" delete="false" requiredParams="${requiredParams}">
+        <table:table typeIdFieldName="fingerbookId" data="${fbs}" id="l_com_fingerbook_models_Fingerbook" path="/listfingerbooks" z="" create="false" update="true" delete="false" requiredParams="${requiredParams}">
             <table:column id="c_com_fingerbook_models_Fingerbook_fingerbookId" property="fingerbookId" z=""/>
         	<table:column id="c_com_fingerbook_models_Fingerbook_stamp" property="stampDate" z=""/>
         	<table:column id="c_com_fingerbook_models_Fingerbook_tags" property="tags" z=""/>
