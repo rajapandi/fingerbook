@@ -1,13 +1,17 @@
 package com.fingerbook.models;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 public class Fingerbook implements Serializable {
 	private static final long serialVersionUID = 3826603447160435399L;
+	
+	public static String defaultDateFormat = "yyyy-MM-dd";
 
 	public enum STATE {
-		START, CONTENT, FINISH, TIMEOUT_ERROR, RESUME
+		START, CONTENT, FINISH, TIMEOUT_ERROR, RESUME, UPDATE
 	}
 	protected Long fingerbookId;
 	protected Fingerprints fingerPrints;
@@ -98,6 +102,17 @@ public class Fingerbook implements Serializable {
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	public String getStampDate() {
+		
+		String stampDate = "";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		sdf.applyPattern(defaultDateFormat);
+		stampDate = sdf.format(new Date(stamp));
+		
+		return stampDate;
 	}
 	
 }
