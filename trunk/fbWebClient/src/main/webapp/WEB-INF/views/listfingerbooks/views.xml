@@ -19,4 +19,13 @@
 <definition extends="default" name="listfingerbooks/show">
         <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/show.jspx"/>
     </definition>
+<definition extends="default" name="listfingerbooks/list_by_user">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/list_by_user.jspx"/>
+    </definition>
+<definition extends="default" name="listfingerbooks/update">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/update.jspx"/>
+    </definition>
+    <definition extends="default" name="listfingerbooks/list_by_hash">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/list_by_hash.jspx"/>
+    </definition>
 </tiles-definitions>
