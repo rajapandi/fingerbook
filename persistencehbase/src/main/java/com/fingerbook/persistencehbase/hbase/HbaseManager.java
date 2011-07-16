@@ -202,6 +202,8 @@ public class HbaseManager {
 		if(config == null) {
 			config = HBaseConfiguration.create();
 		}
+		
+		byte [] value = null;
 	    
 		// This instantiates an HTable object that connects you to
 	    // the "myLittleHBaseTable" table.
@@ -212,9 +214,11 @@ public class HbaseManager {
 	    // the hbase return into the form you find most palatable.
 //	    Get g = new Get(Bytes.toBytes(rowId));
 	    Get g = new Get(rowId);
+	    g.addColumn(Bytes.toBytes(columnFamily), columnName);
 	    Result r = table.get(g);
-//	    byte [] value = r.getValue(Bytes.toBytes(columnFamily), Bytes.toBytes(columnName));
-	    byte [] value = r.getValue(Bytes.toBytes(columnFamily), columnName);
+	    if(r != null && !r.isEmpty()) {
+	    	value = r.getValue(Bytes.toBytes(columnFamily), columnName);
+	    }
 	    // If we convert the value bytes, we should get back 'Some Value', the
 	    // value we inserted at this location.
 //	    String valueStr = Bytes.toString(value);
@@ -276,11 +280,49 @@ public class HbaseManager {
 	    // Result instances. Generally, a Result is an object that will package up
 	    // the hbase return into the form you find most palatable.
 	    Get g = new Get(rowId);
+	    
+	    g.addFamily(Bytes.toBytes(columnFamily));
+	    
 	    Result r = table.get(g);
 	    NavigableMap<byte[],byte[]> ret = r.getFamilyMap(Bytes.toBytes(columnFamily));
 	    
 		
 		return ret;
+	}
+	
+	public static int getMembersMapCount(String tableName, byte[] rowId, String columnFamily) throws IOException {
+		
+		int total = 0;
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+		// Now, to retrieve the data we just wrote. The values that come back are
+	    // Result instances. Generally, a Result is an object that will package up
+	    // the hbase return into the form you find most palatable.
+	    Get g = new Get(rowId);
+	    g.addFamily(Bytes.toBytes(columnFamily));
+	    Result r = table.get(g);
+	    NavigableMap<byte[],byte[]> ret = r.getFamilyMap(Bytes.toBytes(columnFamily));
+	    
+	    if(ret != null) {
+	    	total = ret.size();
+	    }
+		
+		return total;
 	}
 	
 	public static NavigableMap<byte[],byte[]> getMembersMapPag(String tableName, byte[] rowId, String columnFamily, int limit, int offset) throws IOException {
@@ -666,6 +708,21 @@ public class HbaseManager {
 	    HTable table = new HTable(config, tableName);
 		Delete delete = new Delete(rowId);
 		
+		table.delete(delete);
+	}
+	
+	public static void deleteFamily(String tableName, byte[] rowId, String columnFamily) throws IOException {
+		
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+		
+	    HTable table = new HTable(config, tableName);
+		Delete delete = new Delete(rowId);
+		delete = delete.deleteFamily(Bytes.toBytes(columnFamily));
 		table.delete(delete);
 	}
 	
