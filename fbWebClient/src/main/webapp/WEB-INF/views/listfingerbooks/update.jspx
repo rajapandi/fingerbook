@@ -71,6 +71,7 @@
 
           myLink.setAttribute('href','#');
           myLink.innerText ="Delete";
+          myLink.innerHTML ="Delete";
 //           myLink.appendChild(img);
           //                myLink.onclick = "deleteRow(rowId); return false;";
           myLink.onclick = function(){deleteRow(rowId); return false;}
@@ -112,7 +113,7 @@
   		<tr>
   			<td>Tags:</td>
   			<td>
-  				<table id="tags_table">
+  				<table id="tags_table" style="margin: 0px;">
   					<c:forEach var="tag" items="${fb.tags}" varStatus="rIndex">
   						<tr id="${ rIndex.index }">
   							<td><input type="text" name="tags_input" value="${tag}"/></td>
@@ -130,6 +131,6 @@
   	</table>
   	<br />
   	<input type="hidden" name="fbId" value="${fb.fingerbookId}"/>
-  	<input type="submit" value="Submit" />
+  	<input type="submit" value="Submit" /> <a href="${referer}">Cancel</a>
   </form>
 </div>
