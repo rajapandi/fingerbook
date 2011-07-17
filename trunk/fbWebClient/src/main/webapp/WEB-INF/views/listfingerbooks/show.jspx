@@ -24,7 +24,7 @@
   		<tr>
   			<td>Tags:</td>
   			<td>
-  				<table id="tags_table">
+  				<table id="tags_table" style="margin: 0px;">
   					<c:forEach var="tag" items="${fb.tags}" varStatus="rIndex">
   						<tr id="${ rIndex.index }">
   							<td>${tag}</td>
@@ -42,5 +42,6 @@
   <table:table_no_actions typeIdFieldName="shaHash" data="${fb.fingerPrints.files}" id="l_com_fingerbook_models_FileInfo" path="/listfingerbooks" z="">
     <table:column id="c_com_fingerbook_models_FileInfo_shaHash" property="shaHash" z="" maxLength="32"/>
   </table:table_no_actions>
+  
 
 </div>

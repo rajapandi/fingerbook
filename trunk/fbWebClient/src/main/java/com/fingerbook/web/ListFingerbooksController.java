@@ -292,41 +292,135 @@ public class ListFingerbooksController {
     		ret = restTemplate.postForObject(urlStr, loadfb, Response.class);
 
     		
-    		fb = getFingerbookRest(request, id);
-    		
-    		if(request.getParameter("page") != null) {
-    			page = Integer.parseInt(request.getParameter("page"));
-    		}
-    		if(request.getParameter("size") != null) {
-    			size = Integer.parseInt(request.getParameter("size"));
-    		}
-    		fingerprintsFeed = getFingerprintsFeedREST(request, id, size, page);
-    		
-    		if(fingerprintsFeed != null) {
-    			
-    			maxPages = (int) Math.ceil((double)fingerprintsFeed.getTotalresults() / (double)size);
-    			
-    			fb.setFingerPrints(fingerprintsFeed.getFingerPrints());
-    			
-    		}
-
-    		result = result + "<br />" + fb.toString();
-    		System.out.println(fb.toString());
+//    		fb = getFingerbookRest(request, id);
+//    		
+//    		if(request.getParameter("page") != null) {
+//    			page = Integer.parseInt(request.getParameter("page"));
+//    		}
+//    		if(request.getParameter("size") != null) {
+//    			size = Integer.parseInt(request.getParameter("size"));
+//    		}
+//    		fingerprintsFeed = getFingerprintsFeedREST(request, id, size, page);
+//    		
+//    		if(fingerprintsFeed != null) {
+//    			
+//    			maxPages = (int) Math.ceil((double)fingerprintsFeed.getTotalresults() / (double)size);
+//    			
+//    			fb.setFingerPrints(fingerprintsFeed.getFingerPrints());
+//    			
+//    		}
+//
+//    		result = result + "<br />" + fb.toString();
+//    		System.out.println(fb.toString());
 
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
     	
-    	modelMap.put("result", result);
-    	modelMap.put("fb", fb);
+//    	modelMap.put("result", result);
+//    	modelMap.put("fb", fb);
+//    	
+//    	modelMap.put("maxPages", maxPages);
+//    	
+//    	modelMap.put("page", page);
+//		modelMap.put("size", size);
+//		return "listfingerbooks/show";
     	
-    	modelMap.put("maxPages", maxPages);
-    	
-    	modelMap.put("page", page);
-		modelMap.put("size", size);
-		
-		return "listfingerbooks/show";
+    	return "redirect:" + id;
     }
+	
+//	@RequestMapping(value="/update", method = RequestMethod.GET)
+//	public String updateFingerbook(ModelMap modelMap, HttpServletRequest request) {
+//		
+//		Response ret = null;
+//		Fingerbook fb = null;
+//		Fingerbook loadfb = null;
+//		String result = "";
+//		
+//		Long id = null;
+//		String comment = "";
+//		Set<String> tags = new HashSet<String>();
+//		String[] tagsInput = null;
+//		
+//		int size = LIMIT_PAG;
+//		int page = 1;
+//		int maxPages = 1;
+//		
+//		String urlStr = null;
+//		FingerprintsFeed fingerprintsFeed = null;
+//		
+//    	try {
+//    		if(request.getParameter("fbId") != null) {
+//    			id = Long.parseLong(request.getParameter("fbId"));
+//    		}
+//    		if(request.getParameter("comment_input") != null) {
+//    			comment = request.getParameter("comment_input");
+//    		}
+//    		
+//    		tagsInput = request.getParameterValues("tags_input"); 
+//    		if(tagsInput != null && tagsInput.length > 0) {
+//    			for(int i = 0; i < tagsInput.length; i++) {
+//    				tags.add(tagsInput[i]);
+//    			}
+//    		}
+//    		
+//    		loadfb = new Fingerbook();
+//    		
+//    		loadfb.setFingerbookId(id);
+//    		loadfb.setComment(comment);
+//    		loadfb.setTags(tags);
+//    		
+//    		String authMethod = getAuthMethod();
+//    		
+//    		if(authMethod.equalsIgnoreCase(ROLE_USER)) {
+//    			urlStr = URL_UPDATE_USER;
+//    		}
+//    		else if(authMethod.equalsIgnoreCase(ROLE_SEMIAUTH)) {
+//    			urlStr = URL_UPDATE_TICKET;
+//    		}
+//    		else {
+//    			urlStr = URL_UPDATE_TICKET;
+//    		}
+//    		
+//    		RestTemplate restTemplate = buildRestTemplate(request, loadfb);
+//    		ret = restTemplate.postForObject(urlStr, loadfb, Response.class);
+//
+//    		
+//    		fb = getFingerbookRest(request, id);
+//    		
+//    		if(request.getParameter("page") != null) {
+//    			page = Integer.parseInt(request.getParameter("page"));
+//    		}
+//    		if(request.getParameter("size") != null) {
+//    			size = Integer.parseInt(request.getParameter("size"));
+//    		}
+//    		fingerprintsFeed = getFingerprintsFeedREST(request, id, size, page);
+//    		
+//    		if(fingerprintsFeed != null) {
+//    			
+//    			maxPages = (int) Math.ceil((double)fingerprintsFeed.getTotalresults() / (double)size);
+//    			
+//    			fb.setFingerPrints(fingerprintsFeed.getFingerPrints());
+//    			
+//    		}
+//
+//    		result = result + "<br />" + fb.toString();
+//    		System.out.println(fb.toString());
+//
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    	
+//    	modelMap.put("result", result);
+//    	modelMap.put("fb", fb);
+//    	
+//    	modelMap.put("maxPages", maxPages);
+//    	
+//    	modelMap.put("page", page);
+//		modelMap.put("size", size);
+//		
+//		return "listfingerbooks/show";
+//    }
 	
 //	@RequestMapping(value="/user", method = RequestMethod.GET)
 //	public String listByUser(@RequestParam("user_input") String user, ModelMap modelMap, HttpServletRequest request) {
@@ -469,6 +563,10 @@ public class ListFingerbooksController {
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
+    	
+    	String referer = request.getHeader("Referer");
+    	
+    	modelMap.put("referer", referer);
     	
     	modelMap.put("result", result);
     	modelMap.put("fb", fb);
