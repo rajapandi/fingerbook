@@ -28,4 +28,7 @@
     <definition extends="default" name="listfingerbooks/list_by_hash">
         <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/list_by_hash.jspx"/>
     </definition>
+    <definition extends="default" name="listfingerbooks/error_response">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/error_response.jspx"/>
+    </definition>
 </tiles-definitions>
