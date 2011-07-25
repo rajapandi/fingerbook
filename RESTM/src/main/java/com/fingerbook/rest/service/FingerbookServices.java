@@ -12,6 +12,7 @@ import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
+import com.fingerbook.models.transfer.FingerbookFeed;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
@@ -131,6 +132,60 @@ public class FingerbookServices {
 		} else {
 			return null;
 		}
+	}
+	
+	public FingerbookFeed getFingerbookFeedById(Long id, boolean loadFingerprints) {
+		
+		FingerbookFeed fingerbookFeed = new FingerbookFeed();
+		if(id != null) {
+			
+			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, loadFingerprints);
+			
+			fingerbookFeed.setFingerbook(fingerbook);
+			fingerbookFeed.setTotalresults(1);
+			
+		} else {
+			fingerbookFeed.setTotalresults(0);
+		}
+		
+		return fingerbookFeed;
+	}
+	
+	public FingerbookFeed getFingerbookFeedById(Long id, int limit, int offset ) {
+		
+		FingerbookFeed fingerbookFeed = new FingerbookFeed();
+		
+		fingerbookFeed.setLimit(1);
+		fingerbookFeed.setOffset(0);
+		
+		if(id != null) {
+			
+			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, false);
+			
+			if(fingerbook != null) {
+				
+				FingerprintsFeed fingerprintsFeed = PersistentFingerbook.getFingerprintsFeedByFingerBookPag(id, limit, offset);
+				
+				if(fingerprintsFeed != null) {
+					
+					fingerbook.setFingerPrints(fingerprintsFeed.getFingerPrints());
+					
+					fingerprintsFeed.setFingerPrints(null);
+					fingerbookFeed.setFingerprintsFeed(fingerprintsFeed);
+					
+				}
+			}
+			
+			
+			
+			fingerbookFeed.setFingerbook(fingerbook);
+			fingerbookFeed.setTotalresults(1);
+			
+		} else {
+			fingerbookFeed.setTotalresults(0);
+		}
+		
+		return fingerbookFeed;
 	}
 	
 	public Fingerbook getFingerbookById(Long id, int size, int offset ) {	

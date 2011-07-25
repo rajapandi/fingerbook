@@ -17,6 +17,7 @@ import com.fingerbook.models.Auth;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.Fingerbook.STATE;
+import com.fingerbook.models.transfer.FingerbookFeed;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
 import com.fingerbook.models.Response;
@@ -148,66 +149,132 @@ public class FingerbooksController {
     	return fingerbook;
     }
     
+//    @RequestMapping(value="/authenticated/fingerbook/{id}/user/{user}", method=RequestMethod.GET)
+//    @ResponseBody
+//    public Fingerbook fingerbookByIdUser(@PathVariable("user") String user, @PathVariable("id") Long id, Model model) {
+//    	Fingerbook fingerbook = null;
+//    	Response ans = null;
+//    	
+//    	if(!fingerbookService.validateAuthUser(user)) {
+//    		
+//    		String msg = "Operation cancelled: Authentication is used, authenticated user not allowed to access user's: " + user + " fingerbooks";
+//			logger.info(authenticated + ": Returning error Response object: " + msg);
+//			ans =  new Response(new Integer(13), msg);
+//			fingerbook = new Fingerbook();
+//    		fingerbook.setFingerbookId(-1L);
+//    	}
+//    	else if((ans = fingerbookService.validateOwner(id, user, authenticated)) != null) {
+//    		fingerbook = new Fingerbook();
+//    		fingerbook.setFingerbookId(-1L);
+//    	}
+//    	else {
+//    		fingerbook = fingerbookService.getFingerbookById(id, false);
+//    	}
+//    	
+//    	model.addAttribute("fingerbooks", fingerbook);
+//    	logger.info("Returning fingerbook for id: " + id);
+//    	
+//    	return fingerbook;
+//    }
+    
     @RequestMapping(value="/authenticated/fingerbook/{id}/user/{user}", method=RequestMethod.GET)
     @ResponseBody
-    public Fingerbook fingerbookByIdUser(@PathVariable("user") String user, @PathVariable("id") Long id, Model model) {
-    	Fingerbook fingerbook = null;
+    public FingerbookFeed fingerbookByIdUser(@PathVariable("user") String user, @PathVariable("id") Long id, Model model) {
+    	
+    	FingerbookFeed fingerbookFeed = null;
     	Response ans = null;
     	
-    	if(!fingerbookService.validateAuthUser(user)) {
+    	if(fingerbookService.validateAuthUser(user)) {
+    		ans = fingerbookService.validateOwner(id, user, authenticated);
+    	}
+    	else {
     		
     		String msg = "Operation cancelled: Authentication is used, authenticated user not allowed to access user's: " + user + " fingerbooks";
 			logger.info(authenticated + ": Returning error Response object: " + msg);
 			ans =  new Response(new Integer(13), msg);
-			fingerbook = new Fingerbook();
-    		fingerbook.setFingerbookId(-1L);
-    	}
-    	else if((ans = fingerbookService.validateOwner(id, user, authenticated)) != null) {
-    		fingerbook = new Fingerbook();
-    		fingerbook.setFingerbookId(-1L);
-    	}
-    	else {
-    		fingerbook = fingerbookService.getFingerbookById(id, false);
     	}
     	
-    	model.addAttribute("fingerbooks", fingerbook);
-    	logger.info("Returning fingerbook for id: " + id);
+    	if(ans != null) {
+    		fingerbookFeed = new FingerbookFeed();
+			fingerbookFeed.setResponse(ans);
+			return fingerbookFeed;
+    	}
     	
-    	return fingerbook;
+    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, false);
+    	
+    	model.addAttribute("fingerbooks", fingerbookFeed);
+    	logger.info("Returning fingerbookFeed for id: " + id);
+    	
+    	return fingerbookFeed;
     }
+    
+//    @RequestMapping(value="/semiauthenticated/fingerbook/{id}/ticket/{ticket}", method=RequestMethod.GET)
+//    @ResponseBody
+//    public Fingerbook fingerbookByIdTicket(@PathVariable("ticket") String ticket, @PathVariable("id") Long id, Model model) {
+//    	
+//    	Fingerbook fingerbook = null;
+//    	Response ans;
+//    	if((ans = fingerbookService.validateOwner(id, ticket, semiAuthenticated)) != null) {
+//    		fingerbook = new Fingerbook();
+//    		fingerbook.setFingerbookId(-1L);
+//    	}
+//    	else {
+//    		fingerbook = fingerbookService.getFingerbookById(id, false);
+//    	}
+//    	
+//    	model.addAttribute("fingerbooks", fingerbook);
+//    	
+//    	logger.info("Returning fingerbook for id: " + id);
+//    	
+//    	return fingerbook;
+//    }
     
     @RequestMapping(value="/semiauthenticated/fingerbook/{id}/ticket/{ticket}", method=RequestMethod.GET)
     @ResponseBody
-    public Fingerbook fingerbookByIdTicket(@PathVariable("ticket") String ticket, @PathVariable("id") Long id, Model model) {
+    public FingerbookFeed fingerbookByIdTicket(@PathVariable("ticket") String ticket, @PathVariable("id") Long id, Model model) {
     	
-    	Fingerbook fingerbook = null;
+    	FingerbookFeed fingerbookFeed = null;
     	Response ans;
     	if((ans = fingerbookService.validateOwner(id, ticket, semiAuthenticated)) != null) {
-    		fingerbook = new Fingerbook();
-    		fingerbook.setFingerbookId(-1L);
-    	}
-    	else {
-    		fingerbook = fingerbookService.getFingerbookById(id, false);
+    		fingerbookFeed = new FingerbookFeed();
+			fingerbookFeed.setResponse(ans);
+			return fingerbookFeed;
     	}
     	
-    	model.addAttribute("fingerbooks", fingerbook);
+    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, false);
+    	model.addAttribute("fingerbooks", fingerbookFeed);
     	
-    	logger.info("Returning fingerbook for id: " + id);
+    	logger.info("Returning fingerbookFeed for id: " + id);
     	
-    	return fingerbook;
+    	return fingerbookFeed;
     }
+    
+//    @RequestMapping(value="/anonymous/fingerbook/{id}", method=RequestMethod.GET)
+//    @ResponseBody
+//    public Fingerbook fingerbookByIdAnon(@PathVariable("id") Long id, Model model) {
+//    	Fingerbook fingerbook = null;
+//    	
+//    	fingerbook = new Fingerbook();
+//		fingerbook.setFingerbookId(-1L);
+//		
+//		logger.info("Anonymous not able to load fingerbook for id: " + id);
+//    	
+//    	return fingerbook;
+//    }
     
     @RequestMapping(value="/anonymous/fingerbook/{id}", method=RequestMethod.GET)
     @ResponseBody
-    public Fingerbook fingerbookByIdAnon(@PathVariable("id") Long id, Model model) {
-    	Fingerbook fingerbook = null;
+    public FingerbookFeed fingerbookByIdAnon(@PathVariable("id") Long id, Model model) {
+    	FingerbookFeed fingerbookFeed = null;
     	
-    	fingerbook = new Fingerbook();
-		fingerbook.setFingerbookId(-1L);
+    	String msg = "Anonymous not able to load fingerbook for id: " + id;
+    	logger.info("Anonymous not able to load fingerbook for id: " + id);
+    	Response ans = new Response(new Integer(14), msg);
+    	
+    	fingerbookFeed = new FingerbookFeed();
+		fingerbookFeed.setResponse(ans);
+		return fingerbookFeed;
 		
-		logger.info("Anonymous not able to load fingerbook for id: " + id);
-    	
-    	return fingerbook;
     }
     
 //    @RequestMapping(value="/fingerbook/{id}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
@@ -232,6 +299,76 @@ public class FingerbooksController {
 //    	
 //    	return fingerprintsFeed;
 //    }
+    
+    @RequestMapping(value="/authenticated/fingerbook/{id}/user/{user}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookFeed fingerbookByIdUser(@PathVariable("user") String user, @PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	FingerbookFeed fingerbookFeed = null;
+    	Response ans = null;
+    	
+    	if(fingerbookService.validateAuthUser(user)) {
+    		ans = fingerbookService.validateOwner(id, user, authenticated);
+    	}
+    	else {
+    		
+    		String msg = "Operation cancelled: Authentication is used, authenticated user not allowed to access user's: " + user + " fingerbooks";
+			logger.info(authenticated + ": Returning error Response object: " + msg);
+			ans =  new Response(new Integer(13), msg);
+    	}
+    	
+    	if(ans != null) {
+    		fingerbookFeed = new FingerbookFeed();
+			fingerbookFeed.setResponse(ans);
+			return fingerbookFeed;
+    	}
+    	
+//    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, false);
+    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, limit, offset);
+    	
+    	model.addAttribute("fingerbooks", fingerbookFeed);
+    	logger.info("Returning fingerbookFeed for id: " + id);
+    	
+    	return fingerbookFeed;
+    }
+    
+
+    @RequestMapping(value="/semiauthenticated/fingerbook/{id}/ticket/{ticket}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookFeed fingerbookByIdTicket(@PathVariable("ticket") String ticket, @PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	FingerbookFeed fingerbookFeed = null;
+    	Response ans;
+    	if((ans = fingerbookService.validateOwner(id, ticket, semiAuthenticated)) != null) {
+    		fingerbookFeed = new FingerbookFeed();
+			fingerbookFeed.setResponse(ans);
+			return fingerbookFeed;
+    	}
+    	
+//    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, false);
+    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, limit, offset);
+    	model.addAttribute("fingerbooks", fingerbookFeed);
+    	
+    	logger.info("Returning fingerbookFeed for id: " + id);
+    	
+    	return fingerbookFeed;
+    }
+    
+
+    @RequestMapping(value="/anonymous/fingerbook/{id}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookFeed fingerbookByIdAnon(@PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	FingerbookFeed fingerbookFeed = null;
+    	
+    	String msg = "Anonymous not able to load fingerbook for id: " + id;
+    	logger.info("Anonymous not able to load fingerbook for id: " + id);
+    	Response ans = new Response(new Integer(14), msg);
+    	
+    	fingerbookFeed = new FingerbookFeed();
+		fingerbookFeed.setResponse(ans);
+		return fingerbookFeed;
+		
+    }
     
     @RequestMapping(value="/authenticated/fingerprints/{id}/user/{user}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
     @ResponseBody
