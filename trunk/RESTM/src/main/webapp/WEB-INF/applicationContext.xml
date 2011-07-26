@@ -99,8 +99,12 @@
   		<property name="fingerbookService"><ref bean="fingerbookServices"/></property>
   	</bean>
   	
+  	<!-- DI of adminServices --> 
+  	<bean id="adminServices" class="com.fingerbook.rest.service.AdminServices" />
+  	
   	<bean id="adminController" class="com.fingerbook.rest.web.AdminController">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="adminService"><ref bean="adminServices"/></property>
   	</bean>
   	 
 </beans>

@@ -1,7 +1,12 @@
 package com.fingerbook.rest.web;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Controller;
@@ -11,8 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
+import com.fingerbook.models.SpringSecurityAuthority;
+import com.fingerbook.models.SpringSecurityUser;
+import com.fingerbook.models.SpringSecurityUserMerge;
+import com.fingerbook.models.UserInfo;
 import com.fingerbook.rest.back.FingerbookUtils;
+import com.fingerbook.rest.service.AdminServices;
+import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller
 @RequestMapping("/admin")
@@ -20,6 +33,8 @@ public class AdminController {
 	
 	// DI
     private SessionFactory sessionFactory;
+    // DI
+    private AdminServices adminService;
 	
 	protected final Log logger = LogFactory.getLog(getClass());
 	
@@ -152,6 +167,107 @@ public class AdminController {
 		return response;
 	}    
     
+    @RequestMapping(value="/listUsers", method=RequestMethod.GET)
+    @ResponseBody
+    public List<SpringSecurityUser> fingerbooksByTicket(Model model) {    
+    	
+    	List<SpringSecurityUser> users = new Vector<SpringSecurityUser>();
+    	List<Object[]> ssUsers = null;
+    	List<SpringSecurityAuthority> ssAuthority = null;
+	
+    	String msg;
+    	Session session = null;
+	
+		try{
+			session = sessionFactory.openSession();
+			
+			String sql = "select username, password, enabled from users";
+			//String sql = "from users" ;
+			String sql2 = "select  username, authority from authorities";
+			
+			Query query1 = session.createSQLQuery(sql);
+			//Query query1 = session.createQuery(sql);
+			Query query2 = session.createSQLQuery(sql2);	
+			
+			ssUsers = query1.list();
+			ssAuthority = query2.list();
+					
+			for(int i=0; i<ssUsers.size(); i++) {
+				SpringSecurityUser user = new SpringSecurityUser();
+				
+				Object[] row = (Object[])ssUsers.get(i);  
+				user.setId(new Integer(i).toString());
+				user.setUsername((String)row[0]);
+				user.setPassword((String)row[1]);
+				//TODO Hardwired
+				user.setEnabled(true);
+				
+				users.add(user);
+			}
+			
+			session.close();
+			
+		}catch(Exception e){
+			msg = "Listing users failed: " + e.getMessage();
+			Response response = new Response(null, msg);
+	    	logger.info(msg);
+			e.printStackTrace();
+			
+			return null;
+		}
+    	
+    	model.addAttribute("users", users);
+    	logger.info("Returning users");
+    	
+    	return users;
+    }
+ 
+    @RequestMapping(value="/listUsers/{username}", method=RequestMethod.GET)
+    @ResponseBody
+    public SpringSecurityUser listUserById(@PathVariable("username") String username, Model model) {    
+    	
+    	SpringSecurityUser user = new SpringSecurityUser();
+    	List<Object[]> ssUsers = null;
+    	List<SpringSecurityAuthority> ssAuthority = null;
+	
+    	String msg;
+    	Session session = null;
+	
+		try{
+			session = sessionFactory.openSession();		
+			String sql = "select username, password, enabled from users where username = '" + username + "'";
+			
+			Query query1 = session.createSQLQuery(sql);	
+			
+			ssUsers = query1.list();
+					
+			for(int i=0; i<ssUsers.size(); i++) {
+				
+				Object[] row = (Object[])ssUsers.get(i);  
+				user.setId(new Integer(i).toString());
+				user.setUsername((String)row[0]);
+				user.setPassword((String)row[1]);
+				//TODO Hardwired
+				user.setEnabled(true);
+			}
+			
+			session.close();
+			
+		}catch(Exception e){
+			msg = "Listing users failed: " + e.getMessage();
+			Response response = new Response(null, msg);
+	    	logger.info(msg);
+			e.printStackTrace();
+			
+			return null;
+		}
+    	
+    	model.addAttribute("user", user);
+    	logger.info("Returning user " + username);
+    	
+    	return user;
+    }
+    
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
@@ -160,5 +276,11 @@ public class AdminController {
 		this.sessionFactory = sessionFactory;
 	}
 
-    
+	public AdminServices getAdminService() {
+		return adminService;
+	}
+
+	public void setAdminService(AdminServices adminService) {
+		this.adminService = adminService;
+	}    
 }

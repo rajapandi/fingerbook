@@ -15,12 +15,13 @@
         </menu:category>
     -->
     <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
-        <menu:item id="i_controller__filehashexistsindex_id" messageCode="global_generic" url="/filehashexists" z="j94tvYN3FkX4visOi6QMR9o2/wk="/>
+        <menu:item id="i_controller__filehashexistsindex_id" messageCode="global_generic" url="/filehashexists" z="user-managed"/>
         <menu:item id="i_controller__listfingerbooksindex_id" messageCode="global_generic" url="/listfingerbooks/index" z="wyo228M3JsFinlpdETUtUAG5uhU="/>
         <menu:item id="i_controller__createuserindex_id" messageCode="global_generic" url="/createUser"/>
-        <menu:item id="i_controller__deleteuserindex_id" messageCode="global_generic" url="/deleteUser" z="1x+pQfO5QkPbzBnnPTggfYI6KH0="/>
-        <menu:item id="i_controller__modifyuserindex_id" messageCode="global_generic" url="/modifyUser" z="L1lafhPB9xVV9YKl9gJqD0zktBE="/>
-        <menu:item id="i_controller__ticketloginindex_id" messageCode="global_generic" url="/ticketLogin" z="entHEvZP5pi8ZSll7PNRdg1TRes="/>
+        <menu:item id="i_controller__deleteuserindex_id" messageCode="global_generic" url="/deleteUser" z="user-managed"/>
+        <menu:item id="i_controller__modifyuserindex_id" messageCode="global_generic" url="/modifyUser" z="user-managed"/>
+        <menu:item id="i_controller__ticketloginindex_id" messageCode="global_generic" url="/ticketLogin" z="user-managed"/>
+        <menu:item id="i_controller__listusersindex_id" messageCode="global_generic" url="/listUsers" z="IAHnNQ3NoMWVxFONJMy4hzNiOfM="/>
         </menu:category>
     <!--  
     <menu:category id="c_fbuser" z="FsvQK5umsufdcUyEmfaAoa6rrvs=">

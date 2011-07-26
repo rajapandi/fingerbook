@@ -3,17 +3,28 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     
+      
     <form action="modifyUser" method="post">
-	  	Username: <input type="text" name="username" />
+	  	Username: <input type="text" name="username" value="${user.username}"/>
 	  	<br />
-	  	Password: <input type="password" name="password" />
+	  	Password: <input type="password" name="password" value="${user.password}"/>
+	  	<!--  
 	  	<br />
-	  	Role: <input type="text" name="role" />
+	  	Role: <input type="text" name="role" value="${fb.comment}"/>
+	  	-->
 	  	<br />
-	  	Enabled: <input type="text" name="enabled" />
+	  	Enabled: <input type="text" name="enabled" value="${user.enabled}"/>
 	  	<br />
 	  	<input type="submit" value="Submit" />
   	</form>
   	
+  	<!--  
+	<form:update id="pl_com_fingerbook_models_SpringSecurityUser" modelAttribute="user" path="/categorys" z="">
+        <field:input field="username" id="_com_fingerbook_models_SpringSecurityUser_username" required="true" z=""/>
+        <field:input field="password" id="c_com_fingerbook_models_SpringSecurityUser_password" required="true" z=""/>
+        <field:input field="enabled" id="c_com_fingerbook_models_SpringSecurityUser_enabled" required="true" z=""/>
+    </form:update>
+    -->
+    
     User modification result: ${result}
 </div>
