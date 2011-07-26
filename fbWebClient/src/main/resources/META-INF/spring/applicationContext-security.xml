@@ -24,6 +24,7 @@
        	<intercept-url pattern="/createUser/**" access="hasRole('ROLE_ADMIN')" />
        	<intercept-url pattern="/modifyUser/**" access="hasRole('ROLE_ADMIN')" />
        	<intercept-url pattern="/deleteUser/**" access="hasRole('ROLE_ADMIN')" />
+       	<intercept-url pattern="/listUsers/**" access="hasRole('ROLE_ADMIN')" />
        	<intercept-url pattern="/**" access="isAuthenticated()" />
        	
        	<custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
