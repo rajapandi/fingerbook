@@ -45,11 +45,57 @@ public class ListUsersController {
         return "modifyuser/modifyUserForm";
     }
     
+    // Create
+	@RequestMapping(params = "form", method = RequestMethod.GET)
+	public String createForm(ModelMap uiModel) {
+		return "createuser/createUserForm";
+	}
+	   
+    // Delete
+    @RequestMapping(value = "/{username}", method = RequestMethod.DELETE)
+    public String delete(@PathVariable("username") String username, ModelMap uiModel) {
+    	
+    	SpringSecurityUser user = getUser(username);
+    	
+		uiModel.addAttribute("user", user);
+        uiModel.addAttribute("itemId", username);
+        
+        return "deleteuser/deleteUserForm";
+    }
+	
     @RequestMapping(method = RequestMethod.GET)
     public String get(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
     	
     	List<SpringSecurityUser> users = null;
-		String result = "";
+    	String result = "";
+    	
+    	users = getUsers(request);
+    		
+		for(SpringSecurityUser user: users) {
+			result = result + "<br />" + user.toString();
+			System.out.println(user.toString());
+		}
+    	
+    	modelMap.put("maxPages", 3);
+    	modelMap.put("result", result);
+    	modelMap.put("users", users);
+    	
+    	return "listusers/list";
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "{id}")
+    public void post(@PathVariable Long id, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
+    }
+
+    @RequestMapping
+    public String index() {
+        return "listusers/index";
+    }
+    
+    private List<SpringSecurityUser> getUsers(HttpServletRequest request) {
+    	
+    	List<SpringSecurityUser> users = null;
+    	
     	try {
     		
     		String authenticatedUser = request.getUserPrincipal().getName();
@@ -114,51 +160,14 @@ public class ListUsersController {
     		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
     		users = (List<SpringSecurityUser>) restTemplate.getForObject(urlStr, List.class);
     		
-    		
-    		for(SpringSecurityUser user: users) {
-    			result = result + "<br />" + user.toString();
-    			System.out.println(user.toString());
-    		}
-    		
-
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+    	} catch (BeansException e) {
+			e.printStackTrace();
+		} catch (RestClientException e) {
+			e.printStackTrace();
+		}
     	
-    	modelMap.put("maxPages", 3);
-    	modelMap.put("result", result);
-    	modelMap.put("users", users);
-    	
-    	return "listusers/list";
+    	return users;
     }
-    
-    @RequestMapping(method = RequestMethod.POST, value = "{id}")
-    public void post(@PathVariable Long id, ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
-    }
-
-    @RequestMapping
-    public String index() {
-        return "listusers/index";
-    }
-     
-    /*
-    // Create
-	@RequestMapping(value="/", params = "form", method = RequestMethod.GET)
-	public String createForm(ModelMap uiModel) {
-		uiModel.addAttribute("user", new SpringSecurityUser());
-		return "listusers/create";
-	}
-   
-    // Delete
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public String delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, ModelMap uiModel) {
-        //TODO: Category.findCategory(id).remove();
-        //TODO uiModel.asMap().clear();
-        uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
-        uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
-        return "redirect:/listusers";
-    }
-    */
     
     private SpringSecurityUser getUser(String username) {
     	

@@ -4,7 +4,7 @@
     <jsp:output omit-xml-declaration="yes"/>
     
     <form action="deleteUser" method="post">
-	  	Username: <input type="text" name="username" />
+	  	Username: <input type="text" name="username" value="${user.username}"/>
 	  	<br />
 	  	<input type="submit" value="Submit" />
   	</form>

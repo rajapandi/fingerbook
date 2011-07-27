@@ -16,5 +16,13 @@
     <definition extends="default" name="modifyuser/modifyUserForm">
         <put-attribute name="body" value="/WEB-INF/views/modifyuser/modifyUserForm.jspx"/>
     </definition> 
+
+    <definition extends="public" name="createuser/createUserForm">
+        <put-attribute name="body" value="/WEB-INF/views/createuser/createUserForm.jspx"/>
+    </definition>  
+        
+    <definition extends="public" name="deleteuser/deleteUserForm">
+        <put-attribute name="body" value="/WEB-INF/views/deleteuser/deleteUserForm.jspx"/>
+    </definition>   
     
 </tiles-definitions>
