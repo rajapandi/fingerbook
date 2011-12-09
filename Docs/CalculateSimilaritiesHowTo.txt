@@ -28,3 +28,9 @@ Finalmente, asegurandonos que esta Hbase levantada corremos el script que deseam
 pig -x local scriptpig.pig
 
 
+8-De esta forma ya se encuentra los porcentajes calculados en la tabla tsimilarities. Si se agregan nuevos fingerbooks y se desean calcular nuevamente los porcentajes hay que volver a recalcular todos por lo cual antes de correr el script hay que truncar la tabla tsimilarities desde el shell de hbase con el comando:
+
+truncate 'tsimilarities'
+
+
+NOTA ADICIONAL: Recordar que para que los registros queden bien persistidos con Hbase antes de apagar el equipo hay que bajar Hbase con el comando $HBASE_HOME/bin/stop-hbase.sh
