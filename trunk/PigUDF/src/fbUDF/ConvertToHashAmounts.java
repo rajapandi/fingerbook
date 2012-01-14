@@ -29,8 +29,8 @@ public class ConvertToHashAmounts extends EvalFunc<DataBag> {
 	        		Long amount = DataByteArrayToLong((DataByteArray) e.getValue());
 	        		for(long i = 0; i < amount; i++) {
 	        			Tuple hashAmountTuple = TupleFactory.getInstance().newTuple(2);
-						hashAmountTuple.set(0, hash);
-						hashAmountTuple.set(1, e.getKey());
+						hashAmountTuple.set(1, hash);
+						hashAmountTuple.set(0, e.getKey());
 						b.add(hashAmountTuple);
 	        		}
 
