@@ -66,7 +66,7 @@ similarities_grouped = GROUP similarities by v1;
 
 hbase_format = FOREACH similarities_grouped GENERATE group, fbUDF.BagToMap.BagToMap(*);
 --DESCRIBE hbase_format;
-DUMP hbase_format;
+--DUMP hbase_format;
 
---STORE hbase_format INTO 'tsimilarities' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('group_fid:*');
+STORE hbase_format INTO 'tsimilarities' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('group_fid:*');
 
