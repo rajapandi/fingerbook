@@ -15,6 +15,7 @@ import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.transfer.FingerbookFeed;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
+import com.fingerbook.models.transfer.SimilaritiesFeed;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.web.FingerbooksController;
 
@@ -103,6 +104,15 @@ public class FingerbookServices {
 		}
 	}
 	
+	public SimilaritiesFeed getSimilaritiesFeedById(Long id, int limit, int offset) {	
+		if(id != null) {
+			SimilaritiesFeed similaritiesFeed = PersistentFingerbook.getSimilaritiesFeed(id, limit, offset);
+			return similaritiesFeed;
+		} else {
+			return null;
+		}
+	}
+	
 	public Fingerbook getFingerbookById(Long id) {	
 		if(id != null) {
 			
@@ -176,6 +186,45 @@ public class FingerbookServices {
 				}
 			}
 			
+			
+			
+			fingerbookFeed.setFingerbook(fingerbook);
+			fingerbookFeed.setTotalresults(1);
+			
+		} else {
+			fingerbookFeed.setTotalresults(0);
+		}
+		
+		return fingerbookFeed;
+	}
+	
+	public FingerbookFeed getFingerbookFeedById(Long id, int limitFp, int offsetFp, int limitSimil, int offsetSimil ) {
+		
+		FingerbookFeed fingerbookFeed = new FingerbookFeed();
+		
+		fingerbookFeed.setLimit(1);
+		fingerbookFeed.setOffset(0);
+		
+		if(id != null) {
+			
+			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, false);
+			
+			if(fingerbook != null) {
+				
+				FingerprintsFeed fingerprintsFeed = PersistentFingerbook.getFingerprintsFeedByFingerBookPag(id, limitFp, offsetFp);
+				
+				if(fingerprintsFeed != null) {
+					
+					fingerbook.setFingerPrints(fingerprintsFeed.getFingerPrints());
+					
+					fingerprintsFeed.setFingerPrints(null);
+					fingerbookFeed.setFingerprintsFeed(fingerprintsFeed);
+					
+				}
+			}
+			
+			SimilaritiesFeed similaritiesFeed = PersistentFingerbook.getSimilaritiesFeed(id, 0, limitSimil, offsetSimil);
+			fingerbookFeed.setSimilaritiesFeed(similaritiesFeed);
 			
 			
 			fingerbookFeed.setFingerbook(fingerbook);
