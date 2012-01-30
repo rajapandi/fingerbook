@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:tiles="http://tiles.apache.org/tags-tiles" >
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <jsp:output omit-xml-declaration="yes"/>
+  
+  <div id="fpinner">
+	  <table:table_no_actions typeIdFieldName="shaHash" data="${fingerprints.files}" id="l_com_fingerbook_models_FileInfo" path="/listfingerbooks" z="">
+	    <table:column id="c_com_fingerbook_models_FileInfo_shaHash" property="shaHash" z="" maxLength="32"/>
+	  </table:table_no_actions>
+  </div>
+  
+  
+  
+</div>
