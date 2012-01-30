@@ -18,9 +18,12 @@
     </definition>
 <definition extends="default" name="listfingerbooks/show">
         <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/show.jspx"/>
+        <put-attribute name="fingerprintslist" value="/WEB-INF/views/listfingerbooks/fingerprintslist.jspx" cascade="true"/>
+        <put-attribute name="fbmatches" value="/WEB-INF/views/listfingerbooks/fbmatches.jspx" cascade="true"/>
     </definition>
 <definition extends="default" name="listfingerbooks/list_by_user">
         <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/list_by_user.jspx"/>
+        <put-attribute name="fbsfulllist" value="/WEB-INF/views/listfingerbooks/fbsfulllist.jspx" cascade="true"/>
     </definition>
 <definition extends="default" name="listfingerbooks/update">
         <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/update.jspx"/>
@@ -31,4 +34,15 @@
     <definition extends="default" name="listfingerbooks/error_response">
         <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/error_response.jspx"/>
     </definition>
+    <definition extends="default" name="listfingerbooks/fingerprintslist">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/fingerprintslist.jspx" />
+    </definition>
+    <definition extends="default" name="listfingerbooks/fbmatches">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/fbmatches.jspx" />
+    </definition>
+    <definition extends="default" name="listfingerbooks/fbsfulllist">
+        <put-attribute name="body" value="/WEB-INF/views/listfingerbooks/fbsfulllist.jspx" />
+    </definition>
+    
+    
 </tiles-definitions>

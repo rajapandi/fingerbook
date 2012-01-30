@@ -17,6 +17,7 @@
         <intercept-url pattern="/publicmyclass/**" access="permitAll" />
         <intercept-url pattern="/authenticate/**" access="permitAll" />
         <intercept-url pattern="/filehashexists/**" access="permitAll" />
+        <intercept-url pattern="/hashform/**" access="permitAll" />
 		<intercept-url pattern="/resources/**" access="permitAll" />
        	<intercept-url pattern="/static/**" access="permitAll" />
        	<intercept-url pattern="/login/**" access="permitAll" />

@@ -3,8 +3,11 @@ package com.fingerbook.web;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Map.Entry;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,12 +31,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fingerbook.FingerbookMatch;
 import com.fingerbook.models.Fingerbook;
+import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.transfer.FingerbookFeed;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
+import com.fingerbook.models.transfer.SimilaritiesFeed;
 
 
 
@@ -49,6 +55,10 @@ public class ListFingerbooksController {
 	public static final String URL_FINGEPRINTS_AUTH = "http://localhost:8080/fingerbookRESTM/fingerbooks/authenticated/fingerprints/";
 	public static final String URL_FINGEPRINTS_SEMIAUTH = "http://localhost:8080/fingerbookRESTM/fingerbooks/semiauthenticated/fingerprints/";
 	public static final String URL_FINGEPRINTS_ANON = "http://localhost:8080/fingerbookRESTM/fingerbooks/anonymous/fingerprints/";
+	
+	public static final String URL_MATCHES_AUTH = "http://localhost:8080/fingerbookRESTM/fingerbooks/authenticated/matches/";
+	public static final String URL_MATCHES_SEMIAUTH = "http://localhost:8080/fingerbookRESTM/fingerbooks/semiauthenticated/matches/";
+	public static final String URL_MATCHES_ANON = "http://localhost:8080/fingerbookRESTM/fingerbooks/anonymous/matches/";
 	
 	public static final String URL_FINGERBOOKS_USER = "http://localhost:8080/fingerbookRESTM/fingerbooks/authenticated/user/";
 	public static final String URL_FINGERBOOKS_TICKET = "http://localhost:8080/fingerbookRESTM/fingerbooks/semiauthenticated/ticket/";
@@ -101,84 +111,92 @@ public class ListFingerbooksController {
 		
 		FingerbookList fingerbookList = null;
 		Vector<Fingerbook> fbs = null;
-		String result = "";
+//		String result = "";
 		Response response = null;
-    	try {
-    		
-//    		String urlStr = "http://localhost:8080/fingerbookRESTM/fingerbooks/ticket/";
-    		String urlStr = URL_FINGERBOOKS_TICKET;
-    		urlStr = urlStr + ticket;
-    		
-    		if(request.getParameter("page") != null) {
-    			try {
-					page = Integer.parseInt(request.getParameter("page"));
-					if(page <= 0) {
-						page = 1;
+		
+		if(ticket != null && !ticket.isEmpty()) {
+	    	try {
+	    		
+	//    		String urlStr = "http://localhost:8080/fingerbookRESTM/fingerbooks/ticket/";
+	    		String urlStr = URL_FINGERBOOKS_TICKET;
+	    		urlStr = urlStr + ticket;
+	    		
+	    		if(request.getParameter("page") != null) {
+	    			try {
+						page = Integer.parseInt(request.getParameter("page"));
+						if(page <= 0) {
+							page = 1;
+						}
+					} catch (NumberFormatException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-    		}
-    		if(request.getParameter("size") != null) {
-    			try {
-					size = Integer.parseInt(request.getParameter("size"));
-					if(size <= 0) {
-						size = LIMIT_PAG;
-					}
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-    		}
-    		
-    		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
-    		
-    		WebApplicationContext wap = ContextLoaderListener.getCurrentWebApplicationContext();
-    		
-    		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
-    		
-//    		fbs = (List<Fingerbook>) restTemplate.getForObject(urlStr, List.class);
-    		fingerbookList = (FingerbookList) restTemplate.getForObject(urlStr, FingerbookList.class);
-    		
-
-    		if(fingerbookList != null) {
-    			
-    			response = fingerbookList.getResponse();
-    			if(response != null) {
-        			//TODO: Nahuel: accion de error
-        			modelMap.put("response", response);
-        			return "listfingerbooks/error_response";
-        		}
-    			
-    			maxPages = (int) Math.ceil((double)fingerbookList.getTotalresults() / (double)size);
-    			
-    			fbs = fingerbookList.getFbs();
-	    		for(Fingerbook fb: fbs) {
-	    			result = result + "<br />" + fb.toString();
-	    			System.out.println(fb.toString());
 	    		}
-    		}
-
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+	    		if(request.getParameter("size") != null) {
+	    			try {
+						size = Integer.parseInt(request.getParameter("size"));
+						if(size <= 0) {
+							size = LIMIT_PAG;
+						}
+					} catch (NumberFormatException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	    		}
+	    		
+	    		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
+	    		
+	    		WebApplicationContext wap = ContextLoaderListener.getCurrentWebApplicationContext();
+	    		
+	    		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
+	    		
+	//    		fbs = (List<Fingerbook>) restTemplate.getForObject(urlStr, List.class);
+	    		fingerbookList = (FingerbookList) restTemplate.getForObject(urlStr, FingerbookList.class);
+	    		
+	
+	    		if(fingerbookList != null) {
+	    			
+	    			response = fingerbookList.getResponse();
+	    			if(response != null) {
+	        			//TODO: Nahuel: accion de error
+	        			modelMap.put("response", response);
+	        			return "listfingerbooks/error_response";
+	        		}
+	    			
+	    			maxPages = (int) Math.ceil((double)fingerbookList.getTotalresults() / (double)size);
+	    			
+	    			fbs = fingerbookList.getFbs();
+		    		for(Fingerbook fb: fbs) {
+	//	    			result = result + "<br />" + fb.toString();
+		    			System.out.println(fb.toString());
+		    		}
+	    		}
+	
+	    	} catch (Exception e) {
+	    		e.printStackTrace();
+	    	}
+		}
     	
-    	modelMap.put("result", result);
+//    	modelMap.put("result", result);
+    	
     	modelMap.put("fbs", fbs);
-    	
+    	modelMap.put("page", page);
+		modelMap.put("size", size);
     	modelMap.put("maxPages", maxPages);
-    	
     	modelMap.put("requiredParams", "ticket_input");
 		
-//        return "listfingerbooks/list";
+    	if(request.getParameter("table") != null && request.getParameter("table").equals("fbsfulllist")) {
+			return "listfingerbooks/fbsfulllist";
+		}
+    	
     	return "listfingerbooks/list_by_user";
     	
     }
 
 	
 	@RequestMapping(value="/user", method = RequestMethod.GET)
-	public String listByUser(@RequestParam("user_input") String user, ModelMap modelMap, HttpServletRequest request) {
+//	public String listByUser(@RequestParam("user_input") String user, ModelMap modelMap, HttpServletRequest request) {
+	public String listByUser(ModelMap modelMap, HttpServletRequest request) {
 		
 		int size = LIMIT_PAG;
 		int page = 1;
@@ -186,7 +204,7 @@ public class ListFingerbooksController {
 		
 		FingerbookList fingerbookList = null;
 		Vector<Fingerbook> fbs = null;
-		String result = "";
+//		String result = "";
 		Response response = null;
     	try {
     		
@@ -229,7 +247,7 @@ public class ListFingerbooksController {
     			
     			fbs = fingerbookList.getFbs();
 	    		for(Fingerbook fb: fbs) {
-	    			result = result + "<br />" + fb.toString();
+//	    			result = result + "<br />" + fb.toString();
 	    			System.out.println(fb.toString());
 	    		}
     		}
@@ -238,12 +256,18 @@ public class ListFingerbooksController {
     		e.printStackTrace();
     	}
     	
-    	modelMap.put("result", result);
-    	modelMap.put("fbs", fbs);
+//    	modelMap.put("result", result);
     	
+    	modelMap.put("fbs", fbs);
+    	modelMap.put("page", page);
+		modelMap.put("size", size);
     	modelMap.put("maxPages", maxPages);
     	
-    	modelMap.put("requiredParams", "user_input");
+//    	modelMap.put("requiredParams", "user_input");
+    	
+    	if(request.getParameter("table") != null && request.getParameter("table").equals("fbsfulllist")) {
+			return "listfingerbooks/fbsfulllist";
+		}
 		
         return "listfingerbooks/list_by_user";
     }
@@ -452,9 +476,18 @@ public class ListFingerbooksController {
 		Fingerbook fb = null;
 		String result = "";
 		
+		Fingerprints fingerprints = null;
+		
+		Vector<FingerbookMatch> fbMatches = new Vector<FingerbookMatch>();
+		Map<Fingerbook, Double> similsFbs = null;
+		
 		int size = LIMIT_PAG;
 		int page = 1;
 		int maxPages = 1;
+		
+		int sizeS = LIMIT_PAG;
+		int pageS = 1;
+		int maxPagesS = 1;
 		
 		FingerbookFeed fingerbookFeed = null;
 		FingerprintsFeed fingerprintsFeed = null;
@@ -492,7 +525,8 @@ public class ListFingerbooksController {
     		}
     		
 //    		fingerbookFeed = getFingerbookRest(request, id);
-    		fingerbookFeed = getFingerbookRest(request, id, size, page);
+//    		fingerbookFeed = getFingerbookRest(request, id, size, page);
+    		fingerbookFeed = getFingerbookRest(request, id, size, page, sizeS, pageS);
     		
     		if(fingerbookFeed != null) {
     			response = fingerbookFeed.getResponse();
@@ -521,6 +555,8 @@ public class ListFingerbooksController {
 	        			return "listfingerbooks/error_response";
 	        		}
 	    			
+	    			fingerprints = fingerprintsFeed.getFingerPrints();
+	    			
 	    			maxPages = (int) Math.ceil((double)fingerprintsFeed.getTotalresults() / (double)size);
 //	    			fb.setFingerPrints(fingerprintsFeed.getFingerPrints());
 	    			
@@ -528,6 +564,25 @@ public class ListFingerbooksController {
 	
 	    		result = result + "<br />" + fb.toString();
 	    		System.out.println(fb.toString());
+	    		
+	    		SimilaritiesFeed similaritiesFeed = fingerbookFeed.getSimilaritiesFeed();
+	    		
+	    		if(similaritiesFeed != null) {
+	    			similsFbs = similaritiesFeed.getSimilsFbs();
+	    			
+	    			fbMatches = getFingerbookMatches(similsFbs);
+	    			
+	    			maxPagesS = (int) Math.ceil((double)similaritiesFeed.getTotalresults() / (double)sizeS);
+	    			
+	    			if(similsFbs != null) {
+	    				System.out.println("SIMILARITIES");
+	    				for(Entry<Fingerbook, Double> entry: similsFbs.entrySet()) {
+	    					
+	    					System.out.println(entry.getKey() + " --> " + entry.getValue());
+	    				}
+	    			}
+	    			
+	    		}
     		}
     		
     		
@@ -542,16 +597,265 @@ public class ListFingerbooksController {
     	modelMap.put("result", result);
     	modelMap.put("fb", fb);
     	
+    	modelMap.put("fingerprints", fingerprints);
+    	
     	modelMap.put("maxPages", maxPages);
     	
     	modelMap.put("page", page);
 		modelMap.put("size", size);
+		
+		modelMap.put("pages", pageS);
+		modelMap.put("sizes", sizeS);
+		modelMap.put("maxPagess", maxPagesS);
+		
+		modelMap.put("fbMatches", fbMatches);
 		
 		if(request.getParameter("form") != null) {
 			return "listfingerbooks/update";
 		}
 		
 		return "listfingerbooks/show";
+	}
+	
+	@RequestMapping(value="/{id}", params="table=fingerprintslist", method = RequestMethod.GET)
+	public String getFingerprints(@PathVariable("id") Long id, ModelMap modelMap, HttpServletRequest request) {
+		
+//		Fingerbook fb = null;
+//		String result = "";
+		
+//		Vector<FingerbookMatch> fbMatches = new Vector<FingerbookMatch>();
+//		Map<Fingerbook, Double> similsFbs = null;
+		
+		Fingerprints fingerprints = null;
+		
+		int size = LIMIT_PAG;
+		int page = 1;
+		int maxPages = 1;
+		
+//		FingerbookFeed fingerbookFeed = null;
+		FingerprintsFeed fingerprintsFeed = null;
+		
+		Response response = null;
+		
+    	try {
+    		
+
+    		if(request.getParameter("page") != null) {
+    			try {
+					page = Integer.parseInt(request.getParameter("page"));
+					
+					if(page <= 0) {
+						page = 1;
+					}
+					
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    		if(request.getParameter("size") != null) {
+    			try {
+					size = Integer.parseInt(request.getParameter("size"));
+					
+					if(size <= 0) {
+						size = LIMIT_PAG;
+					}
+					
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    		
+//    		fingerbookFeed = getFingerbookRest(request, id, size, page, 5, 1);
+//    		fingerbookFeed = getFingerbookRest(request, id, size, page);
+    		
+//    		if(fingerbookFeed != null) {
+//    			response = fingerbookFeed.getResponse();
+//    		}
+//    		
+//    		if(response != null) {
+//    			//TODO: Nahuel: accion de error
+//    			modelMap.put("response", response);
+//    			return "listfingerbooks/error_response";
+//    		}
+//    		
+//    		fb = fingerbookFeed.getFingerbook();
+    		
+    		
+//			fingerprintsFeed = fingerbookFeed.getFingerprintsFeed();
+    		
+    		fingerprintsFeed = getFingerprintsFeedREST(request, id, size, page);
+    		
+    		if(fingerprintsFeed != null) {
+    			
+    			response = fingerprintsFeed.getResponse();
+    			if(response != null) {
+    				modelMap.put("response", response);
+        			return "listfingerbooks/error_response";
+        		}
+    			
+    			fingerprints = fingerprintsFeed.getFingerPrints();
+    			
+    			maxPages = (int) Math.ceil((double)fingerprintsFeed.getTotalresults() / (double)size);
+    		}
+
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+//    	String referer = request.getHeader("Referer");
+//    	modelMap.put("referer", referer);
+//    	modelMap.put("result", result);
+    	
+//    	modelMap.put("fb", fb);
+    	
+    	modelMap.put("fingerprints", fingerprints);
+    	
+    	modelMap.put("maxPages", maxPages);
+    	modelMap.put("page", page);
+		modelMap.put("size", size);
+		
+		
+		return "listfingerbooks/fingerprintslist";
+	}
+	
+	@RequestMapping(value="/{id}", params="table=fbmatches", method = RequestMethod.GET)
+	public String getFbMatches(@PathVariable("id") Long id, ModelMap modelMap, HttpServletRequest request) {
+		
+//		Fingerbook fb = null;
+//		String result = "";
+		
+		Vector<FingerbookMatch> fbMatches = new Vector<FingerbookMatch>();
+		Map<Fingerbook, Double> similsFbs = null;
+		
+		int size = LIMIT_PAG;
+		int page = 1;
+		int maxPages = 1;
+		
+//		FingerbookFeed fingerbookFeed = null;
+//		FingerprintsFeed fingerprintsFeed = null;
+		
+		Response response = null;
+		
+    	try {
+    		
+
+    		if(request.getParameter("page") != null) {
+    			try {
+					page = Integer.parseInt(request.getParameter("page"));
+					
+					if(page <= 0) {
+						page = 1;
+					}
+					
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    		if(request.getParameter("size") != null) {
+    			try {
+					size = Integer.parseInt(request.getParameter("size"));
+					
+					if(size <= 0) {
+						size = LIMIT_PAG;
+					}
+					
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    		
+//    		fingerbookFeed = getFingerbookRest(request, id, size, page);
+//    		fingerbookFeed = getFingerbookRest(request, id, size, page, size, page);
+//    		
+//    		if(fingerbookFeed != null) {
+//    			response = fingerbookFeed.getResponse();
+//    		}
+//    		
+//    		if(response != null) {
+//    			modelMap.put("response", response);
+//    			return "listfingerbooks/error_response";
+//    		}
+//    		
+//    		fb = fingerbookFeed.getFingerbook();
+//    		result = result + "<br />" + fb.toString();
+//    		System.out.println(fb.toString());
+//			SimilaritiesFeed similaritiesFeed = fingerbookFeed.getSimilaritiesFeed();
+    		
+    		SimilaritiesFeed similaritiesFeed = getSimilaritiesFeedREST(request, id, size, page);
+			
+			if(similaritiesFeed != null) {
+				
+				response = similaritiesFeed.getResponse();
+				if(response != null) {
+	    			//TODO: Nahuel: accion de error
+					modelMap.put("response", response);
+	    			return "listfingerbooks/error_response";
+	    		}
+				
+				similsFbs = similaritiesFeed.getSimilsFbs();
+				
+				fbMatches = getFingerbookMatches(similsFbs);
+				
+				maxPages = (int) Math.ceil((double)similaritiesFeed.getTotalresults() / (double)size);
+				
+				if(similsFbs != null) {
+					System.out.println("SIMILARITIES");
+					for(Entry<Fingerbook, Double> entry: similsFbs.entrySet()) {
+						
+						System.out.println(entry.getKey() + " --> " + entry.getValue());
+					}
+				}
+				
+			}
+    		
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+//    	String referer = request.getHeader("Referer");
+//    	modelMap.put("referer", referer);
+//    	modelMap.put("result", result);
+//    	modelMap.put("fb", fb);
+    	
+    	modelMap.put("maxPagess", maxPages);
+    	modelMap.put("pages", page);
+		modelMap.put("sizes", size);
+		
+		modelMap.put("fbMatches", fbMatches);
+		
+		
+		return "listfingerbooks/fbmatches";
+	}
+	
+	public Vector<FingerbookMatch> getFingerbookMatches(Map<Fingerbook, Double> similsFbs) {
+		
+		Vector<FingerbookMatch> fbMatches = new Vector<FingerbookMatch>();
+		
+		if(similsFbs != null) {
+			
+			System.out.println("getFingerbookMatches");
+			
+			for(Entry<Fingerbook, Double> entry: similsFbs.entrySet()) {
+				
+				Fingerbook fb = entry.getKey();
+				Double match = entry.getValue();
+				
+				System.out.println(fb + " --> " + match);
+				
+				FingerbookMatch fbMatch = new FingerbookMatch(fb, match);
+				fbMatches.add(fbMatch);
+			}
+		}
+		
+		
+		return fbMatches;
+		
 	}
 	
 //	@RequestMapping(value="/{id}", method = RequestMethod.GET)
@@ -742,6 +1046,48 @@ public class ListFingerbooksController {
 		return fingerprintsFeed;
 	}
 	
+	
+	public SimilaritiesFeed getSimilaritiesFeedREST(HttpServletRequest request, Long id, int size, int page) {
+		
+		SimilaritiesFeed similaritiesFeed = null;
+		String urlStr = null;
+		
+    	try {
+    		
+    		String authMethod = getAuthMethod();
+    		
+    		if(authMethod.equalsIgnoreCase(ROLE_USER)) {
+    			urlStr = URL_MATCHES_AUTH;
+    			urlStr = urlStr + id;
+    			
+    			String user = request.getUserPrincipal().getName();
+    			urlStr = urlStr + "/user/" + user;
+    		}
+    		else if(authMethod.equalsIgnoreCase(ROLE_SEMIAUTH)) {
+    			urlStr = URL_MATCHES_SEMIAUTH;
+    			urlStr = urlStr + id;
+    			
+    			String ticket = request.getUserPrincipal().getName();
+    			urlStr = urlStr + "/ticket/" + ticket;
+    		}
+    		else {
+    			urlStr = URL_MATCHES_ANON;
+    			urlStr = urlStr + id;
+    		}
+    		
+    		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
+    		
+    		RestTemplate restTemplate = buildRestTemplate(request, null);
+    		similaritiesFeed = (SimilaritiesFeed) restTemplate.getForObject(urlStr, SimilaritiesFeed.class);
+    		
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+		return similaritiesFeed;
+	}
+	
 	public FingerbookFeed getFingerbookRest(HttpServletRequest request, Long id, int size, int page) {
 		
 		FingerbookFeed fingerbookFeed = null;
@@ -771,6 +1117,51 @@ public class ListFingerbooksController {
     		}
     		
     		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
+    		
+    		RestTemplate restTemplate = buildRestTemplate(request, null);
+    		fingerbookFeed = (FingerbookFeed) restTemplate.getForObject(urlStr, FingerbookFeed.class);
+    		
+//    		System.out.println(fb.toString());
+    		
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return fingerbookFeed;
+	}
+	
+	public FingerbookFeed getFingerbookRest(HttpServletRequest request, Long id, int size, int page, int sizeS, int pageS) {
+		
+		FingerbookFeed fingerbookFeed = null;
+		String urlStr = null;
+		
+    	try {
+    		
+    		String authMethod = getAuthMethod();
+    		
+    		if(authMethod.equalsIgnoreCase(ROLE_USER)) {
+    			urlStr = URL_FINGERBOOK_USER;
+    			urlStr = urlStr + id;
+    			
+    			String user = request.getUserPrincipal().getName();
+    			urlStr = urlStr + "/user/" + user;
+    		}
+    		else if(authMethod.equalsIgnoreCase(ROLE_SEMIAUTH)) {
+    			urlStr = URL_FINGERBOOK_TICKET;
+    			urlStr = urlStr + id;
+    			
+    			String ticket = request.getUserPrincipal().getName();
+    			urlStr = urlStr + "/ticket/" + ticket;
+    		}
+    		else {
+    			urlStr = URL_FINGERBOOK_ANON;
+    			urlStr = urlStr + id;
+    		}
+    		
+    		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
+    		
+    		urlStr = urlStr + "/limits/" + sizeS + "/offsets/" + (pageS-1)  * sizeS;
     		
     		RestTemplate restTemplate = buildRestTemplate(request, null);
     		fingerbookFeed = (FingerbookFeed) restTemplate.getForObject(urlStr, FingerbookFeed.class);
