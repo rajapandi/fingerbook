@@ -20,6 +20,7 @@ import com.fingerbook.models.Fingerbook.STATE;
 import com.fingerbook.models.transfer.FingerbookFeed;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
+import com.fingerbook.models.transfer.SimilaritiesFeed;
 import com.fingerbook.models.Response;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
@@ -332,6 +333,37 @@ public class FingerbooksController {
     	return fingerbookFeed;
     }
     
+    @RequestMapping(value="/authenticated/fingerbook/{id}/user/{user}/limit/{limit}/offset/{offset}/limits/{limits}/offsets/{offsets}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookFeed fingerbookByIdUser(@PathVariable("user") String user, @PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, @PathVariable("limits") int limits, @PathVariable("offsets") int offsets, Model model) {
+    	
+    	FingerbookFeed fingerbookFeed = null;
+    	Response ans = null;
+    	
+    	if(fingerbookService.validateAuthUser(user)) {
+    		ans = fingerbookService.validateOwner(id, user, authenticated);
+    	}
+    	else {
+    		
+    		String msg = "Operation cancelled: Authentication is used, authenticated user not allowed to access user's: " + user + " fingerbooks";
+			logger.info(authenticated + ": Returning error Response object: " + msg);
+			ans =  new Response(new Integer(13), msg);
+    	}
+    	
+    	if(ans != null) {
+    		fingerbookFeed = new FingerbookFeed();
+			fingerbookFeed.setResponse(ans);
+			return fingerbookFeed;
+    	}
+    	
+//    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, false);
+    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, limit, offset, limits, offsets);
+    	
+    	model.addAttribute("fingerbooks", fingerbookFeed);
+    	logger.info("Returning fingerbookFeed for id: " + id);
+    	
+    	return fingerbookFeed;
+    }
 
     @RequestMapping(value="/semiauthenticated/fingerbook/{id}/ticket/{ticket}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
     @ResponseBody
@@ -354,10 +386,47 @@ public class FingerbooksController {
     	return fingerbookFeed;
     }
     
+    @RequestMapping(value="/semiauthenticated/fingerbook/{id}/ticket/{ticket}/limit/{limit}/offset/{offset}/limits/{limits}/offsets/{offsets}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookFeed fingerbookByIdTicket(@PathVariable("ticket") String ticket, @PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, @PathVariable("limits") int limits, @PathVariable("offsets") int offsets, Model model) {
+    	
+    	FingerbookFeed fingerbookFeed = null;
+    	Response ans;
+    	if((ans = fingerbookService.validateOwner(id, ticket, semiAuthenticated)) != null) {
+    		fingerbookFeed = new FingerbookFeed();
+			fingerbookFeed.setResponse(ans);
+			return fingerbookFeed;
+    	}
+    	
+//    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, limit, offset);
+    	fingerbookFeed = fingerbookService.getFingerbookFeedById(id, limit, offset, limits, offsets);
+    	
+    	model.addAttribute("fingerbooks", fingerbookFeed);
+    	
+    	logger.info("Returning fingerbookFeed for id: " + id);
+    	
+    	return fingerbookFeed;
+    }
+    
 
     @RequestMapping(value="/anonymous/fingerbook/{id}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
     @ResponseBody
     public FingerbookFeed fingerbookByIdAnon(@PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	FingerbookFeed fingerbookFeed = null;
+    	
+    	String msg = "Anonymous not able to load fingerbook for id: " + id;
+    	logger.info("Anonymous not able to load fingerbook for id: " + id);
+    	Response ans = new Response(new Integer(14), msg);
+    	
+    	fingerbookFeed = new FingerbookFeed();
+		fingerbookFeed.setResponse(ans);
+		return fingerbookFeed;
+		
+    }
+    
+    @RequestMapping(value="/anonymous/fingerbook/{id}/limit/{limit}/offset/{offset}/limits/{limits}/offsets/{offsets}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookFeed fingerbookByIdAnon(@PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, @PathVariable("limits") int limits, @PathVariable("offsets") int offsets, Model model) {
     	FingerbookFeed fingerbookFeed = null;
     	
     	String msg = "Anonymous not able to load fingerbook for id: " + id;
@@ -431,6 +500,71 @@ public class FingerbooksController {
     	logger.info("Returning fingerprintsFeed for id: " + id);
     	
     	return fingerprintsFeed;
+    }
+    
+    
+    
+    @RequestMapping(value="/authenticated/matches/{id}/user/{user}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public SimilaritiesFeed similaritiesFeedByIdAuth(@PathVariable("user") String user,@PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	SimilaritiesFeed similaritiesFeed = null;
+    	Response ans = null;
+    	
+    	if(fingerbookService.validateAuthUser(user)) {
+    		
+    		ans = fingerbookService.validateOwner(id, user, authenticated);
+    	}
+    	else {
+    		String msg = "Operation cancelled: Authentication is used, authenticated user not allowed to access user's: " + user + " fingerbooks";
+			logger.info(authenticated + ": Returning error Response object: " + msg);
+			ans =  new Response(new Integer(13), msg);
+    	}
+    	
+    	if(ans != null) {
+    		similaritiesFeed = new SimilaritiesFeed();
+    		similaritiesFeed.setResponse(ans);
+			return similaritiesFeed;
+    	}
+    	
+    	similaritiesFeed = fingerbookService.getSimilaritiesFeedById(id, limit, offset);
+    	model.addAttribute("similaritiesFeed", similaritiesFeed);
+    	
+    	logger.info("Returning similaritiesFeed for id: " + id);
+    	
+    	return similaritiesFeed;
+    }
+    
+    @RequestMapping(value="/semiauthenticated/matches/{id}/ticket/{ticket}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public SimilaritiesFeed similaritiesFeedByIdSemiAuth(@PathVariable("ticket") String ticket,@PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	SimilaritiesFeed similaritiesFeed = null;
+    	Response ans;
+    	if((ans = fingerbookService.validateOwner(id, ticket, semiAuthenticated)) != null) {
+    		similaritiesFeed = new SimilaritiesFeed();
+    		similaritiesFeed.setResponse(ans);
+			return similaritiesFeed;
+    	}
+    	
+    	similaritiesFeed = fingerbookService.getSimilaritiesFeedById(id, limit, offset);
+    	model.addAttribute("similaritiesFeed", similaritiesFeed);
+    	
+    	logger.info("Returning similaritiesFeed for id: " + id);
+    	
+    	return similaritiesFeed;
+    	
+    }
+    
+    @RequestMapping(value="/anonymous/matches/{id}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public SimilaritiesFeed similaritiesFeedByIdAnonymous(@PathVariable("id") Long id, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {    
+    	SimilaritiesFeed similaritiesFeed = fingerbookService.getSimilaritiesFeedById(id, limit, offset);
+    	model.addAttribute("similaritiesFeed", similaritiesFeed);
+    	
+    	logger.info("Returning similaritiesFeed for id: " + id);
+    	
+    	return similaritiesFeed;
     }
     
 //    @RequestMapping(value="/update", method=RequestMethod.POST)

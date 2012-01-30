@@ -48,6 +48,7 @@
 				<prop key="FingerbookList">com.fingerbook.models.transfer.FingerbookList</prop>
 				<prop key="FingerprintsFeed">com.fingerbook.models.transfer.FingerprintsFeed</prop>
 				<prop key="FingerbookFeed">com.fingerbook.models.transfer.FingerbookFeed</prop>
+				<prop key="SimilaritiesFeed">com.fingerbook.models.transfer.SimilaritiesFeed</prop>
 			</props>
 		</property>
 	</bean>
