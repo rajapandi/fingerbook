@@ -4,10 +4,15 @@ package com.fingerbook.persistencehbase;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
@@ -20,9 +25,11 @@ import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
+import com.fingerbook.models.transfer.SimilaritiesFeed;
 import com.fingerbook.persistencehbase.hbase.HbaseManager;
 import com.fingerbook.persistencehbase.hbase.TransHTable;
 import com.fingerbook.persistencehbase.svc.Sha1;
+import com.fingerbook.persistencehbase.svc.ValueComparator;
 
 //public class PersistentFingerbook extends Fingerbook{
 public class PersistentFingerbook {
@@ -80,7 +87,8 @@ public class PersistentFingerbook {
 	public static String TUSER_INFO_FAMILY = "general";
 	public static String TUSER_COLUMN_TOTAL = "total";
 	
-	
+	public static String SIMIL_TABLE_NAME = "tsimilarities";
+	public static String TSIMIL_GROUP_FID_FAMILY = "group_fid";
 
 //	public PersistentFingerbook(Fingerbook fingerBook) {
 //		this.fingerbookId = fingerBook.getFingerbookId();
@@ -1109,6 +1117,148 @@ public class PersistentFingerbook {
 		}
 		
 		return fingerbooks;
+	}
+	
+	public static SimilaritiesFeed getSimilaritiesFeed(long fingerbookId, int limit, int offset) {
+		
+		return getSimilaritiesFeed(fingerbookId, 0, limit, offset);
+	}
+	
+	public static SimilaritiesFeed getSimilaritiesFeed(long fingerbookId, double threshold, int limit, int offset) {
+		
+		SimilaritiesFeed similaritiesFeed = new SimilaritiesFeed();
+		
+		Map<Fingerbook, Double> similsFbs = new LinkedHashMap<Fingerbook, Double>();
+		Map<Long, Double> simils = null;
+		
+//		similsFbs = getSimilarFbs(fingerbookId, threshold, limit, offset);
+		
+		
+		
+		simils = getSimilarities(fingerbookId, threshold);
+		
+		int idx = 0;
+		int last = limit + offset;
+		
+		for(Entry<Long, Double> entry: simils.entrySet()) {
+			
+			if(idx >= offset && idx < last) {
+				
+				Fingerbook auxFingerbook = new Fingerbook();
+				auxFingerbook.setFingerbookId(entry.getKey());
+				auxFingerbook = PersistentFingerbook.loadFingerbookStampTags(entry.getKey());
+				
+				similsFbs.put(auxFingerbook, entry.getValue());
+				
+			}
+			else if(idx >= last) {
+				break;
+			}
+			idx++;
+		}
+		
+		similaritiesFeed.setSimilsFbs(similsFbs);
+		similaritiesFeed.setLimit(limit);
+		similaritiesFeed.setOffset(offset);
+		similaritiesFeed.setTotalresults(simils.size());
+		
+		return similaritiesFeed;
+	}
+	
+	public static Map<Fingerbook, Double> getSimilarFbs(long fingerbookId, double threshold, int limit, int offset) {
+		
+		Map<Fingerbook, Double> similsFbs = new LinkedHashMap<Fingerbook, Double>();
+		Map<Long, Double> simils = null;
+		
+		simils = getSimilarities(fingerbookId, threshold);
+		
+		int idx = 0;
+		int last = limit + offset;
+		
+		for(Entry<Long, Double> entry: simils.entrySet()) {
+			
+			if(idx >= offset && idx < last) {
+				
+				Fingerbook auxFingerbook = new Fingerbook();
+				auxFingerbook.setFingerbookId(entry.getKey());
+				auxFingerbook = PersistentFingerbook.loadFingerbookStampTags(entry.getKey());
+				
+				similsFbs.put(auxFingerbook, entry.getValue());
+				
+			}
+			else if(idx >= last) {
+				break;
+			}
+			idx++;
+		}
+		
+		return similsFbs;
+	}
+	
+	public static Map<Long, Double> getSimilarities(long fingerbookId, double threshold) {
+		
+//		Vector<Fingerbook> fingerbooks = new Vector<Fingerbook>();
+		NavigableMap<byte[],byte[]> familyMapSimilGroup = null;
+		
+		HashMap<Long, Double> simils = new HashMap<Long, Double>();
+		
+		ValueComparator bvc =  new ValueComparator(simils);
+		TreeMap<Long,Double> similsSorted = new TreeMap<Long, Double>(bvc);
+		
+		String fbIdStr = String.valueOf(fingerbookId);
+		
+		String thresholdStr = String.valueOf(threshold);
+		byte[] thresholdB = Bytes.toBytes(thresholdStr);
+		
+		try {
+			
+//			familyMapSimilGroup = HbaseManager.getMembersMap(SIMIL_TABLE_NAME, Bytes.toBytes(fbIdStr), TSIMIL_GROUP_FID_FAMILY);
+			familyMapSimilGroup = HbaseManager.getMembersMapFiltered(SIMIL_TABLE_NAME, Bytes.toBytes(fbIdStr), TSIMIL_GROUP_FID_FAMILY, thresholdB, CompareOp.GREATER_OR_EQUAL);
+			
+			if(familyMapSimilGroup == null) {
+				return similsSorted;
+			}
+			
+//			Vector<Long> loaded = new Vector<Long>();
+			for(byte[] fingerbookIdB: familyMapSimilGroup.keySet()) {
+				
+				
+				String auxFingerbookIdStr = Bytes.toString(fingerbookIdB);
+//				long auxFingerbookId = Bytes.toLong(fingerbookIdB);
+				Long auxFingerbookId = Long.valueOf(auxFingerbookIdStr);
+				
+				String matchStr = Bytes.toString(familyMapSimilGroup.get(fingerbookIdB));
+				
+//				Long match = Long.valueOf(matchStr);
+				Double match = Double.valueOf(matchStr);
+				
+				System.out.println(auxFingerbookId + " --> " + match);
+				
+//				if(auxFingerbookId.longValue() != fingerbookId && match.doubleValue() >= threshold) {
+				if(auxFingerbookId.longValue() != fingerbookId) {
+					simils.put(auxFingerbookId, match);
+				}
+				
+//				if(!loaded.contains(auxFingerbookId)) {
+//					
+//					Fingerbook auxFingerbook = new Fingerbook();
+//					auxFingerbook.setFingerbookId(auxFingerbookId);
+//
+//					auxFingerbook = PersistentFingerbook.loadMe(auxFingerbookId);
+//										
+//					fingerbooks.add(auxFingerbook);
+//					loaded.add(auxFingerbookId);
+//				}
+			}
+			
+			similsSorted.putAll(simils);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return similsSorted;
 	}
 	
 	public static Vector<Fingerbook> getFingerbookByTicket(String ticket) {
