@@ -16,10 +16,12 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.BinaryComparator;
 import org.apache.hadoop.hbase.filter.ColumnPaginationFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
+import org.apache.hadoop.hbase.filter.ValueFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 
 public class HbaseManager {
@@ -282,6 +284,43 @@ public class HbaseManager {
 	    Get g = new Get(rowId);
 	    
 	    g.addFamily(Bytes.toBytes(columnFamily));
+	    
+	    Result r = table.get(g);
+	    NavigableMap<byte[],byte[]> ret = r.getFamilyMap(Bytes.toBytes(columnFamily));
+	    
+		
+		return ret;
+	}
+	
+	public static NavigableMap<byte[],byte[]> getMembersMapFiltered(String tableName, byte[] rowId, String columnFamily, byte[] value, CompareOp compareOp) throws IOException {
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+		// Now, to retrieve the data we just wrote. The values that come back are
+	    // Result instances. Generally, a Result is an object that will package up
+	    // the hbase return into the form you find most palatable.
+	    Get g = new Get(rowId);
+	    
+	    g.addFamily(Bytes.toBytes(columnFamily));
+	    
+	    BinaryComparator bc = new BinaryComparator(value);
+	    ValueFilter valueFilter = new ValueFilter(compareOp, bc);
+	    
+	    g.setFilter(valueFilter);
 	    
 	    Result r = table.get(g);
 	    NavigableMap<byte[],byte[]> ret = r.getFamilyMap(Bytes.toBytes(columnFamily));

@@ -1,7 +1,10 @@
 package com.fingerbook.persistencehbase;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import com.fingerbook.models.FileInfo;
@@ -9,12 +12,36 @@ import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
 
 public class CreateFingerTables {
+	
+	public static void main(String[] args) throws IOException {
+		
+		long fingerbookId = 1L;
+		
+//		Map<Long, Double> simils = null;
+//		simils = PersistentFingerbook.getSimilarities(fingerbookId, 0.45);
+//		
+//		for(Entry<Long, Double> entry: simils.entrySet()) {
+//			
+//			System.out.println(entry.getKey() + " --> " + entry.getValue());
+//		}
+		
+		Map<Fingerbook, Double> similsFbs = null;
+		
+		similsFbs = PersistentFingerbook.getSimilarFbs(fingerbookId, 0.35, 2, 0);
+		
+		for(Entry<Fingerbook, Double> entry: similsFbs.entrySet()) {
+			
+			System.out.println(entry.getKey() + " --> " + entry.getValue());
+		}
+		
+		
+	}
 
 	/**
 	 * @param args
 	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void mainOld(String[] args) throws IOException {
 
 //		PersistentFingerbook.createFingerTables();
 		
