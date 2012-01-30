@@ -8,6 +8,7 @@ public class FingerbookFeed extends BaseFeed {
 	
 	protected Fingerbook fingerbook;
 	protected FingerprintsFeed fingerprintsFeed;
+	protected SimilaritiesFeed similaritiesFeed;
 
 	public FingerbookFeed() {
 		// TODO Auto-generated constructor stub
@@ -42,6 +43,14 @@ public class FingerbookFeed extends BaseFeed {
 
 	public void setFingerprintsFeed(FingerprintsFeed fingerprintsFeed) {
 		this.fingerprintsFeed = fingerprintsFeed;
+	}
+
+	public SimilaritiesFeed getSimilaritiesFeed() {
+		return similaritiesFeed;
+	}
+
+	public void setSimilaritiesFeed(SimilaritiesFeed similaritiesFeed) {
+		this.similaritiesFeed = similaritiesFeed;
 	}
 
 }
