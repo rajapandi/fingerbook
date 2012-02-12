@@ -9,6 +9,7 @@
 	<!-- <http use-expressions="true" access-denied-page="/accessDenied.jsp" entry-point-ref="authenticationEntryPointImpl"> -->
     <http use-expressions="true" access-denied-page="/WEB-INF/jsp/access_denied.jsp">
 
+		<intercept-url pattern="/fingerbooks/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/fingerbooks/anonymous/**" access="permitAll"/>
     	<intercept-url pattern="/fingerbooks/semiauthenticated/**" access="permitAll"/>
         <intercept-url pattern="/fingerbooks/authenticated/**" access="hasRole('ROLE_USER')"/>

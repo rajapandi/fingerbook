@@ -319,7 +319,10 @@ public class FingerbookServices {
     		return response;
 		}
 		
-		if(authenticationMethod.equals(FingerbooksController.semiAuthenticated)) {
+		if(authenticationMethod.equals(FingerbooksController.AUTH_METHOD_ADMIN)) {
+			return null;
+		}
+		else if(authenticationMethod.equals(FingerbooksController.AUTH_METHOD_SEMI_AUTHENTICATED)) {
 			String ticket = null;
 			if(userInfo != null) {
 				ticket = userInfo.getTicket();
@@ -339,7 +342,7 @@ public class FingerbookServices {
 				}
 			}
 			
-		} else if(authenticationMethod.equals(FingerbooksController.authenticated)) {
+		} else if(authenticationMethod.equals(FingerbooksController.AUTH_METHOD_AUTHENTICATED)) {
 			String user = null;
 			if(userInfo != null) {
 				user = userInfo.getUser();
@@ -382,7 +385,7 @@ public class FingerbookServices {
     		return response;
 		}
 		
-		if(authenticationMethod.equals(FingerbooksController.semiAuthenticated)) {
+		if(authenticationMethod.equals(FingerbooksController.AUTH_METHOD_SEMI_AUTHENTICATED)) {
 			// If a semi-authentication is used, a ticket is expected
 			if(user == null) {
 				String msg = "Operation cancelled: Semi-authentication is used, but no ticket was received";
@@ -398,7 +401,7 @@ public class FingerbookServices {
 				}
 			}
 			
-		} else if(authenticationMethod.equals(FingerbooksController.authenticated)) {
+		} else if(authenticationMethod.equals(FingerbooksController.AUTH_METHOD_AUTHENTICATED)) {
 			// If authenticated is used, a username is expected
 			if(user == null) {
 				String msg = "Operation cancelled: Authentication is used, but no user name was received";
