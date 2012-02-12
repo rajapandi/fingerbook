@@ -19,9 +19,12 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.filter.BinaryComparator;
 import org.apache.hadoop.hbase.filter.ColumnPaginationFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter;
+import org.apache.hadoop.hbase.filter.RegexStringComparator;
+import org.apache.hadoop.hbase.filter.RowFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.filter.ValueFilter;
+import org.apache.hadoop.hbase.filter.WritableByteArrayComparable;
 import org.apache.hadoop.hbase.util.Bytes;
 
 public class HbaseManager {
@@ -255,6 +258,60 @@ public class HbaseManager {
 	    
 //	    NavigableMap<byte[],byte[]> ret = r.getFamilyMap(Bytes.toBytes(columnFamily));
 	    NavigableMap<byte[],NavigableMap<byte[],byte[]>> ret = r.getNoVersionMap();
+	    
+		
+		return ret;
+	}
+	
+	public static Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> getFullRowMapFilteredByKeyRegex(String tableName, String regex) throws IOException {
+		
+		Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> ret = new Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>>();
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+	    
+	    WritableByteArrayComparable rowComparator = new RegexStringComparator(regex);
+	    
+	    RowFilter rowFilter = new RowFilter(CompareOp.EQUAL, rowComparator);
+	    
+	    Scan s = new Scan();
+	    s.setFilter(rowFilter);
+	    
+	    
+	    ResultScanner scanner = table.getScanner(s);
+	    try {
+	      // Scanners return Result instances.
+	      // Now, for the actual iteration. One way is to use a while loop like so:
+	      for (Result rr = scanner.next(); rr != null; rr = scanner.next()) {
+	        // print out the row we found and the columns we were looking for
+//	        System.out.println("Found row: " + rr);
+	        ret.add(rr.getNoVersionMap());
+	      }
+	
+	      // The other approach is to use a foreach loop. Scanners are iterable!
+	      // for (Result rr : scanner) {
+	      //   System.out.println("Found row: " + rr);
+	      // }
+	    } finally {
+	      // Make sure you close your scanners when you are done!
+	      // Thats why we have it inside a try/finally clause
+	      scanner.close();
+	    }
+	    
 	    
 		
 		return ret;
