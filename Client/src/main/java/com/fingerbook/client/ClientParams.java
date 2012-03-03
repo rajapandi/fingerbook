@@ -9,7 +9,7 @@ public class ClientParams {
 	public String user = new String("gimi");
 	public String mail = new String("ggross@gmail.com");
 	public String gui = new String("yes");
-	public String url = new String("http://client:8080/fingerbookRESTM/");
+	public String url = new String("http://localhost:8080/fingerbookRESTM/");
 
 	ClientParams(String[] args) throws NumberFormatException,
 			IllegalArgumentException, IllegalAccessException {
