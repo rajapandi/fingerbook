@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
-import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller

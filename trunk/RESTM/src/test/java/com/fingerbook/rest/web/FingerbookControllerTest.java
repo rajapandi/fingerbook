@@ -4,6 +4,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 
 public class FingerbookControllerTest extends AbstractTransactionalJUnit4SpringContextTests {
 
+	@SuppressWarnings("unused")
 	private FingerbooksController controller;
 	
 	/*

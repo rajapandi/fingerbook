@@ -52,7 +52,8 @@ public class HibernateRepository<T> implements Repository<T> {
         return domainClass;
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Page<T> list(int page, int size, Collection<Restriction> restrictions,
             Collection<Order> orders) {
         Session session = getSession();

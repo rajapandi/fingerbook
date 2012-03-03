@@ -22,12 +22,14 @@ public class HibernateUserRepository  extends HibernateRepository<User> implemen
             this.sessionFactory = sessionFactory;
     }
 
-    private boolean exists(User user) {
+    @SuppressWarnings("unused")
+	private boolean exists(User user) {
         Page<User> users = super.list(new Restriction("username",user.getUsername()));
         return users.size()>0;
     }
     
-    private boolean emailExists(String email) {
+    @SuppressWarnings("unused")
+	private boolean emailExists(String email) {
         Page<User> users = super.list(new Restriction("email",email));
         return users.size()>0;
     }

@@ -1,6 +1,5 @@
 package com.fingerbook.rest.domain.util;
 
-import org.hibernate.criterion.Criterion;
 
 /**
  * Restricciones sobre la lista de una entidad 

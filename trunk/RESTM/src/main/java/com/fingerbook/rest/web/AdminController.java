@@ -1,6 +1,5 @@
 package com.fingerbook.rest.web;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -17,15 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
-import com.fingerbook.models.SpringSecurityAuthority;
 import com.fingerbook.models.SpringSecurityUser;
-import com.fingerbook.models.SpringSecurityUserMerge;
-import com.fingerbook.models.UserInfo;
 import com.fingerbook.rest.back.FingerbookUtils;
 import com.fingerbook.rest.service.AdminServices;
-import com.fingerbook.rest.service.FingerbookServices;
 
 @Controller
 @RequestMapping("/admin")
@@ -167,13 +161,14 @@ public class AdminController {
 		return response;
 	}    
     
-    @RequestMapping(value="/listUsers", method=RequestMethod.GET)
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value="/listUsers", method=RequestMethod.GET)
     @ResponseBody
     public List<SpringSecurityUser> fingerbooksByTicket(Model model) {    
     	
     	List<SpringSecurityUser> users = new Vector<SpringSecurityUser>();
     	List<Object[]> ssUsers = null;
-    	List<SpringSecurityAuthority> ssAuthority = null;
+    	//List<SpringSecurityAuthority> ssAuthority = null;
 	
     	String msg;
     	Session session = null;
@@ -183,14 +178,14 @@ public class AdminController {
 			
 			String sql = "select username, password, enabled from users";
 			//String sql = "from users" ;
-			String sql2 = "select  username, authority from authorities";
+			//String sql2 = "select  username, authority from authorities";
 			
 			Query query1 = session.createSQLQuery(sql);
 			//Query query1 = session.createQuery(sql);
-			Query query2 = session.createSQLQuery(sql2);	
+			//Query query2 = session.createSQLQuery(sql2);	
 			
 			ssUsers = query1.list();
-			ssAuthority = query2.list();
+			//ssAuthority = query2.list();
 					
 			for(int i=0; i<ssUsers.size(); i++) {
 				SpringSecurityUser user = new SpringSecurityUser();
@@ -209,7 +204,7 @@ public class AdminController {
 			
 		}catch(Exception e){
 			msg = "Listing users failed: " + e.getMessage();
-			Response response = new Response(null, msg);
+			//Response response = new Response(null, msg);
 	    	logger.info(msg);
 			e.printStackTrace();
 			
@@ -222,13 +217,14 @@ public class AdminController {
     	return users;
     }
  
-    @RequestMapping(value="/listUsers/{username}", method=RequestMethod.GET)
+    @SuppressWarnings("unchecked")
+	@RequestMapping(value="/listUsers/{username}", method=RequestMethod.GET)
     @ResponseBody
     public SpringSecurityUser listUserById(@PathVariable("username") String username, Model model) {    
     	
     	SpringSecurityUser user = new SpringSecurityUser();
     	List<Object[]> ssUsers = null;
-    	List<SpringSecurityAuthority> ssAuthority = null;
+    	//List<SpringSecurityAuthority> ssAuthority = null;
 	
     	String msg;
     	Session session = null;
@@ -255,7 +251,7 @@ public class AdminController {
 			
 		}catch(Exception e){
 			msg = "Listing users failed: " + e.getMessage();
-			Response response = new Response(null, msg);
+			//Response response = new Response(null, msg);
 	    	logger.info(msg);
 			e.printStackTrace();
 			
