@@ -15,16 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fingerbook.models.Auth;
 import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.Fingerbook.STATE;
+import com.fingerbook.models.Response;
+import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.transfer.FingerbookFeed;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
 import com.fingerbook.models.transfer.SimilaritiesFeed;
-import com.fingerbook.models.Response;
 import com.fingerbook.persistencehbase.PersistentFingerbook;
 import com.fingerbook.rest.service.FingerbookServices;
-import com.fingerbook.rest.domain.repository.UserRepository;
 
 /**
  * @author nahu
@@ -44,7 +43,7 @@ public class FingerbooksController {
     // DI
     private FingerbookServices fingerbookService;
     @Autowired
-    private UserRepository userRepository;
+    //private UserRepository userRepository;
     
     /** 
      * Returns de Fingerbook with the given fingerbookId when method is GET
@@ -981,6 +980,7 @@ public class FingerbooksController {
 		return ans;
 	}
 	
+	@SuppressWarnings("unused")
 	private Response isValidRequestUpdate(Fingerbook fingerbook, String authenticationMethod) {
 		
 		Response ans = null;

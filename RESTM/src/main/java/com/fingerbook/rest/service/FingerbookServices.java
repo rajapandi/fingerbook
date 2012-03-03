@@ -3,10 +3,10 @@ package com.fingerbook.rest.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;

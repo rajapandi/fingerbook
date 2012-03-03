@@ -26,8 +26,7 @@ public class Page<T> extends ArrayList<T>{
 	    setPagesSize(page.pagesSize);
 	}
 	
-        @SuppressWarnings("unchecked")
-        public Page(List collection, int first, int size) {
+        public Page(List<T> collection, int first, int size) {
             this.addAll(0, collection);
             setTotalResultSize(collection.size());
             setPageNumber(first/size);
