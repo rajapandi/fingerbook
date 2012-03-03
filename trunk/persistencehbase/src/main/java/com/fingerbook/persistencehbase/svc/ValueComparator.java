@@ -3,11 +3,11 @@ package com.fingerbook.persistencehbase.svc;
 import java.util.Comparator;
 import java.util.Map;
 
-public class ValueComparator implements Comparator {
+public class ValueComparator implements Comparator<Object> {
 
-	Map base;
+	Map<?, ?> base;
 
-	public ValueComparator(Map base) {
+	public ValueComparator(Map<?, ?> base) {
 		this.base = base;
 	}
 

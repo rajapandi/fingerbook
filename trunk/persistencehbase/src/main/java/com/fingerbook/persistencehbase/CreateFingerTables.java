@@ -1,15 +1,11 @@
 package com.fingerbook.persistencehbase;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
-import com.fingerbook.models.Fingerprints;
 
 public class CreateFingerTables {
 	
@@ -47,7 +43,7 @@ public class CreateFingerTables {
 		
 		String hash = "7738ca5c0259e34fba0fd32939b517e6";
 		
-		String ticket = "de6f29589e4186411c5e877a29fda3b56a97db95";
+		//String ticket = "de6f29589e4186411c5e877a29fda3b56a97db95";
 		
 		System.out.println("Normal");
 //		Fingerprints auxFingerPrints = PersistentFingerbook.loadFingerPrintsByFingerBook(2);

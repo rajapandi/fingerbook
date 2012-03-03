@@ -33,8 +33,6 @@ import com.fingerbook.persistencehbase.svc.ValueComparator;
 
 //public class PersistentFingerbook extends Fingerbook{
 public class PersistentFingerbook {
-	private static final long serialVersionUID = -2963312837954174296L;
-
 	public static final int FILE_INFO_PAGINATION_LIMIT = 2;
 	
 	private static String TICKET_KEY = "fingerbook";
@@ -289,10 +287,10 @@ public class PersistentFingerbook {
 		try {
 			if(ticket != null) {
 				ticketTable = new TransHTable(TICKET_TABLE_NAME);
-				byte[] fingerbookIdB = Bytes.toBytes(fingerbookId);
+				//byte[] fingerbookIdB = Bytes.toBytes(fingerbookId);
 				byte[] ticketB = Bytes.toBytes(ticket);
 				
-				byte[] auxValueB = Bytes.toBytes("");
+				//byte[] auxValueB = Bytes.toBytes("");
 				
 				/* Modifico para que se guarden ordenados de recientes a anteriores */
 				long modFingerbookId = Long.MAX_VALUE - fingerbookId;
@@ -316,7 +314,7 @@ public class PersistentFingerbook {
 		try {
 			if(user != null) {
 				userTable = new TransHTable(USER_TABLE_NAME);
-				byte[] fingerbookIdB = Bytes.toBytes(fingerbookId);
+				//byte[] fingerbookIdB = Bytes.toBytes(fingerbookId);
 				byte[] userB = Bytes.toBytes(user);
 				
 //				userTable.put(userB, Bytes.toBytes(TUSER_GROUP_ID_FAMILY), fingerbookIdB, null);
@@ -1690,11 +1688,11 @@ public class PersistentFingerbook {
 				userInfo.setTicket(ticket);
 			}
 			
-			Set<String> tags = fingerbook.getTags();
-			int tagsInserted = insertTags(auxFingerbookId, tags);
+			//Set<String> tags = fingerbook.getTags();
+			//int tagsInserted = insertTags(auxFingerbookId, tags);
 			
-			String comment = fingerbook.getComment();
-			int commentInserted = insertComment(auxFingerbookId, comment);
+			//String comment = fingerbook.getComment();
+			//int commentInserted = insertComment(auxFingerbookId, comment);
 			
 			
 			
@@ -1981,7 +1979,7 @@ public class PersistentFingerbook {
 		String auxTransId = createTransactionId(fingerbookId);
 		
 		long nowStamp = System.currentTimeMillis();
-		byte[] groupIdB = Bytes.toBytes(fingerbookId);
+		//byte[] groupIdB = Bytes.toBytes(fingerbookId);
 		byte[] nowStampB = Bytes.toBytes(nowStamp);
 		
 		byte[] auxTransIdB = Bytes.toBytes(auxTransId);
@@ -2074,7 +2072,7 @@ public class PersistentFingerbook {
 		boolean ret = true;
 		NavigableMap<byte[],NavigableMap<byte[],byte[]>> tmpData = null;
 		
-		NavigableMap<byte[],byte[]> familyMapState = null;
+		//NavigableMap<byte[],byte[]> familyMapState = null;
 		NavigableMap<byte[],byte[]> familyMapInfo = null;
 		
 		String transactionId = null;
