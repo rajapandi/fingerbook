@@ -42,7 +42,7 @@ public class FingerbooksController {
     
     // DI
     private FingerbookServices fingerbookService;
-    @Autowired
+    //@Autowired
     //private UserRepository userRepository;
     
     /** 
