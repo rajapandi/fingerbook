@@ -3,7 +3,8 @@ package com.fingerbook.models;
 import java.io.Serializable;
 
 public class SpringSecurityAuthority implements Serializable {
-	
+	private static final long serialVersionUID = 5422718074787117629L;
+
 	private String username;
 	private String authority;
 	public String getUsername() {

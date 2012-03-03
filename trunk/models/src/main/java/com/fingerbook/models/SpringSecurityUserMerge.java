@@ -3,7 +3,8 @@ package com.fingerbook.models;
 import java.io.Serializable;
 
 public class SpringSecurityUserMerge implements Serializable {
-	
+	private static final long serialVersionUID = 98873158280562818L;
+
 	private String username;
 	private String password;
 	private boolean enabled;
