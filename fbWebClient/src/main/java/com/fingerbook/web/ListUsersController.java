@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.BeansException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +15,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
+
 import com.fingerbook.models.SpringSecurityUser;
 
 @RequestMapping("/listUsers")
@@ -92,14 +93,15 @@ public class ListUsersController {
         return "listusers/index";
     }
     
-    private List<SpringSecurityUser> getUsers(HttpServletRequest request) {
+    @SuppressWarnings("unchecked")
+	private List<SpringSecurityUser> getUsers(HttpServletRequest request) {
     	
     	List<SpringSecurityUser> users = null;
     	
     	try {
     		
-    		String authenticatedUser = request.getUserPrincipal().getName();
-    		String authenticatedUserPasswword = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+    		//String authenticatedUser = request.getUserPrincipal().getName();
+    		//String authenticatedUserPasswword = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
     		
     		String urlStr = "http://localhost:8080/fingerbookRESTM/admin/listUsers/";
     		
