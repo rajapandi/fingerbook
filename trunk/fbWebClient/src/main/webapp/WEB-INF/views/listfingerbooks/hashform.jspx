@@ -9,12 +9,18 @@
       <spring:message arguments="${app_name}" code="welcome_titlepane"/>
     </h3>
   </util:panel>
+  
+  <h2>Search by hash</h2>
+  
+  <DIV style="width: 287px"> 
   <form action="hash" method="get">
-  	Hash: <input type="text" name="hash_input" />
-  	<br />
+  	Hash: <input type="text" name="hash_input" style="float:right"/>
+  	<br /><br />
   	<input type="hidden" name="find" value="hash"/>
   	<input type="hidden" name="page" value="${page}"/>
   	<input type="hidden" name="size" value="${size}"/>
-  	<input type="submit" value="Submit" />
+  	<input type="submit" value="Submit" style="float:right"/>
+  	<br /><br />
   </form>
+  </DIV>
 </div>

@@ -4,4 +4,9 @@
     <definition extends="default" name="filehashexists/index">
         <put-attribute name="body" value="/WEB-INF/views/filehashexists/index.jspx"/>
     </definition>
+        
+    <definition extends="default" name="fileHashExists">
+        <put-attribute name="body" value="/WEB-INF/views/filehashexists/fileHashExists.jspx"/>
+    </definition>
+    
 </tiles-definitions>
