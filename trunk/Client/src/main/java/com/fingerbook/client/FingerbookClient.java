@@ -47,7 +47,7 @@ public class FingerbookClient {
 	@SuppressWarnings( "unchecked" )
 	public List<Fingerbook> getGroups(String hash)
 	{
-		return restTemplate.getForObject( baseUrl + "fingerbooks/" + "/" + hash, List.class );
+		return restTemplate.getForObject( baseUrl + "fingerbooks/" + "hash/" + hash, List.class );
 	}
 	
 	public Response postHashes(Fingerbook fb) throws RestClientException {
