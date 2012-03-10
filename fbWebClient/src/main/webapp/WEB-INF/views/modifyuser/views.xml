@@ -5,7 +5,7 @@
         <put-attribute name="body" value="/WEB-INF/views/modifyuser/index.jspx"/>
     </definition>
     
-    <definition extends="public" name="modifyuser/modifyUserForm">
+    <definition extends="default" name="modifyuser/modifyUserForm">
         <put-attribute name="body" value="/WEB-INF/views/modifyuser/modifyUserForm.jspx"/>
     </definition>    
     

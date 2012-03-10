@@ -4,4 +4,9 @@
     <definition extends="default" name="ticketlogin/index">
         <put-attribute name="body" value="/WEB-INF/views/ticketlogin/index.jspx"/>
     </definition>
+    
+    <definition extends="default" name="ticketLogin">
+        <put-attribute name="body" value="/WEB-INF/views/ticketlogin/ticketLogin.jspx"/>
+    </definition> 
+    
 </tiles-definitions>
