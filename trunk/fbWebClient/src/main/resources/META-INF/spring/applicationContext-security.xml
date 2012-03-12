@@ -34,6 +34,19 @@
 
 	<beans:bean id="myFilter" class="com.fingerbook.security.MyAuthenticationFilter">
 		<beans:property name="authenticationManager" ref="authenticationManager"/>
+		<!-- 
+	    <property name="authenticationSuccessHandler">
+	        <bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+	            <property name="defaultTargetUrl" value="/account/"/>
+	            <property name="alwaysUseDefaultTargetUrl" value="false"/>
+	        </bean>
+	    </property>
+		 -->
+	    <beans:property name="authenticationFailureHandler">
+	        <beans:bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+	            <beans:property name="defaultFailureUrl" value="/login?failed=true"/>
+	        </beans:bean>
+	    </beans:property>
 	</beans:bean>
 	
 	<beans:bean id="entryPoint" class="com.fingerbook.security.MyEntryPoint">
