@@ -6,6 +6,9 @@ import java.security.NoSuchAlgorithmException;
 
 public class FingerbookUtils {
 	
+	private final static String adminRole = "ADMIN";
+	private final static String userRole = "USER";
+	
     private static String convertToHex(byte[] data) { 
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < data.length; i++) { 
@@ -32,7 +35,7 @@ public class FingerbookUtils {
     } 
     
     public static boolean isValidRole(String role) {
-    	if(role.equals("USER") || role.equals("ADMIN")) {
+    	if(role.equals(adminRole) || role.equals(userRole)) {
     		return true;
     	} else {
     		return false;

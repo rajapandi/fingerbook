@@ -29,7 +29,7 @@
           <c:set var="sec_name_msg">
             <spring:escapeBody javaScriptEscape="true">${name_msg}</spring:escapeBody>
           </c:set>
-          Spring.addDecoration(new Spring.ElementDecoration({elementId : "j_username", widgetType : "dijit.form.ValidationTextBox", widgetAttrs : {promptMessage: "${sec_name_msg}", required : true}})); 
+          Spring.addDecoration(new Spring.ElementDecoration({elementId : "j_username", widgetType : "dijit.form.ValidationTextBox", widgetAttrs : {promptMessage: "${sec_name_msg}", required : false}})); 
         </script>
       </div>
       <br />
@@ -43,7 +43,7 @@
           <c:set var="sec_pwd_msg">
             <spring:escapeBody javaScriptEscape="true">${pwd_msg}</spring:escapeBody>
           </c:set>
-          Spring.addDecoration(new Spring.ElementDecoration({elementId : "j_password", widgetType : "dijit.form.ValidationTextBox", widgetAttrs : {promptMessage: "${sec_pwd_msg}", required : true}})); 
+          Spring.addDecoration(new Spring.ElementDecoration({elementId : "j_password", widgetType : "dijit.form.ValidationTextBox", widgetAttrs : {promptMessage: "${sec_pwd_msg}", required : false}})); 
         </script>
       </div>
       <br />

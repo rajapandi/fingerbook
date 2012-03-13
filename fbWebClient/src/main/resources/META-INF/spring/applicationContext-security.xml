@@ -29,7 +29,8 @@
        	<intercept-url pattern="/**" access="isAuthenticated()" />
        	
        	<custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
-       	
+       	<access-denied-handler ref="accessDeniedHandler" />
+       	  	
     </http>
 
 	<beans:bean id="myFilter" class="com.fingerbook.security.MyAuthenticationFilter">
@@ -67,5 +68,9 @@
     	<authentication-provider ref="userAuthenticationProvider"/>
     	<authentication-provider ref="ticketAuthenticationProvider"/>
 	</authentication-manager>
+
+	<beans:bean id="accessDeniedHandler" class="com.fingerbook.security.MyAccessDeniedHandler">
+	    <beans:property name="accessDeniedUrl" value="403.html" />
+	</beans:bean>
 
 </beans:beans>

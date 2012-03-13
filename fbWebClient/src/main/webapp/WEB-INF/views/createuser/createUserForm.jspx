@@ -18,7 +18,11 @@
 	  	<br /><br />
 	  	Password: <input type="password" name="password" style="float:right"/>
 	  	<br /><br />
-	  	Role: <input type="text" name="role" style="float:right"/>
+	  	Role: 
+	  	<select name="role" style="float:right">
+		  <option label="ADMIN" value="ADMIN">ADMIN</option>
+		  <option selected="true" label="USER" value="USER">USER</option>
+		</select>
 	  	<br /><br />
 	  	<input type="submit" value="Submit" style="float:right"/>
 	  	<br /><br />
