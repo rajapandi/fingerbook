@@ -26,7 +26,7 @@ intersection  = FOREACH edges_joined {
                     aug_edges::v1 AS v1,
                     aug_dups::v1  AS v2,
                     added_size    AS added_size, 
-		    aug_edges::v1_out AS v1_amount
+		                aug_edges::v1_out AS v1_amount
                   ;
                 };
 
@@ -68,13 +68,16 @@ sim_hash_amounts = FOREACH sim_hash_grp {
                     hash_amount = (int)COUNT(sim_hash);
                     GENERATE
                       CONCAT(CONCAT(group.fid1,'-'), group.fid2)  AS fid_comp,
-                      group.hash              AS hash,
+                      group.hash        AS hash,
+                      group.fid1        AS fid1,
+                      group.fid2        AS fid2,
                       hash_amount       AS hash_amount
                      ;
                   };
-sim_hash_amounts_grouped = GROUP sim_hash_amounts BY fid_comp;
-hbase_format = FOREACH sim_hash_amounts_grouped GENERATE group, fbUDF.BagToMap.BagToMap(*);
---dump hbase_format;
 
-STORE hbase_format INTO 'tcomposite' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('finger:*');
+sim_hash_amounts_grouped = GROUP sim_hash_amounts BY fid_comp;
+
+hbase_format = FOREACH sim_hash_amounts_grouped GENERATE group, fbUDF.BagToMap.BagToMap(*), TOMAP((chararray)MAX(sim_hash_amounts.fid1), MAX(sim_hash_amounts.fid2), (chararray)MAX(sim_hash_amounts.fid2), MAX(sim_hash_amounts.fid1));
+
+STORE hbase_format INTO 'tcomposite' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('finger:* group_fid:*');
 
