@@ -26,7 +26,6 @@ public class BagToMap extends EvalFunc<Map<String, Object>>{
 					fingerbookIdPercentage.put((String)tuple.get(1), tuple.get(2));
 				}
 				
-				System.err.println("Map:" + fingerbookIdPercentage);
 	        } catch(Exception e){
 	            System.err.println("Failed to process input; error - " + e.getMessage());
 	            return null;
