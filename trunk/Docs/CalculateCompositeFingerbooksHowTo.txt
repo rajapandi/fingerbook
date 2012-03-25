@@ -3,7 +3,7 @@ Como correr el script para calcular los fingerbooks compuestos de forma local:
 1-Teniendo Hbase 0.90.3 instalado levantarla con el comando $HBASE_HOME/bin/start-hbase.sh
 
 2-Ingresar a la consola de Hbase ($HBASE_HOME/bin/hbase shell) y ejecutar el siguiente comando para crear la tabla tcomposite que es la que va a tener los fingerbooks compuestos:
-create 'tcomposite', 'finger', 'group_fid'
+create 'tcomposite', 'finger', 'group_fid', 'info'
 
 3-Asegurarse de haber hecho los pasos del 3 al 6 del documeto CalculareSimilaritiesHowTo.txt.
 
