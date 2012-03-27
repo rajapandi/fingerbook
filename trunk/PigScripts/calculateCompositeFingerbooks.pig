@@ -111,7 +111,7 @@ joined_with_tags = JOIN sim_hash_amounts BY (fid1,fid2) left outer, tags_by_fids
 
 sim_hash_amounts_grouped = GROUP joined_with_tags BY sim_hash_amounts::fid_comp;
 
-hbase_format = FOREACH sim_hash_amounts_grouped GENERATE group, fbUDF.BagToMap.BagToMap(*), TOMAP((chararray)MAX(joined_with_tags.sim_hash_amounts::fid1), MAX(joined_with_tags.sim_hash_amounts::fid2), (chararray)MAX(joined_with_tags.sim_hash_amounts::fid2), MAX(joined_with_tags.sim_hash_amounts::fid1)), COUNT(joined_with_tags), fbUDF.BagToMap.TupleBagToMap( TOP(1,0,joined_with_tags.tags_by_fids::tags));
+hbase_format = FOREACH sim_hash_amounts_grouped GENERATE group, fbUDF.BagToMap.BagToMap(*), TOMAP((chararray)MAX(joined_with_tags.sim_hash_amounts::fid1), MAX(joined_with_tags.sim_hash_amounts::fid2)), COUNT(joined_with_tags), fbUDF.BagToMap.TupleBagToMap( TOP(1,0,joined_with_tags.tags_by_fids::tags));
 --dump hbase_format;
 
 STORE hbase_format INTO 'tcomposite' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('finger:* group_fid:* info:total tag:*');
