@@ -76,7 +76,7 @@ public class Fingerbook implements Serializable {
 			}
 			ret.append("}\n");
 		}
-		if(this.fingerPrints != null) {
+		if(this.fingerPrints != null && this.fingerPrints.getFiles() != null) {
 			for (FileInfo fi : this.fingerPrints.getFiles()) {
 				ret.append(" \nHash: ");
 				ret.append(fi.getShaHash());
