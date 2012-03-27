@@ -263,9 +263,98 @@ public class HbaseManager {
 		return ret;
 	}
 	
-	public static Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> getFullRowMapFilteredByKeyRegex(String tableName, String regex) throws IOException {
+	public static NavigableMap<byte[],NavigableMap<byte[],byte[]>> getFullRowMap(String tableName, byte[] rowId, Vector<String> columnFamilies) throws IOException {
+				
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		HTable table = new HTable(config, tableName);
+	    
+		Get g = new Get(rowId);
+	    
+	    if(columnFamilies != null) {
+	    	
+	    	for(String columnFamily: columnFamilies) {
+	    		g.addFamily(Bytes.toBytes(columnFamily));
+	    	}
+	    }
+	    
+	    Result r = table.get(g);
+	    
+	    NavigableMap<byte[],NavigableMap<byte[],byte[]>> ret = r.getNoVersionMap();
+	    
+		
+		return ret;
+	}
+	
+	public static Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> getFullRowMapFilteredByKeyRegex(String tableName, String regex, Vector<String> columnFamilies) throws IOException {
 		
 		Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> ret = new Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>>();
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+	    
+	    WritableByteArrayComparable rowComparator = new RegexStringComparator(regex);
+	    
+	    RowFilter rowFilter = new RowFilter(CompareOp.EQUAL, rowComparator);
+	    
+	    Scan s = new Scan();
+	    s.setFilter(rowFilter);
+	    
+	    if(columnFamilies != null) {
+	    	
+	    	for(String columnFamily: columnFamilies) {
+	    		s.addFamily(Bytes.toBytes(columnFamily));
+	    	}
+	    }
+	    
+	    
+	    
+	    ResultScanner scanner = table.getScanner(s);
+	    try {
+	      // Scanners return Result instances.
+	      // Now, for the actual iteration. One way is to use a while loop like so:
+	      for (Result rr = scanner.next(); rr != null; rr = scanner.next()) {
+	        // print out the row we found and the columns we were looking for
+//	        System.out.println("Found row: " + rr);
+	        ret.add(rr.getNoVersionMap());
+	      }
+	
+	      // The other approach is to use a foreach loop. Scanners are iterable!
+	      // for (Result rr : scanner) {
+	      //   System.out.println("Found row: " + rr);
+	      // }
+	    } finally {
+	      // Make sure you close your scanners when you are done!
+	      // Thats why we have it inside a try/finally clause
+	      scanner.close();
+	    }
+	    
+	    
+		
+		return ret;
+	}
+	
+	
+	public static Vector<byte[]> getRowKeysFilteredByKeyRegex(String tableName, String regex) throws IOException {
+		
+//		Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> ret = new Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>>();
+		Vector<byte[]> ret = new Vector<byte[]>();
 		
 		// You need a configuration object to tell the client where to connect.
 	    // When you create a HBaseConfiguration, it reads in whatever you've set
@@ -294,12 +383,122 @@ public class HbaseManager {
 	    
 	    ResultScanner scanner = table.getScanner(s);
 	    try {
-	      // Scanners return Result instances.
-	      // Now, for the actual iteration. One way is to use a while loop like so:
+
 	      for (Result rr = scanner.next(); rr != null; rr = scanner.next()) {
-	        // print out the row we found and the columns we were looking for
-//	        System.out.println("Found row: " + rr);
-	        ret.add(rr.getNoVersionMap());
+	    	  
+//	        ret.add(rr.getNoVersionMap());
+	    	  ret.add(rr.getRow());
+	        
+	      }
+	
+
+	    } finally {
+	      // Make sure you close your scanners when you are done!
+	      // Thats why we have it inside a try/finally clause
+	      scanner.close();
+	    }
+	    
+	    
+		
+		return ret;
+	}
+	
+	
+	public static Vector<byte[]> getRowKeys(String tableName) throws IOException {
+		
+//		Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> ret = new Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>>();
+		Vector<byte[]> ret = new Vector<byte[]>();
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+	    
+//	    WritableByteArrayComparable rowComparator = new RegexStringComparator(regex);
+//	    RowFilter rowFilter = new RowFilter(CompareOp.EQUAL, rowComparator);
+	    
+	    Scan s = new Scan();
+//	    s.setFilter(rowFilter);
+	    
+	    
+	    ResultScanner scanner = table.getScanner(s);
+	    try {
+
+	      for (Result rr = scanner.next(); rr != null; rr = scanner.next()) {
+	    	  
+//	        ret.add(rr.getNoVersionMap());
+	    	  ret.add(rr.getRow());
+	        
+	      }
+	
+
+	    } finally {
+	      // Make sure you close your scanners when you are done!
+	      // Thats why we have it inside a try/finally clause
+	      scanner.close();
+	    }
+	    
+	    
+		
+		return ret;
+	}
+	
+	
+	public static Vector<byte[]> getValuesFilteredByKeyRegex(String tableName, String regex, String columnFamily, byte[] columnName) throws IOException {
+		
+//		Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> ret = new Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>>();
+//		Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>> filteredMapsVec = new Vector<NavigableMap<byte[],NavigableMap<byte[],byte[]>>>();
+		
+		Vector<byte[]> ret = new Vector<byte[]>();
+		
+		
+		// You need a configuration object to tell the client where to connect.
+	    // When you create a HBaseConfiguration, it reads in whatever you've set
+	    // into your hbase-site.xml and in hbase-default.xml, as long as these can
+	    // be found on the CLASSPATH
+
+//	    HBaseConfiguration config = new HBaseConfiguration();
+//		Configuration config = HBaseConfiguration.create();
+		
+		if(config == null) {
+			config = HBaseConfiguration.create();
+		}
+	    
+		// This instantiates an HTable object that connects you to
+	    // the "myLittleHBaseTable" table.
+	    HTable table = new HTable(config, tableName);
+	    
+	    
+	    WritableByteArrayComparable rowComparator = new RegexStringComparator(regex);
+	    
+	    RowFilter rowFilter = new RowFilter(CompareOp.EQUAL, rowComparator);
+	    
+	    Scan s = new Scan();
+	    s.setFilter(rowFilter);
+	    
+	    s.addColumn(Bytes.toBytes(columnFamily), columnName);
+	    
+	    
+	    ResultScanner scanner = table.getScanner(s);
+	    try {
+	      for (Result rr = scanner.next(); rr != null; rr = scanner.next()) {
+
+//	    	  ret.add(rr.getNoVersionMap());
+//	    	  filteredMapsVec.add(rr.getNoVersionMap());
+	    	  ret.add(rr.getValue(Bytes.toBytes(columnFamily), columnName));
+	    	  
 	      }
 	
 	      // The other approach is to use a foreach loop. Scanners are iterable!
