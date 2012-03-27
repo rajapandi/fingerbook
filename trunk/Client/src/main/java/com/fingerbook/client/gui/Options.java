@@ -72,8 +72,8 @@ public class Options extends JDialog{
 	}
 	
 	private void populate() {
-		if(Front.getConfiguration().get("tags") != null)
-			getTTags().setText(Front.getConfiguration().get("tags"));		
+		if(Front.getConfiguration().get("tags") != null) //$NON-NLS-1$
+			getTTags().setText(Front.getConfiguration().get("tags"));		 //$NON-NLS-1$
 	}
 	
 	/**
@@ -129,7 +129,8 @@ public class Options extends JDialog{
 	 */
 	private JLabel getLTags() {
 		if (lTags == null)
-			lTags = new JLabel("Tags");
+			lTags = new JLabel("Tags"); //$NON-NLS-1$
+			lTags.setToolTipText(Messages.getString("Options.4")); //$NON-NLS-1$
 
 		return lTags;
 	}
@@ -141,7 +142,7 @@ public class Options extends JDialog{
 	 */
 	private JLabel getLComments() {
 		if (lComments == null)
-			lComments = new JLabel("Comments");
+			lComments = new JLabel("Comments"); //$NON-NLS-1$
 
 		return lComments;
 	}
@@ -180,6 +181,8 @@ public class Options extends JDialog{
 	private JTextField getTTags() {
 		if (tTags == null) {
 			tTags = new JTextField(20);
+			tTags.setToolTipText(Messages.getString("Options.4")); //$NON-NLS-1$
+
 		}
 		return tTags;
 	}
@@ -209,11 +212,11 @@ public class Options extends JDialog{
 			bOk.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Set<String> tags = new HashSet<String>(getTags());
-					Front.getConfiguration().put("tags", tags.toString().substring(1, tags.toString().length()-1));
+					Front.getConfiguration().put("tags", tags.toString().substring(1, tags.toString().length()-1)); //$NON-NLS-1$
 					if (getCTray().isSelected())
-						Front.getConfiguration().put("tray","true");
+						Front.getConfiguration().put("tray","true"); //$NON-NLS-1$ //$NON-NLS-2$
 					else
-						Front.getConfiguration().put("tray","false");
+						Front.getConfiguration().put("tray","false"); //$NON-NLS-1$ //$NON-NLS-2$
 					dispose();
 				}
 
@@ -223,7 +226,7 @@ public class Options extends JDialog{
 					/* Build List from String */
 					List<String> tagList = new ArrayList<String>();
 					java.util.Scanner scan = new java.util.Scanner(tags);
-					scan.useDelimiter(",");
+					scan.useDelimiter(","); //$NON-NLS-1$
 					while (scan.hasNext())
 						tagList.add(scan.next().trim());
 					return tagList;

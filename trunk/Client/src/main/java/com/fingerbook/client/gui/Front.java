@@ -506,8 +506,15 @@ public class Front extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if (!setConfig())
 						return;
-					/* Proceed without resuming */
-					proceed(false);
+					/* Check if no tags */
+					if(getConfiguration().get("tags") == null  &&
+							JOptionPane.showConfirmDialog(null,
+							Messages.getString("Front.25"), //$NON-NLS-1$
+							"Tags", JOptionPane.YES_NO_OPTION) == 0)
+							new Options();
+					else
+						/* Proceed without resuming */
+						proceed(false);
 				}
 			});
 		}
@@ -603,7 +610,7 @@ public class Front extends JFrame {
 		setAuthMetod();
 		setCredentials();
 		
-		if (configuration.get("tray") == null || !configuration.get("tray").equals("true"))
+		if (configuration.get("tray") == null || !configuration.get("tray").equals("true")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			tray = false;
 		else
 			tray = true;
