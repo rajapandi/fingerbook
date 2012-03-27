@@ -19,10 +19,12 @@ import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.fingerbook.models.Auth;
+import com.fingerbook.models.CompositeFingerbook;
 import com.fingerbook.models.FileInfo;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.UserInfo;
+import com.fingerbook.models.transfer.CompositeFingerbookList;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
 import com.fingerbook.models.transfer.SimilaritiesFeed;
@@ -39,6 +41,11 @@ public class PersistentFingerbook {
 	private static String TRANSACTION_ID_KEY = "fingerbook_trans_key";
 	
 	public static int separator = 30;
+	
+	public static String COMPOSITE_ID_SEP = "-";
+	
+//	public static String BASE_REGEX = "(^1\\-.)";
+	public static String BASE_REGEX = "(^id\\-.)";
 	
 	public static String FINGER_TABLE_NAME = "tfinger";
 	public static String TFINGER_GROUP_FAMILY = "group_info";
@@ -87,6 +94,16 @@ public class PersistentFingerbook {
 	
 	public static String SIMIL_TABLE_NAME = "tsimilarities";
 	public static String TSIMIL_GROUP_FID_FAMILY = "group_fid";
+	
+//	public static String COMPOSITE_TABLE_NAME = "tcomposite";
+//	public static String TCOMPOSITE_FINGER_FAMILY = "finger";
+	public static String COMPOSITE_TABLE_NAME = "tcomposite";
+	public static String TCOMPOSITE_GROUP_FAMILY = "group_fid";
+	public static String TCOMPOSITE_FINGER_FAMILY = "finger";
+	public static String TCOMPOSITE_TAG_FAMILY = "tag";
+	public static String TCOMPOSITE_INFO_FAMILY = "info";
+	public static String TCOMPOSITE_COLUMN_TOTAL = "total";
+	
 
 //	public PersistentFingerbook(Fingerbook fingerBook) {
 //		this.fingerbookId = fingerBook.getFingerbookId();
@@ -545,6 +562,101 @@ public class PersistentFingerbook {
 		return fingerBook;
 	}
 	
+	
+	public static CompositeFingerbook loadCompositeFingerbook(String compFingerbookId, boolean loadFingerPrints, int fingerprintsSize, int fingerprintsOffset) {
+		
+		CompositeFingerbook compositeFingerbook = new CompositeFingerbook();
+		compositeFingerbook.setCompFingerbookId(compFingerbookId);
+		
+//		Fingerprints auxFingerPrints = new Fingerprints();
+		Fingerprints auxFingerPrints = new Fingerprints();
+		byte[] compFingerbookIdB = Bytes.toBytes(compFingerbookId);
+		
+		Vector<String> columnFamilies = new Vector<String>();
+		columnFamilies.add(TCOMPOSITE_GROUP_FAMILY);
+		columnFamilies.add(TCOMPOSITE_INFO_FAMILY);
+		columnFamilies.add(TCOMPOSITE_TAG_FAMILY);
+		
+		NavigableMap<byte[],NavigableMap<byte[],byte[]>> compData = null;
+		NavigableMap<byte[],byte[]> familyMapGroup = null;
+		NavigableMap<byte[],byte[]> familyMapTag = null;
+		NavigableMap<byte[],byte[]> familyMapInfo = null;
+		
+		try {
+			
+			compData = HbaseManager.getFullRowMap(COMPOSITE_TABLE_NAME, compFingerbookIdB, columnFamilies);
+			
+			if(compData != null) {
+				
+				familyMapGroup = compData.get(Bytes.toBytes(TCOMPOSITE_GROUP_FAMILY));
+				familyMapTag = compData.get(Bytes.toBytes(TCOMPOSITE_TAG_FAMILY));
+				familyMapInfo = compData.get(Bytes.toBytes(TCOMPOSITE_INFO_FAMILY));
+				
+				if(familyMapGroup != null) {
+					
+//					for(Entry<byte[], byte[]> entryGroup: familyMapGroup.entrySet()) {
+						
+					Entry<byte[], byte[]> entryGroup = familyMapGroup.firstEntry();
+					String fbId1Str = Bytes.toString(entryGroup.getKey());						
+					String fbId2Str = Bytes.toString(entryGroup.getValue());
+					
+					Long fbId1 = Long.valueOf(fbId1Str);
+					Long fbId2 = Long.valueOf(fbId2Str);
+					
+					compositeFingerbook.setFingerbookId1(fbId1);
+					compositeFingerbook.setFingerbookId2(fbId2);
+						
+//						System.out.println("COLNAME: " + colName);
+//						System.out.println("VALUE: " + value);
+//					}
+				}
+				
+				if(familyMapTag != null) {
+//					System.out.println("START FAMILY_TAG");
+					Set<String> tags = new HashSet<String>();
+					
+					for(Entry<byte[], byte[]> entryTag: familyMapTag.entrySet()) {
+						
+						String tag = Bytes.toString(entryTag.getKey());
+						
+						tags.add(tag);
+						
+//						System.out.println("TAG: " + tag);
+					}
+					
+					compositeFingerbook.setTags(tags);
+//					System.out.println("END FAMILY_TAG");
+				}
+				
+				if(familyMapInfo != null) {
+//					System.out.println("START FAMILY_INFO");
+					
+					String totalValueStr = Bytes.toString(familyMapInfo.get(Bytes.toBytes(TCOMPOSITE_COLUMN_TOTAL)));
+					
+					int total = Integer.parseInt(totalValueStr);
+					
+					compositeFingerbook.setTotalFingers(total);
+					
+//					System.out.println("TOTAL_VALUE: " + totalValueStr);
+//					System.out.println("END FAMILY_INFO");
+				}
+			}
+			
+			if(loadFingerPrints) {
+//				loadFingerPrintsByFingerBookPag(auxFingerPrints, fingerbookId, fingerprintsSize, fingerprintsOffset);
+				loadFingerPrintsByCompFingerBookPag(auxFingerPrints, compFingerbookId, fingerprintsSize, fingerprintsOffset);
+			}
+			
+			compositeFingerbook.setFingerPrints(auxFingerPrints);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return compositeFingerbook;
+	}
+	
+	
 	public static UserInfo loadUserInfoByFingerbookId(long fingerbookId) {
 		
 		UserInfo userInfo = new UserInfo();
@@ -722,6 +834,41 @@ public class PersistentFingerbook {
 		
 	}
 	
+	public static FingerprintsFeed getFingerprintsFeedByCompFingerBookPag(String compFingerbookId, int limit, int offset) {
+		
+		FingerprintsFeed fingerprintsFeed = new FingerprintsFeed();
+		Fingerprints auxFingerPrints = new Fingerprints();
+		int total = 0;
+		
+		byte[] totalB;
+		try {
+			totalB = HbaseManager.getValue(COMPOSITE_TABLE_NAME, Bytes.toBytes(compFingerbookId), TCOMPOSITE_INFO_FAMILY, Bytes.toBytes(TCOMPOSITE_COLUMN_TOTAL));
+			
+			if(totalB != null) {
+//				long totalLong = Bytes.toLong(totalB);
+				
+				String totalStr = Bytes.toString(totalB);
+				total = Integer.parseInt(totalStr);
+			}
+			
+			loadFingerPrintsByCompFingerBookPag(auxFingerPrints, compFingerbookId, limit, offset);
+			
+			fingerprintsFeed.setFingerPrints(auxFingerPrints);
+			fingerprintsFeed.setLimit(limit);
+			fingerprintsFeed.setOffset(offset);
+			fingerprintsFeed.setTotalresults(total);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return fingerprintsFeed;
+		
+	}
+	
 	public static int loadFingerPrintsByFingerBookPag(Fingerprints auxFingerPrints, long fingerbookId, int limit, int offset) {
 		
 		List<FileInfo> auxFiles = new ArrayList<FileInfo>();
@@ -776,6 +923,57 @@ public class PersistentFingerbook {
 		}
 		
 		return nextOffset;
+	}
+	
+	public static int loadFingerPrintsByCompFingerBookPag(Fingerprints auxFingerPrints, String compFingerbookId, int limit, int offset) {
+		
+		List<FileInfo> auxFiles = new ArrayList<FileInfo>();
+		
+		int nextOffset = -1;
+		
+//		String compId = getCompositeFingerbookId(fingerbookId1, fingerbookId2);
+		
+		NavigableMap<byte[],byte[]> familyMap = null;
+		try {
+			
+//			familyMap = HbaseManager.getMembersMapPag(GROUP_TABLE_NAME, Bytes.toBytes(fingerbookId), TGROUP_FINGER_FAMILY, limit, offset);
+			familyMap = HbaseManager.getMembersMapPag(COMPOSITE_TABLE_NAME, Bytes.toBytes(compFingerbookId), TCOMPOSITE_FINGER_FAMILY, limit, offset);
+			
+			if(familyMap != null) {
+				
+				if(familyMap.size() >= limit) {
+					nextOffset = offset + limit;
+				}
+				else if(familyMap.size() > 0) {
+					nextOffset = 0;
+				}
+				
+				for(byte[] hashB: familyMap.keySet()) {
+					
+					String shaHash = Bytes.toString(hashB);
+					
+					FileInfo auxFileInfo = new FileInfo();
+					auxFileInfo.setShaHash(shaHash);
+					auxFiles.add(auxFileInfo);
+				}
+			}
+			auxFingerPrints.setFiles(auxFiles);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return nextOffset;
+	}
+	
+	public static String getCompositeFingerbookId(long fingerbookId1, long fingerbookId2) {
+		
+		String compId = null;
+		
+		compId = String.valueOf(fingerbookId1) + COMPOSITE_ID_SEP + String.valueOf(fingerbookId2); 
+		
+		return compId;
 	}
 	
 	public static Vector<Fingerbook> getFingerbooksByTicketPag(String ticket, int limit, int offset) {
@@ -1010,10 +1208,10 @@ public class PersistentFingerbook {
 					
 					long fingerbookId = Bytes.toLong(fingerbookIdB);
 					
-					Fingerbook auxFingerbook = new Fingerbook();
-					auxFingerbook.setFingerbookId(fingerbookId);
+//					Fingerbook auxFingerbook = new Fingerbook();
+//					auxFingerbook.setFingerbookId(fingerbookId);
 					
-//					auxFingerbook = PersistentFingerbook.loadMe(fingerbookId, false);
+					Fingerbook auxFingerbook = null;
 					auxFingerbook = PersistentFingerbook.loadFingerbookStampTags(fingerbookId);
 					
 					fingerbooks.add(auxFingerbook);
@@ -1163,6 +1361,52 @@ public class PersistentFingerbook {
 		return similaritiesFeed;
 	}
 	
+	
+	public static CompositeFingerbookList getCompositeFingerbookList(long fingerbookId, int limit, int offset) {
+		
+//		SimilaritiesFeed similaritiesFeed = new SimilaritiesFeed();
+		
+		CompositeFingerbookList compositeFingerbookList = new CompositeFingerbookList();
+		
+		Vector<CompositeFingerbook> compFbs = new Vector<CompositeFingerbook>();
+		Vector<String> rowKeys = null;
+		
+//		Map<Fingerbook, Double> similsFbs = new LinkedHashMap<Fingerbook, Double>();
+//		Map<Long, Double> simils = null;
+//		simils = getSimilarities(fingerbookId, threshold);
+		
+		rowKeys = getCompositeFbRowKeys(fingerbookId);
+		
+		int idx = 0;
+		int last = limit + offset;
+		
+//		for(Entry<Long, Double> entry: simils.entrySet()) {
+		for(String rowKey: rowKeys) {
+			
+			if(idx >= offset && idx < last) {
+				
+				CompositeFingerbook compFb = loadCompositeFingerbook(rowKey, false, 0, 0);
+				
+				compFbs.add(compFb);
+				
+			}
+			else if(idx >= last) {
+				break;
+			}
+			idx++;
+		}
+		
+		compositeFingerbookList.setCompFbs(compFbs);
+		compositeFingerbookList.setLimit(limit);
+		compositeFingerbookList.setOffset(offset);
+		compositeFingerbookList.setTotalresults(rowKeys.size());
+		
+		
+		return compositeFingerbookList;
+	}
+	
+	
+	
 	public static Map<Fingerbook, Double> getSimilarFbs(long fingerbookId, double threshold, int limit, int offset) {
 		
 		Map<Fingerbook, Double> similsFbs = new LinkedHashMap<Fingerbook, Double>();
@@ -1257,6 +1501,58 @@ public class PersistentFingerbook {
 		}
 		
 		return similsSorted;
+	}
+	
+	public static Vector<String> getCompositeFbRowKeys(Long fingerbookId1) {
+		
+		Vector<byte[]> rowKeysB = null;
+		Vector<String> rowKeys = new Vector<String>();
+		
+//		String regex = BASE_REGEX;
+		String regex = buildRegex(fingerbookId1);
+		
+		try {
+			
+			
+			if(fingerbookId1.longValue() >= 0) {
+				rowKeysB = HbaseManager.getRowKeysFilteredByKeyRegex(COMPOSITE_TABLE_NAME, regex);
+			}
+			else {
+				rowKeysB = HbaseManager.getRowKeys(COMPOSITE_TABLE_NAME);
+			}
+			
+			
+			if(rowKeysB != null) {
+//				System.out.println("START ROW_KEYS");
+				
+				for(byte[] auxRowKey: rowKeysB) {
+					
+					String rowKeyStr = Bytes.toString(auxRowKey);
+					
+					rowKeys.add(rowKeyStr);
+					
+//					System.out.println("ROW_KEY: " + rowKeyStr);
+				}
+//				System.out.println("END ROW_KEYS");
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		System.out.println("END");
+		
+		return rowKeys;
+
+	}
+	
+	public static String buildRegex(Long compId) {
+		
+		String compIdStr = compId.toString();
+		
+		String regex = BASE_REGEX.replaceFirst("id", compIdStr);
+		
+		return regex;
 	}
 	
 	public static Vector<Fingerbook> getFingerbookByTicket(String ticket) {
