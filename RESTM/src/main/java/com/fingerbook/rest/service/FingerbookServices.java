@@ -8,10 +8,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.fingerbook.models.CompositeFingerbook;
 import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Fingerprints;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
+import com.fingerbook.models.transfer.CompositeFingerbookFeed;
+import com.fingerbook.models.transfer.CompositeFingerbookList;
 import com.fingerbook.models.transfer.FingerbookFeed;
 import com.fingerbook.models.transfer.FingerbookList;
 import com.fingerbook.models.transfer.FingerprintsFeed;
@@ -22,38 +25,14 @@ import com.fingerbook.rest.web.FingerbooksController;
 
 public class FingerbookServices {
 	protected final Log logger = LogFactory.getLog(getClass());
-
-	public Vector<Fingerbook> getFingerbooksWithHash(String hash) {	
-		if(hash != null) {
-			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByHash(hash);
-			return fingerbooks;
-		} else {
-			return null;
-		}
-	}
+	
+	
+	/* ----------- IN USE ----------- */
 	
 	public FingerbookList getFingerbookListByHash(String hash, int limit, int offset) {	
 		if(hash != null) {
 			FingerbookList fingerbookList = PersistentFingerbook.getFingerbookListStampTagsByHashPag(hash, limit, offset);
 			return fingerbookList;
-		} else {
-			return null;
-		}
-	}
-	
-	public Vector<Fingerbook> getFingerbooksByTicket(String ticket) {	
-		if(ticket != null) {
-			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByTicket(ticket);
-			return fingerbooks;
-		} else {
-			return null;
-		}
-	}
-	
-	public Vector<Fingerbook> getFingerbooksByTicket(String ticket, int limit, int offset) {	
-		if(ticket != null) {
-			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbooksByTicketPag(ticket, limit, offset);
-			return fingerbooks;
 		} else {
 			return null;
 		}
@@ -77,27 +56,18 @@ public class FingerbookServices {
 		}
 	}
 	
-	public Vector<Fingerbook> getFingerbooksByUser(String user, int limit, int offset) {	
-		if(user != null) {
-			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbooksByUserPag(user, limit, offset);
-			return fingerbooks;
-		} else {
-			return null;
-		}
-	}
-	
-	public Vector<Fingerbook> getFingerbooksByUser(String user) {	
-		if(user != null) {
-			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByUser(user);
-			return fingerbooks;
-		} else {
-			return null;
-		}
-	}
-	
 	public FingerprintsFeed getFingerprintsFeedById(Long id, int limit, int offset) {	
 		if(id != null) {
 			FingerprintsFeed fingerprintsFeed = PersistentFingerbook.getFingerprintsFeedByFingerBookPag(id, limit, offset);
+			return fingerprintsFeed;
+		} else {
+			return null;
+		}
+	}
+	
+	public FingerprintsFeed getFingerprintsFeedByCompId(String compId, int limit, int offset) {	
+		if(compId != null) {
+			FingerprintsFeed fingerprintsFeed = PersistentFingerbook.getFingerprintsFeedByCompFingerBookPag(compId, limit, offset);
 			return fingerprintsFeed;
 		} else {
 			return null;
@@ -113,91 +83,25 @@ public class FingerbookServices {
 		}
 	}
 	
-	public Fingerbook getFingerbookById(Long id) {	
+	public CompositeFingerbookList getCompositeFingerbookListById(Long id, int limit, int offset) {	
 		if(id != null) {
 			
-//			Fingerbook fingerbook = new Fingerbook();
-//			fingerbook.setFingerbookId(id);
-//			PersistentFingerbook pf = new PersistentFingerbook(fingerbook);
-//			fingerbook = pf.loadMe(true);
-			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, true);
+			CompositeFingerbookList compositeFingerbookList = PersistentFingerbook.getCompositeFingerbookList(id, limit, offset);
 			
-			return fingerbook;
+			return compositeFingerbookList;
 		} else {
 			return null;
 		}
 	}
 	
-	public Fingerbook getFingerbookById(Long id, boolean loadFingerprints) {	
-		if(id != null) {
-			
-//			Fingerbook fingerbook = new Fingerbook();
-//			fingerbook.setFingerbookId(id);
-//			PersistentFingerbook pf = new PersistentFingerbook(fingerbook);
-//			fingerbook = pf.loadMe(loadFingerprints);
-			
-			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, loadFingerprints);
-			
-			return fingerbook;
-		} else {
-			return null;
-		}
+	public CompositeFingerbookList getAllCompositeFingerbookListById(int limit, int offset) {	
+		
+		CompositeFingerbookList compositeFingerbookList = PersistentFingerbook.getCompositeFingerbookList(-1L, limit, offset);
+		
+		return compositeFingerbookList;
 	}
 	
-	public FingerbookFeed getFingerbookFeedById(Long id, boolean loadFingerprints) {
-		
-		FingerbookFeed fingerbookFeed = new FingerbookFeed();
-		if(id != null) {
-			
-			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, loadFingerprints);
-			
-			fingerbookFeed.setFingerbook(fingerbook);
-			fingerbookFeed.setTotalresults(1);
-			
-		} else {
-			fingerbookFeed.setTotalresults(0);
-		}
-		
-		return fingerbookFeed;
-	}
-	
-	public FingerbookFeed getFingerbookFeedById(Long id, int limit, int offset ) {
-		
-		FingerbookFeed fingerbookFeed = new FingerbookFeed();
-		
-		fingerbookFeed.setLimit(1);
-		fingerbookFeed.setOffset(0);
-		
-		if(id != null) {
-			
-			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, false);
-			
-			if(fingerbook != null) {
-				
-				FingerprintsFeed fingerprintsFeed = PersistentFingerbook.getFingerprintsFeedByFingerBookPag(id, limit, offset);
-				
-				if(fingerprintsFeed != null) {
-					
-					fingerbook.setFingerPrints(fingerprintsFeed.getFingerPrints());
-					
-					fingerprintsFeed.setFingerPrints(null);
-					fingerbookFeed.setFingerprintsFeed(fingerprintsFeed);
-					
-				}
-			}
-			
-			
-			
-			fingerbookFeed.setFingerbook(fingerbook);
-			fingerbookFeed.setTotalresults(1);
-			
-		} else {
-			fingerbookFeed.setTotalresults(0);
-		}
-		
-		return fingerbookFeed;
-	}
-	
+
 	public FingerbookFeed getFingerbookFeedById(Long id, int limitFp, int offsetFp, int limitSimil, int offsetSimil ) {
 		
 		FingerbookFeed fingerbookFeed = new FingerbookFeed();
@@ -237,25 +141,161 @@ public class FingerbookServices {
 		return fingerbookFeed;
 	}
 	
-	public Fingerbook getFingerbookById(Long id, int size, int offset ) {	
+	public CompositeFingerbookFeed getCompositeFingerbookFeedById(String id, int limitFp, int offsetFp) {
+		
+		CompositeFingerbookFeed compositeFingerbookFeed = new CompositeFingerbookFeed();
+		
+		compositeFingerbookFeed.setLimit(1);
+		compositeFingerbookFeed.setOffset(0);
+		
+		if(id != null) {
+			
+//			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, false);
+			
+			CompositeFingerbook compositeFingerbook = PersistentFingerbook.loadCompositeFingerbook(id, false, 0, 0);
+			
+			if(compositeFingerbook != null) {
+				
+//				FingerprintsFeed fingerprintsFeed = PersistentFingerbook.getFingerprintsFeedByFingerBookPag(id, limitFp, offsetFp);
+				FingerprintsFeed fingerprintsFeed = PersistentFingerbook.getFingerprintsFeedByCompFingerBookPag(id, limitFp, offsetFp);
+				
+				if(fingerprintsFeed != null) {
+					
+					compositeFingerbook.setFingerPrints(fingerprintsFeed.getFingerPrints());
+					
+					fingerprintsFeed.setFingerPrints(null);
+					compositeFingerbookFeed.setFingerprintsFeed(fingerprintsFeed);
+					
+				}
+			}
+			
+			
+			compositeFingerbookFeed.setCompositeFingerbook(compositeFingerbook);
+			compositeFingerbookFeed.setTotalresults(1);
+			
+		} else {
+			compositeFingerbookFeed.setTotalresults(0);
+		}
+		
+		return compositeFingerbookFeed;
+	}
+	
+
+	public Integer updateFingerbook(Fingerbook fingerbook) {    
+    	return PersistentFingerbook.updateTagsComment(fingerbook);
+    }
+	
+	
+	
+	/* ----------- END IN USE ----------- */
+    
+    /* ---------- NOT USED ---------- */
+	
+	public Vector<Fingerbook> getFingerbooksWithHash(String hash) {	
+		if(hash != null) {
+			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByHash(hash);
+			return fingerbooks;
+		} else {
+			return null;
+		}
+	}
+	
+	public Vector<Fingerbook> getFingerbooksByTicket(String ticket) {	
+		if(ticket != null) {
+			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByTicket(ticket);
+			return fingerbooks;
+		} else {
+			return null;
+		}
+	}
+	
+	
+	public Vector<Fingerbook> getFingerbooksByUser(String user) {	
+		if(user != null) {
+			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbookByUser(user);
+			return fingerbooks;
+		} else {
+			return null;
+		}
+	}
+
+	
+	public Fingerbook getFingerbookById(Long id, boolean loadFingerprints) {	
 		if(id != null) {
 			
 //			Fingerbook fingerbook = new Fingerbook();
 //			fingerbook.setFingerbookId(id);
 //			PersistentFingerbook pf = new PersistentFingerbook(fingerbook);
-//			fingerbook = pf.loadMe(true, size, offset);
+//			fingerbook = pf.loadMe(loadFingerprints);
 			
-			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, true, size, offset);
+			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, loadFingerprints);
 			
 			return fingerbook;
 		} else {
 			return null;
 		}
 	}
+
+	public FingerbookFeed getFingerbookFeedById(Long id, boolean loadFingerprints) {
+		
+		FingerbookFeed fingerbookFeed = new FingerbookFeed();
+		if(id != null) {
+			
+			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, loadFingerprints);
+			
+			fingerbookFeed.setFingerbook(fingerbook);
+			fingerbookFeed.setTotalresults(1);
+			
+		} else {
+			fingerbookFeed.setTotalresults(0);
+		}
+		
+		return fingerbookFeed;
+	}
 	
-	public Integer updateFingerbook(Fingerbook fingerbook) {    
-    	return PersistentFingerbook.updateTagsComment(fingerbook);
-    }
+
+	public FingerbookFeed getFingerbookFeedById(Long id, int limit, int offset ) {
+		
+		FingerbookFeed fingerbookFeed = new FingerbookFeed();
+		
+		fingerbookFeed.setLimit(1);
+		fingerbookFeed.setOffset(0);
+		
+		if(id != null) {
+			
+			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, false);
+			
+			if(fingerbook != null) {
+				
+				FingerprintsFeed fingerprintsFeed = PersistentFingerbook.getFingerprintsFeedByFingerBookPag(id, limit, offset);
+				
+				if(fingerprintsFeed != null) {
+					
+					fingerbook.setFingerPrints(fingerprintsFeed.getFingerPrints());
+					
+					fingerprintsFeed.setFingerPrints(null);
+					fingerbookFeed.setFingerprintsFeed(fingerprintsFeed);
+					
+				}
+			}
+			
+			
+			
+			fingerbookFeed.setFingerbook(fingerbook);
+			fingerbookFeed.setTotalresults(1);
+			
+		} else {
+			fingerbookFeed.setTotalresults(0);
+		}
+		
+		return fingerbookFeed;
+	}
+	
+	
+	
+	
+	
+	/* ---------- END NOT USED ---------- */
 
 	public List<Fingerprints> getFingerprintsWithHash(String hash) {
 		
@@ -553,4 +593,41 @@ public class FingerbookServices {
 		}
 
 	}
+	
+//	public Vector<Fingerbook> getFingerbooksByTicket(String ticket, int limit, int offset) {	
+//		if(ticket != null) {
+//			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbooksByTicketPag(ticket, limit, offset);
+//			return fingerbooks;
+//		} else {
+//			return null;
+//		}
+//	}
+	
+
+//	public Vector<Fingerbook> getFingerbooksByUser(String user, int limit, int offset) {	
+//		if(user != null) {
+//			Vector<Fingerbook> fingerbooks = PersistentFingerbook.getFingerbooksByUserPag(user, limit, offset);
+//			return fingerbooks;
+//		} else {
+//			return null;
+//		}
+//	}
+
+//	public Fingerbook getFingerbookById(Long id) {	
+//		if(id != null) {			
+//			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, true);
+//			return fingerbook;
+//		} else {
+//			return null;
+//		}
+//	}
+
+//	public Fingerbook getFingerbookById(Long id, int size, int offset ) {	
+//		if(id != null) {
+//			Fingerbook fingerbook = PersistentFingerbook.loadMe(id, true, size, offset);
+//			return fingerbook;
+//		} else {
+//			return null;
+//		}
+//	}
 }

@@ -45,10 +45,13 @@
 				<prop key="FileInfo">com.fingerbook.models.FileInfo</prop>
 				<prop key="UserInfo">com.fingerbook.models.UserInfo</prop>
 				<prop key="Response">com.fingerbook.models.Response</prop>
+				<prop key="CompositeFingerbook">com.fingerbook.models.CompositeFingerbook</prop>
 				<prop key="FingerbookList">com.fingerbook.models.transfer.FingerbookList</prop>
 				<prop key="FingerprintsFeed">com.fingerbook.models.transfer.FingerprintsFeed</prop>
 				<prop key="FingerbookFeed">com.fingerbook.models.transfer.FingerbookFeed</prop>
 				<prop key="SimilaritiesFeed">com.fingerbook.models.transfer.SimilaritiesFeed</prop>
+				<prop key="CompositeFingerbookList">com.fingerbook.models.transfer.CompositeFingerbookList</prop>
+				<prop key="CompositeFingerbookFeed">com.fingerbook.models.transfer.CompositeFingerbookFeed</prop>
 			</props>
 		</property>
 	</bean>
