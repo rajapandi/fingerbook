@@ -116,5 +116,43 @@
   	
     //]]>
   </script>
+  
+  <util:panel id="compfbspanel" title="Composite Fingerbooks">
+		<div id="compfbs">
+			<tiles:insertAttribute name="compfblist"/>
+		</div>
+	</util:panel>
+	
+	
+	<script type="text/javascript" language="javascript">
+//<![CDATA[
+           
+           function modCompFbsTable() {
+	          
+        	   $('#compfbs .footer a').attr('href', function(i, h) {
+  			     return h + (h.indexOf('?') != -1 ? "&table=compfblist" : "?table=compfblist");
+  			   });
+          	   
+          	   $('#compfbs .footer a').click(function(e) {
+          		   e.preventDefault();
+          		   
+          		   $('#compfbs').load(this.href + ' #compfbsinner', function() {
+          			   //alert('Load was performed.');
+          			   modCompFbsTable();
+          			 });
+          		   
+          	   });
+	      }
+
+           $(function() {
+        	   
+        	   modCompFbsTable();
+        	   
+			});
+
+
+  	
+    //]]>
+  </script>
 
 </div>
