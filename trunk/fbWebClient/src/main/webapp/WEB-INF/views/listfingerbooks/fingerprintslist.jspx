@@ -4,7 +4,7 @@
   <jsp:output omit-xml-declaration="yes"/>
   
   <div id="fpinner">
-	  <table:table_no_actions typeIdFieldName="shaHash" data="${fingerprints.files}" id="l_com_fingerbook_models_FileInfo" path="/listfingerbooks" z="">
+	  <table:table_no_actions typeIdFieldName="shaHash" data="${fingerprints.files}" id="l_com_fingerbook_models_FileInfo" path="${fpsTablePath}" z="">
 	    <table:column id="c_com_fingerbook_models_FileInfo_shaHash" property="shaHash" z="" maxLength="32"/>
 	  </table:table_no_actions>
   </div>
