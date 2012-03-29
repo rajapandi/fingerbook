@@ -17,8 +17,16 @@
         <spring:message code="security_logout"/>
       </a>
     </span>
+    
+    <span id="luser">
+  	<c:out value=" | "/>
+  	<c:out value="User: "/>
+  	<c:out value="${pageContext.request.userPrincipal.name}" />
+  </span>
+    
   </c:if>
 
+  <!--
   <span id="language">
     <c:out value=" | "/>
     <spring:message code="global_language"/>
@@ -26,5 +34,8 @@
   <util:language label="English" locale="en"/>
     </span>
   <util:theme/>
+  -->
+  
+  
 
 </div>
