@@ -688,6 +688,46 @@ public class PersistentFingerbook {
 		return userInfo;
 	}
 	
+	public static boolean matchesUserInfoUser(String user, UserInfo userInfo) {
+		
+		boolean matches = false;
+		
+		if(user != null && !user.isEmpty()) {
+			
+			if(userInfo != null) {
+				String auxUser = userInfo.getUser();
+				
+				if(auxUser != null && !auxUser.isEmpty()) {
+					
+					matches = user.equals(auxUser);
+				}
+			}
+			
+		}
+		
+		return matches;
+	}
+	
+	public static boolean matchesUserInfoTicket(String ticket, UserInfo userInfo) {
+		
+		boolean matches = false;
+		
+		if(ticket != null && !ticket.isEmpty()) {
+			
+			if(userInfo != null) {
+				String auxTicket = userInfo.getTicket();
+				
+				if(auxTicket != null && !auxTicket.isEmpty()) {
+					
+					matches = ticket.equals(auxTicket);
+				}
+			}
+			
+		}
+		
+		return matches;
+	}
+	
 	public static boolean validateOwnerUser(String user, long fingerbookId) {
 		
 		boolean isValid = false;
@@ -1127,6 +1167,78 @@ public class PersistentFingerbook {
 		
 		return fingerbookList;
 	}
+	
+	public static FingerbookList getFingerbookListByHashPag(String hash, int limit, int offset, String user, int authType) {
+		
+		FingerbookList fingerbookList = new FingerbookList();
+		
+		int total = 0;
+		Vector<Fingerbook> fingerbooks = new Vector<Fingerbook>();
+		NavigableMap<byte[],byte[]> familyMapHashGroup = null;
+		try {
+			
+			familyMapHashGroup = HbaseManager.getMembersMapPag(FINGER_TABLE_NAME, Bytes.toBytes(hash), TFINGER_GROUP_FAMILY, limit, offset);
+			
+			byte[] totalB = HbaseManager.getValue(FINGER_TABLE_NAME, Bytes.toBytes(hash), TFINGER_INFO_FAMILY, Bytes.toBytes(TFINGER_COLUMN_TOTAL));
+			if(totalB != null) {
+				long totalLong = Bytes.toLong(totalB);
+				total = (int) totalLong;
+			}
+			
+			fingerbookList.setLimit(limit);
+			fingerbookList.setOffset(offset);
+			fingerbookList.setTotalresults(total);
+			
+			if(familyMapHashGroup != null) {
+				for(byte[] fingerbookIdB: familyMapHashGroup.keySet()) {
+					
+					long fingerbookId = Bytes.toLong(fingerbookIdB);
+										
+					Fingerbook auxFingerbook = null;
+					
+					if(authType == Auth.AUTH_ADMIN) {
+						
+						auxFingerbook = PersistentFingerbook.loadMe(fingerbookId, false);
+					}
+					else if(authType == Auth.AUTH_AUTHENTICATED) {
+						
+						if(validateOwnerUser(user, fingerbookId)) {
+							auxFingerbook = PersistentFingerbook.loadMe(fingerbookId, false);
+						}
+						else {
+							auxFingerbook = PersistentFingerbook.loadFingerbookStampTags(fingerbookId);
+						}
+					}
+					else if(authType == Auth.AUTH_SEMI_AUTHENTICATED) {
+						
+						if(validateOwnerTicket(user, fingerbookId)) {
+							auxFingerbook = PersistentFingerbook.loadMe(fingerbookId, false);
+						}
+						else {
+							auxFingerbook = PersistentFingerbook.loadFingerbookStampTags(fingerbookId);
+						}
+					}
+					else {
+						auxFingerbook = PersistentFingerbook.loadFingerbookStampTags(fingerbookId);
+					}
+					
+					
+					fingerbooks.add(auxFingerbook);
+					
+				}
+			}
+			
+			fingerbookList.setFbs(fingerbooks);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return fingerbookList;
+		
+	}
+	
 	
 	public static FingerbookList getFingerbookListByHashPag(String hash, int limit, int offset) {
 		
