@@ -609,13 +609,16 @@ public class Front extends JFrame {
 		
 		setAuthMetod();
 		setCredentials();
-		
+
 		if (configuration.get("tray") == null || !configuration.get("tray").equals("true")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			tray = false;
 		else
 			tray = true;
 		try {
 			pBar = new ProgressBar(auto, tray);
+			
+			// Delete Tags
+			configuration.put("tags", null);
 		} catch (Exception ex) {
 			logger.error("An unexpected error happened: " + ex.getMessage()); //$NON-NLS-1$
 		}
