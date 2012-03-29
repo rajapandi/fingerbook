@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.BeansException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -100,8 +101,8 @@ public class ListUsersController {
     	
     	try {
     		
-    		//String authenticatedUser = request.getUserPrincipal().getName();
-    		//String authenticatedUserPasswword = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+    		String authenticatedUser = request.getUserPrincipal().getName();
+    		String authenticatedUserPasswword = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
     		
     		String urlStr = "http://localhost:8080/fingerbookRESTM/admin/listUsers/";
     		
