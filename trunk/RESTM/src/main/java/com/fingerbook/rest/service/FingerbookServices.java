@@ -38,6 +38,15 @@ public class FingerbookServices {
 		}
 	}
 	
+	public FingerbookList getFingerbookListByHash(String hash, int limit, int offset, String user, int authType) {	
+		if(hash != null) {
+			FingerbookList fingerbookList = PersistentFingerbook.getFingerbookListByHashPag(hash, limit, offset, user, authType);
+			return fingerbookList;
+		} else {
+			return null;
+		}
+	}
+	
 	public FingerbookList getFingerbookListByTicket(String ticket, int limit, int offset) {	
 		if(ticket != null) {
 			FingerbookList fingerbookList = PersistentFingerbook.getFingerbookListByTicketPag(ticket, limit, offset);
@@ -567,6 +576,18 @@ public class FingerbookServices {
 //		System.out.println("---------- getName(): " + authenticatedUser);
 		
 		return validateAuthUser(authUser, paramUser);
+
+	}
+	
+	public String getAuthUser() {
+		
+		String authUser = null;
+		
+		authUser = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		System.out.println("---------- getPrincipal(): " + authUser);
+		
+		return authUser;
 
 	}
 	
