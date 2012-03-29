@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0">
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <jsp:output omit-xml-declaration="yes"/>
+  <spring:message code="label_listfingerbooks_userform" htmlEscape="false" var="title"/>
+  <util:panel id="title" title="${title}">
+    <spring:message code="application_name" htmlEscape="false" var="app_name"/>
+    <h3>
+      <spring:message arguments="${app_name}" code="welcome_titlepane"/>
+    </h3>
+  </util:panel>
+  
+  <h2>Search by user</h2>
+  
+  <DIV style="width: 287px"> 
+  <form action="user" method="get">
+  	User: <input type="text" name="user_input" style="float:right"/>
+  	<br /><br />
+  	<input type="hidden" name="find" value="user"/>
+  	<input type="hidden" name="page" value="${page}"/>
+  	<input type="hidden" name="size" value="${size}"/>
+  	<input type="submit" value="Submit" style="float:right"/>
+  	<br /><br />
+  </form>
+  </DIV>
+</div>
