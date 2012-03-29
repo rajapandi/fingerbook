@@ -8,8 +8,8 @@
 	<sec:authorize ifAllGranted="ROLE_ADMIN">
 	    <menu:category id="c_controller" z="nj8Dm3hojIyIEyPkwE1UMDIs+K8=">
 			<menu:item id="i_controller__createuserindex_id" messageCode="global_generic" url="/createUser"/>
-	        <menu:item id="i_controller__deleteuserindex_id" messageCode="global_generic" url="/deleteUser" z="user-managed"/>
-	        <menu:item id="i_controller__modifyuserindex_id" messageCode="global_generic" url="/modifyUser" z="user-managed"/>
+<!-- 	        <menu:item id="i_controller__deleteuserindex_id" messageCode="global_generic" url="/deleteUser" z="user-managed"/> -->
+<!-- 	        <menu:item id="i_controller__modifyuserindex_id" messageCode="global_generic" url="/modifyUser" z="user-managed"/> -->
 	        <menu:item id="i_controller__listusersindex_id" messageCode="global_generic" url="/listUsers" z="IAHnNQ3NoMWVxFONJMy4hzNiOfM="/>
 	    </menu:category>
 	</sec:authorize>

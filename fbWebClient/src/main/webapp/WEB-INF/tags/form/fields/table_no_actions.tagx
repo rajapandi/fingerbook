@@ -159,7 +159,7 @@
             </span>
             <c:out value=" " />
           </c:if>
-          <c:if test="${not empty maxPages}">
+          <c:if test="${not empty maxPages and maxPages gt 0}">
             <util:pagination maxPages="${maxPages}" page="${page}" size="${size}" finder="${param.find}" requiredParams="${requiredParams}"/>
           </c:if>
         </td>
