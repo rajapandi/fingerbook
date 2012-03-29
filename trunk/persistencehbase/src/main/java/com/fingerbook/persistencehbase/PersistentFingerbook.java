@@ -1984,13 +1984,14 @@ public class PersistentFingerbook {
 				userInfo.setTicket(ticket);
 			}
 			
-			//Set<String> tags = fingerbook.getTags();
-			//int tagsInserted = insertTags(auxFingerbookId, tags);
+			Set<String> tags = fingerbook.getTags();
+			int tagsInserted = insertTags(auxFingerbookId, tags);
 			
-			//String comment = fingerbook.getComment();
-			//int commentInserted = insertComment(auxFingerbookId, comment);
+			String comment = fingerbook.getComment();
+
+			int commentInserted = insertComment(auxFingerbookId, comment);
 			
-			
+			System.out.println("Tags: " + tagsInserted + "\nComments: " + commentInserted);
 			
 			return auxFingerbookId;
 		} catch (IOException e) {
