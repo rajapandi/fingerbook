@@ -33,7 +33,7 @@ import com.fingerbook.persistencehbase.hbase.TransHTable;
 import com.fingerbook.persistencehbase.svc.Sha1;
 import com.fingerbook.persistencehbase.svc.ValueComparator;
 
-//public class PersistentFingerbook extends Fingerbook{
+//
 public class PersistentFingerbook {
 	public static final int FILE_INFO_PAGINATION_LIMIT = 2;
 	
