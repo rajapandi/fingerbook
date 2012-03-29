@@ -5,7 +5,7 @@
   
   <div id="fbsfullinner">
 	  
-        <table:table_cust_pag page="${page}" size="${size}" maxPages="${maxPages}" typeIdFieldName="fingerbookId" data="${fbs}" id="l_com_fingerbook_models_Fingerbook" path="/listfingerbooks" z="" actions="true" update="true" show="true" requiredParams="${requiredParams}">
+        <table:table_cust_pag page="${page}" size="${size}" maxPages="${maxPages}" typeIdFieldName="fingerbookId" pagPath="${pagPath}" data="${fbs}" id="l_com_fingerbook_models_Fingerbook" path="/listfingerbooks" z="" actions="true" update="true" show="true" requiredParams="${requiredParams}">
             <table:column_cust id="c_com_fingerbook_models_Fingerbook_fingerbookId" property="fingerbookId" z=""/>
         	<table:column_cust id="c_com_fingerbook_models_Fingerbook_stamp" property="stampDate" z="" maxLength="-1"/>
         	<table:column_cust id="c_com_fingerbook_models_Fingerbook_tags" z="user-managed" maxLength="-1">
