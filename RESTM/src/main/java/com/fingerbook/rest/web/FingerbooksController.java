@@ -595,6 +595,69 @@ public class FingerbooksController {
     	return fingerbookList;
     }
     
+    /* URL_FINGERBOOKS_ADMIN_HASH */
+    @RequestMapping(value="/admin/hash/{hash}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookList fingerbooksByHashAdmin(@PathVariable("hash") String hash, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	FingerbookList fingerbookList = null;
+    	String authUser = null;
+    	
+    	fingerbookList = fingerbookService.getFingerbookListByHash(hash, limit, offset, authUser, Auth.AUTH_ADMIN);
+    	model.addAttribute("fingerbookList", fingerbookList);
+    	
+    	logger.info("Returning fingerbookList for hash: " + hash);
+    	
+    	return fingerbookList;
+    }
+    
+    /* URL_FINGERBOOKS_AUTH_HASH */
+    @RequestMapping(value="/authenticated/hash/{hash}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookList fingerbooksByHashAuth(@PathVariable("hash") String hash, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	FingerbookList fingerbookList = null;
+    	String authUser = fingerbookService.getAuthUser();
+    	
+    	fingerbookList = fingerbookService.getFingerbookListByHash(hash, limit, offset, authUser, Auth.AUTH_AUTHENTICATED);
+    	model.addAttribute("fingerbookList", fingerbookList);
+    	
+    	logger.info("Returning fingerbookList for hash: " + hash);
+    	
+    	return fingerbookList;
+    }
+    
+    /* URL_FINGERBOOKS_SEMIAUTH_HASH */
+    @RequestMapping(value="/semiauthenticated/hash/{hash}/ticket/{ticket}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookList fingerbooksByHashSemiAuth(@PathVariable("hash") String hash, @PathVariable("ticket") String ticket, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	FingerbookList fingerbookList = null;
+//    	String authUser = fingerbookService.getAuthUser();
+    	
+    	fingerbookList = fingerbookService.getFingerbookListByHash(hash, limit, offset, ticket, Auth.AUTH_SEMI_AUTHENTICATED);
+    	model.addAttribute("fingerbookList", fingerbookList);
+    	
+    	logger.info("Returning fingerbookList for hash: " + hash);
+    	
+    	return fingerbookList;
+    }
+    
+    /* URL_FINGERBOOKS_ANON_HASH */
+    @RequestMapping(value="/anonymous/hash/{hash}/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public FingerbookList fingerbooksByHashAnon(@PathVariable("hash") String hash, @PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	FingerbookList fingerbookList = null;
+    	String authUser = null;
+    	
+    	fingerbookList = fingerbookService.getFingerbookListByHash(hash, limit, offset, authUser, Auth.AUTH_ANONYMOUS);
+    	model.addAttribute("fingerbookList", fingerbookList);
+    	
+    	logger.info("Returning fingerbookList for hash: " + hash);
+    	
+    	return fingerbookList;
+    }
     
     /* URL_UPDATE_ADMIN */
     @RequestMapping(value="/admin/update", method=RequestMethod.POST)
