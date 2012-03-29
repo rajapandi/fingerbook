@@ -81,7 +81,12 @@ public class ListFingerbooksController {
 	public static final String URL_FINGERBOOKS_ADMIN_TICKET = "http://localhost:8080/fingerbookRESTM/fingerbooks/admin/ticket/";
 	public static final String URL_FINGERBOOKS_USER = "http://localhost:8080/fingerbookRESTM/fingerbooks/authenticated/user/";
 	public static final String URL_FINGERBOOKS_TICKET = "http://localhost:8080/fingerbookRESTM/fingerbooks/semiauthenticated/ticket/";
+	
 	public static final String URL_FINGERBOOKS_HASH = "http://localhost:8080/fingerbookRESTM/fingerbooks/hash/";
+	public static final String URL_FINGERBOOKS_ADMIN_HASH = "http://localhost:8080/fingerbookRESTM/fingerbooks/admin/hash/";
+	public static final String URL_FINGERBOOKS_AUTH_HASH = "http://localhost:8080/fingerbookRESTM/fingerbooks/authenticated/hash/";
+	public static final String URL_FINGERBOOKS_SEMIAUTH_HASH = "http://localhost:8080/fingerbookRESTM/fingerbooks/semiauthenticated/hash/";
+	public static final String URL_FINGERBOOKS_ANON_HASH = "http://localhost:8080/fingerbookRESTM/fingerbooks/anonymous/hash/";
 	
 	public static final String URL_UPDATE_ADMIN = "http://localhost:8080/fingerbookRESTM/fingerbooks/admin/update/";
 	public static final String URL_UPDATE_USER = "http://localhost:8080/fingerbookRESTM/fingerbooks/authenticated/update/";
@@ -434,7 +439,8 @@ public class ListFingerbooksController {
 	//    		RestTemplate restTemplate = wap.getBean("restTemplate", RestTemplate.class);
 	//    		fingerbookList = (FingerbookList) restTemplate.getForObject(urlStr, FingerbookList.class);
 	
-	    		fingerbookList = getFingerbookListRESTHash(request, hash, size, page);
+//	    		fingerbookList = getFingerbookListRESTHash(request, hash, size, page);
+	    		fingerbookList = getFingerbookListRESTHashUserLogged(request, hash, size, page);
 	    		
 	    		if(fingerbookList != null) {
 	    			
@@ -548,9 +554,15 @@ public class ListFingerbooksController {
 		modelMap.put("size", size);
     	modelMap.put("maxPages", maxPages);
     	
+    	String pagPath = "/listfingerbooks/userlogged";
+    	modelMap.put("pagPath", pagPath);
+    	
 //    	modelMap.put("requiredParams", "user_input");
     	
     	if(request.getParameter("table") != null && request.getParameter("table").equals("fbsfulllist")) {
+    		
+    		System.out.println("listfingerbooks/fbsfulllist");
+    		
 			return "listfingerbooks/fbsfulllist";
 		}
 		
@@ -1588,6 +1600,52 @@ public class ListFingerbooksController {
     		else {
     			return fingerbookList;
     		}
+    		
+    		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
+    		RestTemplate restTemplate = buildRestTemplate(request, null);
+    		fingerbookList = (FingerbookList) restTemplate.getForObject(urlStr, FingerbookList.class);
+    		
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+		return fingerbookList;
+	}
+	
+	public FingerbookList getFingerbookListRESTHashUserLogged(HttpServletRequest request, String hash, int size, int page) {
+		
+		FingerbookList fingerbookList = null;
+		String urlStr = null;
+		
+    	try {
+    		
+    		String authMethod = getAuthMethod();
+    		
+    		if(authMethod.equalsIgnoreCase(ROLE_ADMIN)) {
+    			urlStr = URL_FINGERBOOKS_ADMIN_HASH;
+    			urlStr = urlStr + hash;
+    			
+    		}
+    		else if(authMethod.equalsIgnoreCase(ROLE_USER)) {
+    			urlStr = URL_FINGERBOOKS_AUTH_HASH;
+    			urlStr = urlStr + hash;
+    			
+//    			String user = request.getUserPrincipal().getName();
+//    			urlStr = urlStr + "/user/" + user;
+    		}
+    		else if(authMethod.equalsIgnoreCase(ROLE_SEMIAUTH)) {
+    			urlStr = URL_FINGERBOOKS_SEMIAUTH_HASH;
+    			urlStr = urlStr + hash;
+    			
+    			String ticket = request.getUserPrincipal().getName();
+    			urlStr = urlStr + "/ticket/" + ticket;
+    		}
+    		else {
+    			urlStr = URL_FINGERBOOKS_ANON_HASH;
+    			urlStr = urlStr + hash;
+    		}
+    		
     		
     		urlStr = urlStr + "/limit/" + size + "/offset/" + (page-1)  * size;
     		RestTemplate restTemplate = buildRestTemplate(request, null);
