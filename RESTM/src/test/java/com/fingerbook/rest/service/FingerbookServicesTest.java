@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 public class FingerbookServicesTest extends TestCase {
 	
-	//private FingerbookServices services= new FingerbookServices();
+	private FingerbookServices services= new FingerbookServices();
 
 	public void testGetFingerbookWithHash() throws Exception {
 		//Vector<Fingerbook> fingerbooks = services.getFingerbooksWithHash("hashtest");
