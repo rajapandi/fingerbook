@@ -220,7 +220,7 @@ public class PersistentFingerbook {
 		return fingerbookId;
 	}
 	
-	private static void updateFingerbookTotalFiles(long fingerbookId) throws IOException {
+	public static void updateFingerbookTotalFiles(long fingerbookId) throws IOException {
 		
 		int total = 0;
 		byte[] groupIdB = Bytes.toBytes(fingerbookId);
@@ -283,7 +283,7 @@ public class PersistentFingerbook {
 		return 0;
 	}
 	
-	private static void addFingerbookToUser(long fingerbookId) {
+	public static void addFingerbookToUser(long fingerbookId) {
 		
 		UserInfo userInfo = loadUserInfoByFingerbookId(fingerbookId);
 		
@@ -298,7 +298,7 @@ public class PersistentFingerbook {
 		}
 	}
 	
-	private static void updateTicketTable(long fingerbookId, String ticket) {
+	public static void updateTicketTable(long fingerbookId, String ticket) {
 		
 		TransHTable ticketTable = null;
 		try {
@@ -325,7 +325,7 @@ public class PersistentFingerbook {
 		}
 	}
 	
-	private static void updateUserTable(long fingerbookId, String user) {
+	public static void updateUserTable(long fingerbookId, String user) {
 		
 		TransHTable userTable = null;
 		try {
@@ -352,7 +352,7 @@ public class PersistentFingerbook {
 		}
 	}
 	
-	private static void updateFingerTable(long fingerbookId) {
+	public static void updateFingerTable(long fingerbookId) {
 		
 		Fingerprints auxFingerprints = null;
 		
@@ -2045,7 +2045,7 @@ public class PersistentFingerbook {
 		HbaseManager.createTable(USER_TABLE_NAME, families);
 	}
 	
-	private static synchronized long insertGroupInfo(Fingerbook fingerbook, int authMethod) {
+	public static synchronized long insertGroupInfo(Fingerbook fingerbook, int authMethod) {
 		
 		try {
 			long auxFingerbookId = getNextGroupId();
@@ -2195,7 +2195,7 @@ public class PersistentFingerbook {
 		return 0;
 	}
 	
-	private static synchronized long getNextGroupId() throws IOException {
+	public static synchronized long getNextGroupId() throws IOException {
 		
 		long maxGroupId = 0;
 //		HBaseConfiguration config = new HBaseConfiguration();
@@ -2383,7 +2383,7 @@ public class PersistentFingerbook {
 //		HbaseManager.putValue(TMP_TABLE_NAME, groupIdB, TTMP_STATE_FAMILY, Bytes.toBytes(COLUMN_LAST_ACTION), nowStampB);
 //	}
 	
-	private static void updateTmpState(long fingerbookId) throws IOException {
+	public static void updateTmpState(long fingerbookId) throws IOException {
 		
 		String auxTransId = createTransactionId(fingerbookId);
 		
@@ -2398,7 +2398,7 @@ public class PersistentFingerbook {
 //		HbaseManager.putValue(TMP_TABLE_NAME, auxTransIdB, TTMP_INFO_FAMILY, Bytes.toBytes(TTMP_COLUMN_GROUP_ID), groupIdB);
 	}
 	
-	private static void createTmpState(Fingerbook fingerbook, int authMethod) throws IOException {
+	public static void createTmpState(Fingerbook fingerbook, int authMethod) throws IOException {
 		
 		long fingerbookId = fingerbook.getFingerbookId();
 		String auxTransId = createTransactionId(fingerbookId);
@@ -2444,7 +2444,7 @@ public class PersistentFingerbook {
 		return ids;
 	}
 	
-	private static int deleteFingerbookFromTmp(long fingerbookId) {
+	public static int deleteFingerbookFromTmp(long fingerbookId) {
 		
 		String transactionId = createTransactionId(fingerbookId);
 		byte[] transactionIdB = Bytes.toBytes(transactionId);
@@ -2462,7 +2462,7 @@ public class PersistentFingerbook {
 		return 0;
 	}
 	
-	private static int deleteFingerbookFromTGroup(long fingerbookId) {
+	public static int deleteFingerbookFromTGroup(long fingerbookId) {
 		
 		byte[] groupIdB = Bytes.toBytes(fingerbookId);
 		try {
@@ -2558,7 +2558,7 @@ public class PersistentFingerbook {
 		return ret;
 	}
 	
-	private static boolean fingerprintsSaveAllowed(Fingerbook fingerbook) throws IOException {
+	public static boolean fingerprintsSaveAllowed(Fingerbook fingerbook) throws IOException {
 		
 		boolean ret = false;
 		
@@ -2583,7 +2583,7 @@ public class PersistentFingerbook {
 //		return ret;
 //	}
 	
-	private static boolean fingerprintsSaveAllowedState(long fingerbookId) throws IOException {
+	public static boolean fingerprintsSaveAllowedState(long fingerbookId) throws IOException {
 		
 		String transactionId = createTransactionId(fingerbookId);
 		
