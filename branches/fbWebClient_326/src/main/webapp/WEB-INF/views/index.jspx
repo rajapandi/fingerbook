@@ -1,0 +1,66 @@
+<div xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:sec="http://www.springframework.org/security/tags" version="2.0">
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:output omit-xml-declaration="yes" />
+  <spring:message var="app_name" code="application_name" htmlEscape="false" />
+  <spring:message var="title" code="welcome_titlepane" arguments="${app_name}" htmlEscape="false" />
+  <util:panel id="title" title="${title}">
+    <h3>
+      <spring:message code="welcome_h3" arguments="${app_name}" />
+    </h3>
+    <p>
+      <spring:message code="welcome_text" />
+    </p>
+  </util:panel>
+  
+  <spring:url value="http://code.jquery.com/jquery-latest.js" var="jquery_js_url"/>
+  <script src="${jquery_js_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+  
+  <sec:authorize ifNotGranted="ROLE_ADMIN">
+  
+  <h2>Fingerbooks found:</h2>
+  <br />
+  
+  
+	<div id="fbsfull">
+  		
+	</div>
+	
+	
+	<script type="text/javascript" language="javascript">
+//<![CDATA[
+           
+           function modFbsTable() {
+	          
+        	   $('#fbsfull .footer a').attr('href', function(i, h) {
+  			     return h + (h.indexOf('?') != -1 ? "&table=fbsfulllist" : "?table=fbsfulllist");
+  			   });
+          	   
+          	   $('#fbsfull .footer a').click(function(e) {
+          		   e.preventDefault();
+          		   
+          		   $('#fbsfull').load(this.href + ' #fbsfullinner', function() {
+          			   //alert('Load was performed.');
+          			   modFbsTable();
+          			 });
+          		   
+          	   });
+	      }
+
+           $(function() {
+        	   
+        	   $('#fbsfull').load('listfingerbooks/userlogged?table=fbsfulllist' + ' #fbsfullinner', function() {
+      			   //alert('Load was performed.');
+      			   modFbsTable();
+      			 });
+        	   
+        	   
+			});
+
+
+  	
+    //]]>
+  </script>
+  
+  </sec:authorize>
+  
+</div>

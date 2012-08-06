@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_fingerbook_FBUser" items="${fbusers}" z="bm7rB6Z13mdH+SknKdtzSP3Kc8Q=">
+        <table:table data="${fbusers}" id="l_com_fingerbook_FBUser" path="/fbusers" z="fQsIosHT7ApGgwsVV0mG0fnztOk=">
+            <table:column id="c_com_fingerbook_FBUser_username" property="username" z="cmDkxNkElElrAgPgpi4/pDNhyB4="/>
+        <table:column id="c_com_fingerbook_FBUser_password" property="password" z="P4KRFUIcU+InFBeaZgvSzxGN5ew="/>
+        <table:column id="c_com_fingerbook_FBUser_enabled" property="enabled" z="tdZR9Ftk+PAHwNAt5kT6m7YiP0o="/>
+        </table:table>
+    </page:list>
+</div>
