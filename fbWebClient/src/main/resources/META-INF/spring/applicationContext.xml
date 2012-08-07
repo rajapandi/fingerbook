@@ -84,6 +84,12 @@
 				<prop key="SimilaritiesFeed">com.fingerbook.models.transfer.SimilaritiesFeed</prop>
 				<prop key="CompositeFingerbookList">com.fingerbook.models.transfer.CompositeFingerbookList</prop>
 				<prop key="CompositeFingerbookFeed">com.fingerbook.models.transfer.CompositeFingerbookFeed</prop>
+				<prop key="PigScript">com.fingerbook.models.pig.PigScript</prop>
+				<prop key="PigScriptResult">com.fingerbook.models.pig.PigScriptResult</prop>
+				<prop key="PigScriptList">com.fingerbook.models.transfer.PigScriptList</prop>
+				<prop key="PigScriptResultList">com.fingerbook.models.transfer.PigScriptResultList</prop>
+				<prop key="PigScriptFeed">com.fingerbook.models.transfer.PigScriptFeed</prop>
+				<prop key="PigScriptResultFeed">com.fingerbook.models.transfer.PigScriptResultFeed</prop>
 			</props>
 		</property>
 	</bean>

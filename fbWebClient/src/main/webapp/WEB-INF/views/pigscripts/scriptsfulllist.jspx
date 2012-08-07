@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:tiles="http://tiles.apache.org/tags-tiles" >
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <jsp:output omit-xml-declaration="yes"/>
+  
+  <div id="scriptsfullinner">
+	  
+        <table:table_cust_pigscripts page="${page}" size="${size}" maxPages="${maxPages}" typeIdFieldName="scriptId" pagPath="${pagPath}" data="${scripts}" id="l_com_fingerbook_models_PigScript" path="/pigscripts/script" z="" actions="true" execute="true" update="true" show="true" requiredParams="${requiredParams}">
+            <table:column_cust id="c_com_fingerbook_models_PigScript_scriptId" property="scriptId" z=""/>
+        	<table:column_cust id="c_com_fingerbook_models_PigScript_scriptName" property="scriptName" z="" maxLength="-1"/>
+        	<table:column_cust id="c_com_fingerbook_models_PigScript_scriptDesc" property="scriptDesc" z="" maxLength="-1"/>
+        	<table:column_cust id="c_com_fingerbook_models_PigScript_scriptFilePath" property="scriptFilePath" z="" maxLength="-1"/>
+        </table:table_cust_pigscripts>
+    
+  </div>
+  
+  
+  
+</div>

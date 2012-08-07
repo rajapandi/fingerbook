@@ -12,6 +12,10 @@
 <!-- 	        <menu:item id="i_controller__modifyuserindex_id" messageCode="global_generic" url="/modifyUser" z="user-managed"/> -->
 	        <menu:item id="i_controller__listusersindex_id" messageCode="global_generic" url="/listUsers" z="IAHnNQ3NoMWVxFONJMy4hzNiOfM="/>
 	    </menu:category>
+	    <menu:category id="c_scripts" z="user-managed">
+	        <menu:item id="i_scripts__pigscriptsscriptslist_id" messageCode="global_generic" url="/pigscripts/script/scriptslist" z="user-managed"/>
+	        <menu:item id="i_scripts__pigscriptsscriptsreslist_id" messageCode="global_generic" url="/pigscripts/scriptsres/scriptsreslist" z="user-managed"/>
+	    </menu:category>
 	</sec:authorize>
     
     <!--  

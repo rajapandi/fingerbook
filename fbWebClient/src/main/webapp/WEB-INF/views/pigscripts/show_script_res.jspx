@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:tiles="http://tiles.apache.org/tags-tiles" >
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <jsp:output omit-xml-declaration="yes"/>
+
+
+  <spring:url value="http://code.jquery.com/jquery-latest.js" var="jquery_js_url"/>
+  <script src="${jquery_js_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
+  
+  
+  
+  <h2>Script Result: ${scriptsResult.scriptResultId}</h2>
+  
+  <table>
+  		<tr>
+  			<td>ID:</td>
+  			<td>${scriptsResult.scriptResultId}</td>
+  		</tr>
+  		<tr>
+  			<td>Script ID:</td>
+  			<td>${scriptsResult.scriptId}</td>
+  		</tr>
+  		<tr>
+  			<td>Execution Date:</td>
+  			<td>${scriptsResult.execDate}</td>
+  		</tr>
+  		<tr>
+  			<td>Successful:</td>
+  			<td>${scriptsResult.successful}</td>
+  		</tr>
+  		<tr>
+  			<td>ReturnCode:</td>
+  			<td>${scriptsResult.returnCode}</td>
+  		</tr>
+  		<tr>
+  			<td>ReturnMessage:</td>
+  			<td>${scriptsResult.returnMessage}</td>
+  		</tr>
+  		<tr>
+  			<td>ErrorMessage:</td>
+  			<td>${scriptsResult.errorMessage}</td>
+  		</tr>
+  		<tr>
+  			<td>ErrorCode:</td>
+  			<td>${scriptsResult.errorCode}</td>
+  		</tr>
+  		<tr>
+  			<td>Duration:</td>
+  			<td>${scriptsResult.duration}</td>
+  		</tr>
+  		
+  	</table>
+  	
+  	<br/>
+  
+
+</div>

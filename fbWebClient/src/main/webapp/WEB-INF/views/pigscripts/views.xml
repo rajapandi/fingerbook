@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="pigscripts/index">
+        <put-attribute name="body" value="/WEB-INF/views/pigscripts/index.jspx"/>
+    </definition>
+    <definition extends="default" name="pigscripts/list_scripts">
+        <put-attribute name="body" value="/WEB-INF/views/pigscripts/list_scripts.jspx"/>
+        <put-attribute name="scriptsfulllist" value="/WEB-INF/views/pigscripts/scriptsfulllist.jspx" cascade="true"/>
+    </definition>
+    <definition extends="default" name="pigscripts/scriptsfulllist">
+        <put-attribute name="body" value="/WEB-INF/views/pigscripts/scriptsfulllist.jspx" />
+    </definition>
+    <definition extends="default" name="pigscripts/list_scripts_res">
+        <put-attribute name="body" value="/WEB-INF/views/pigscripts/list_scripts_res.jspx"/>
+        <put-attribute name="scriptsresfulllist" value="/WEB-INF/views/pigscripts/scriptsresfulllist.jspx" cascade="true"/>
+    </definition>
+    <definition extends="default" name="pigscripts/scriptsresfulllist">
+        <put-attribute name="body" value="/WEB-INF/views/pigscripts/scriptsresfulllist.jspx" />
+    </definition>
+    <definition extends="default" name="pigscripts/show_script">
+        <put-attribute name="body" value="/WEB-INF/views/pigscripts/show_script.jspx"/>
+    </definition>
+    <definition extends="default" name="pigscripts/show_script_res">
+        <put-attribute name="body" value="/WEB-INF/views/pigscripts/show_script_res.jspx"/>
+    </definition>
+    
+    
+</tiles-definitions>
