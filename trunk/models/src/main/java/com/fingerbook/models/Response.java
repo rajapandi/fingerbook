@@ -18,6 +18,7 @@ public class Response {
 	 * 		12 -  Permission denied for ticket
 	 * 		13 -  Permission denied for user
 	 * 		14 -  Permission denied for anonymous
+	 * 		15 -  Error executing pig script task
 	 * 		null - Success!
 	 * */
 
