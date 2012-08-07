@@ -27,6 +27,11 @@
         <menu:item id="i_view__listfingerbooksticketform_id" messageCode="global_generic" url="/listfingerbooks/ticketform" z="HPJ9i2VI+KH5WMCuOLPT6VQ3wEQ="/>
         <menu:item id="i_view__listfingerbooksuserform_id" messageCode="global_generic" url="/listfingerbooks/userform" z="qVO8WFrveXBMG2UC3mWUdVRNRHk="/>
         <menu:item id="i_view__listfingerbookshashform_id" messageCode="global_generic" url="/listfingerbooks/hashform" z="8pfDP3Dg2C5cpFVomjqV/ggWqO8="/>
-        </menu:category>
+    </menu:category>
+    
+    <menu:category id="c_scripts" z="user-managed">
+        <menu:item id="i_scripts__pigscriptsscriptslist_id" messageCode="global_generic" url="/pigscripts/scriptslist" z="user-managed"/>
+    </menu:category>
+        
     </menu:menu>
 </div>
