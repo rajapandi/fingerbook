@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.fingerbook</groupId>
+  <artifactId>pigExecutor</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>PigExecutor</name>
+  <description>Execute Pig scripts</description>
+  <url>http://maven.apache.org</url>
+  <repositories>
+  	<repository>
+  		<id>fingerbook repo</id>
+		<url>http://fingerbook.googlecode.com/svn/trunk/mavenRepository/</url>
+  	</repository>
+  </repositories>
+  <dependencies>
+  	<dependency>
+		<groupId>com.fingerbook</groupId>
+		<artifactId>models</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.pig</groupId>
+		<artifactId>pig</artifactId>
+		<version>0.9.1</version>
+		<scope>compile</scope>
+	</dependency>
+	<dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr-runtime</artifactId>
+      <version>3.4</version>
+    </dependency>
+  </dependencies>
+</project>
