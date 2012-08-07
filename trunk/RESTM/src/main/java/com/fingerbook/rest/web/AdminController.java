@@ -1,13 +1,18 @@
 package com.fingerbook.rest.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +24,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.SpringSecurityAuthority;
 import com.fingerbook.models.SpringSecurityUser;
+import com.fingerbook.models.pig.PigScript;
+import com.fingerbook.models.pig.PigScriptResult;
+import com.fingerbook.models.transfer.PigScriptFeed;
+import com.fingerbook.models.transfer.PigScriptList;
+import com.fingerbook.models.transfer.PigScriptResultFeed;
+import com.fingerbook.models.transfer.PigScriptResultList;
 import com.fingerbook.rest.back.FingerbookUtils;
 import com.fingerbook.rest.service.AdminServices;
+import com.fingerbook.rest.service.PigScriptServices;
+import com.fingerbook.rest.task.PigScriptExecutorTask;
 
 @Controller
 @RequestMapping("/admin")
@@ -32,6 +45,8 @@ public class AdminController {
     private AdminServices adminService;
 	
 	protected final Log logger = LogFactory.getLog(getClass());
+	
+	private TaskExecutor taskExecutor;
 	
     @RequestMapping(value="/createUser", method=RequestMethod.POST)
     @ResponseBody
@@ -265,6 +280,260 @@ public class AdminController {
     	return user;
     }
     
+	@RequestMapping(value="/script/showscript/{id}", method=RequestMethod.GET)
+    @ResponseBody
+    public PigScript showPigScriptById(@PathVariable("id") int scriptId, Model model) {
+    	
+    	PigScript pigScript = null;
+    	
+    	pigScript = PigScriptServices.loadPigScript(scriptId, sessionFactory, logger);
+    	
+    	model.addAttribute("pigScript", pigScript);
+//    	logger.info("Returning user " + username);
+    	
+    	return pigScript;
+    }
+	
+//	@RequestMapping(value="/script/scriptfeed/{id}", method=RequestMethod.GET)
+//	public PigScriptFeed getPigScriptFeedById(@PathVariable("id") int scriptId, Model model) {
+	@RequestMapping(value="/script/scriptfeed", method=RequestMethod.GET)
+    @ResponseBody
+    public PigScriptFeed getPigScriptFeedById(@RequestParam("id") int scriptId, Model model) {
+    	
+		PigScriptFeed pigScriptFeed = null;
+    	PigScript pigScript = null;
+    	
+    	pigScriptFeed = new PigScriptFeed();
+    	
+    	pigScript = PigScriptServices.loadPigScript(scriptId, sessionFactory, logger);
+    	
+    	pigScriptFeed.setPigScript(pigScript);
+    	
+    	model.addAttribute("pigScriptFeed", pigScriptFeed);
+    	
+    	return pigScriptFeed;
+    }
+	
+	
+	@RequestMapping(value="/script/showallscripts", method=RequestMethod.GET)
+    @ResponseBody
+    public List<PigScript> showAllPigScripts(Model model) {
+    	
+    	List<PigScript> pigScripts = null;
+    	
+    	pigScripts = PigScriptServices.loadAllPigScript(sessionFactory, logger);
+    	
+    	model.addAttribute("pigScripts", pigScripts);
+//    	logger.info("Returning user " + username);
+    	
+    	return pigScripts;
+    }
+	
+	@RequestMapping(value="/script/scriptslist/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public PigScriptList getPigScriptsList(@PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+    	PigScriptList pigScriptList = null;
+    	
+//    	pigScripts = PigScriptServices.loadAllPigScript(sessionFactory, logger);
+    	pigScriptList = PigScriptServices.loadPigScriptsList(sessionFactory, logger, limit, offset);
+    	
+    	model.addAttribute("pigScriptList", pigScriptList);
+//    	logger.info("Returning user " + username);
+    	
+    	return pigScriptList;
+    }
+	
+	@RequestMapping(value="/script/execscript/{id}", method=RequestMethod.GET)
+    @ResponseBody
+    public PigScriptResult execPigScriptById(@PathVariable("id") int scriptId, Model model) {
+    	
+		PigScriptResult scriptResult = null;
+    	
+		scriptResult = PigScriptServices.execPigScript(scriptId, sessionFactory, logger);
+    	
+    	model.addAttribute("scriptResult", scriptResult);
+//    	logger.info("Returning user " + username);
+    	
+    	return scriptResult;
+    }
+	
+//	@RequestMapping(value="/script/execscripttask/{id}", method=RequestMethod.GET)
+//	@ResponseBody
+//    public Response execPigScriptByIdTask(@PathVariable("id") int scriptId, Model model) {
+    @RequestMapping(value="/script/execscripttask", method={RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Response execPigScriptByIdTask(@RequestParam("id") int scriptId, Model model) {
+		
+		String msg = null;
+		Response response = null;
+		
+		System.out.println("execPigScriptByIdTask - ID: " + scriptId);
+    			
+		System.out.println("execPigScriptByIdTask - 1 - " + (new Date()));
+				
+		try {
+			taskExecutor.execute(new PigScriptExecutorTask(scriptId, sessionFactory, logger));
+			
+			msg = "Starting pig script id: " + scriptId + " execution success!";
+	    	response = new Response(null, msg);
+	    	
+	    	System.out.println("execPigScriptByIdTask - 2 - " + (new Date()));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			msg = "Starting pig script id: " + scriptId + " execution failed";
+	    	response = new Response(15, msg);
+	    	
+	    	System.out.println("execPigScriptByIdTask - 2 FAIL - " + (new Date()));
+		}
+		
+		
+    	return response;
+    }
+	
+	@RequestMapping(value="/script/execscriptasync/{id}", method=RequestMethod.GET)
+    @ResponseBody
+    public void execPigScriptByIdAsync(@PathVariable("id") int scriptId, Model model) {
+    	
+//		PigScriptResult scriptResult = null;
+//		scriptResult = PigScriptServices.execPigScript(scriptId, sessionFactory, logger);
+		
+		System.out.println("execPigScriptByIdAsync - 1 - " + (new Date()));
+		
+//		doExecPigScriptByIdAsync(scriptId);
+		PigScriptServices.execPigScriptAsync(scriptId, sessionFactory, logger);
+		
+		System.out.println("execPigScriptByIdAsync - 2 - " + (new Date()));
+    	
+    	model.addAttribute("executed", "ok");
+    	
+    	System.out.println("execPigScriptByIdAsync - 3 - " + (new Date()));
+    	
+//    	return scriptResult;
+    }
+	
+	@RequestMapping(value="/script/execscriptcall/{id}", method=RequestMethod.GET)
+    @ResponseBody
+    public Callable<PigScriptResult> execPigScriptByIdCall(@PathVariable("id") final int scriptId, final Model model) {
+		
+		System.out.println("execPigScriptByIdCall - 1 - " + (new Date()));
+    	
+		return new Callable<PigScriptResult>() {
+			
+			public PigScriptResult call() throws Exception {
+				
+				System.out.println("execPigScriptByIdCall - 2 - " + (new Date()));
+			
+				PigScriptResult scriptResult = null;
+		    	
+				scriptResult = PigScriptServices.execPigScript(scriptId, sessionFactory, logger);
+		    	
+		    	model.addAttribute("scriptResult", scriptResult);
+		    	
+		    	System.out.println("execPigScriptByIdCall - 3 - " + (new Date()));
+		    	
+		    	return scriptResult;
+			}
+		};
+    	
+		
+    }
+	
+	@Async
+	void doExecPigScriptByIdAsync(int scriptId) {
+    	
+		System.out.println("doExecPigScriptByIdAsync - 1 - " + (new Date()));
+		PigScriptResult scriptResult = null;
+    	
+		scriptResult = PigScriptServices.execPigScript(scriptId, sessionFactory, logger);
+		
+		System.out.println("doExecPigScriptByIdAsync - 2 - " + (new Date()));
+    	
+//    	model.addAttribute("scriptResult", scriptResult);
+    	
+//    	return scriptResult;
+    }
+	
+	@RequestMapping(value="/script/showscriptres/{id}", method=RequestMethod.GET)
+    @ResponseBody
+    public PigScriptResult showPigScriptResById(@PathVariable("id") int scriptResultId, Model model) {
+    	
+		PigScriptResult scriptResult = null;
+    	
+		scriptResult = PigScriptServices.loadPigScriptResult(scriptResultId, true, sessionFactory, logger);
+    	
+    	model.addAttribute("scriptResult", scriptResult);
+//    	logger.info("Returning user " + username);
+    	
+    	return scriptResult;
+    }
+	
+//	@RequestMapping(value="/script/scriptresfeed/{id}", method=RequestMethod.GET)
+//	public PigScriptResultFeed getPigScriptResultFeedById(@PathVariable("id") int scriptResultId, Model model) {
+	@RequestMapping(value="/script/scriptresfeed", method=RequestMethod.GET)
+    @ResponseBody
+    public PigScriptResultFeed getPigScriptResultFeedById(@RequestParam("id") int scriptResultId, Model model) {
+    	
+		PigScriptResultFeed pigScriptResultFeed = null;
+		PigScriptResult scriptResult = null;
+    	
+		scriptResult = PigScriptServices.loadPigScriptResult(scriptResultId, true, sessionFactory, logger);
+    	
+		pigScriptResultFeed = new PigScriptResultFeed();
+    	
+		pigScriptResultFeed.setScriptResult(scriptResult);
+    	
+    	model.addAttribute("pigScriptResultFeed", pigScriptResultFeed);
+    	
+    	return pigScriptResultFeed;
+    }
+	
+	@RequestMapping(value="/script/showallscriptsres", method=RequestMethod.GET)
+    @ResponseBody
+    public List<PigScriptResult> showAllPigScriptsRes(Model model) {
+    	
+    	List<PigScriptResult> pigScriptResults = null;
+    	
+    	pigScriptResults = PigScriptServices.loadAllPigScriptResults(true, sessionFactory, logger);
+    	
+    	model.addAttribute("pigScriptResults", pigScriptResults);
+//    	logger.info("Returning user " + username);
+    	
+    	return pigScriptResults;
+    }
+	
+	@RequestMapping(value="/script/scriptsreslist/limit/{limit}/offset/{offset}", method=RequestMethod.GET)
+    @ResponseBody
+    public PigScriptResultList getPigScriptsResultsList(@PathVariable("limit") int limit, @PathVariable("offset") int offset, Model model) {
+    	
+//    	List<PigScriptResult> pigScriptResults = null;
+    	PigScriptResultList pigScriptResultList = new PigScriptResultList();
+    	
+//    	pigScriptResults = PigScriptServices.loadAllPigScriptResults(true, sessionFactory, logger);
+    	pigScriptResultList = PigScriptServices.loadPigScriptsResultsList(sessionFactory, logger, limit, offset, true);
+    	
+    	model.addAttribute("pigScriptResultList", pigScriptResultList);
+//    	logger.info("Returning user " + username);
+    	
+    	return pigScriptResultList;
+    }
+	
+	@RequestMapping(value="/script/showallscriptsres/scrid/{id}", method=RequestMethod.GET)
+    @ResponseBody
+    public List<PigScriptResult> showAllPigScriptsResByScriptId(@PathVariable("id") int scriptId, Model model) {
+    	
+    	List<PigScriptResult> pigScriptResults = null;
+    	
+    	pigScriptResults = PigScriptServices.loadPigScriptResultsByScriptId(scriptId, true, sessionFactory, logger);
+    	
+    	model.addAttribute("pigScriptResults", pigScriptResults);
+//    	logger.info("Returning user " + username);
+    	
+    	return pigScriptResults;
+    }
+    
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
@@ -279,5 +548,16 @@ public class AdminController {
 
 	public void setAdminService(AdminServices adminService) {
 		this.adminService = adminService;
-	}    
+	}
+
+	public TaskExecutor getTaskExecutor() {
+		return taskExecutor;
+	}
+
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
+		
+		System.out.println("setTaskExecutor - " + (new Date()));
+	}
+	
 }

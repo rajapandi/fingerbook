@@ -52,6 +52,12 @@
 				<prop key="SimilaritiesFeed">com.fingerbook.models.transfer.SimilaritiesFeed</prop>
 				<prop key="CompositeFingerbookList">com.fingerbook.models.transfer.CompositeFingerbookList</prop>
 				<prop key="CompositeFingerbookFeed">com.fingerbook.models.transfer.CompositeFingerbookFeed</prop>
+				<prop key="PigScript">com.fingerbook.models.pig.PigScript</prop>
+				<prop key="PigScriptResult">com.fingerbook.models.pig.PigScriptResult</prop>
+				<prop key="PigScriptList">com.fingerbook.models.transfer.PigScriptList</prop>
+				<prop key="PigScriptResultList">com.fingerbook.models.transfer.PigScriptResultList</prop>
+				<prop key="PigScriptFeed">com.fingerbook.models.transfer.PigScriptFeed</prop>
+				<prop key="PigScriptResultFeed">com.fingerbook.models.transfer.PigScriptResultFeed</prop>
 			</props>
 		</property>
 	</bean>
@@ -86,6 +92,17 @@
 	<task:scheduled ref="scheduledProcessor" method="process" fixed-delay="120000"/>
 	</task:scheduled-tasks>
 	<task:scheduler id="myScheduler" pool-size="10"/>
+
+		
+ 	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+		<property name="concurrencyLimit" value="10"/>
+ 	</bean>
+ 	
+<!--  	<task:annotation-driven executor="taskExecutor" scheduler="myScheduler"/> -->
+ 	
+ 	
+ 	
+	
 	
 	<!-- DI of fingerbookServices --> 
   	<bean id="fingerbookServices" class="com.fingerbook.rest.service.FingerbookServices" />
@@ -109,6 +126,7 @@
   	<bean id="adminController" class="com.fingerbook.rest.web.AdminController">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   		<property name="adminService"><ref bean="adminServices"/></property>
+  		<property name="taskExecutor"><ref bean="taskExecutor"/></property>
   	</bean>
   	 
 </beans>
