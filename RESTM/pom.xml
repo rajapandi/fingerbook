@@ -184,6 +184,13 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.5.2</version>
         </dependency>
+        <dependency>
+        	<groupId>com.fingerbook</groupId>
+        	<artifactId>pigExecutor</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        	<type>jar</type>
+        	<scope>compile</scope>
+        </dependency>
 	</dependencies>
   
   <build>
