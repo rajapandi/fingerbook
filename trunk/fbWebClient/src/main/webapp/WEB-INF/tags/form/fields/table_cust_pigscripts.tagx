@@ -103,7 +103,7 @@
 	          </td>
           </c:if>
           <c:if test="${update}">
-            <td>
+            <td class="utilbox">
               <spring:url value="${path}/${item[typeIdFieldName]}" var="update_form_url">
                 <spring:param name="action" value="update"/>
               </spring:url>
@@ -115,7 +115,7 @@
             </td>
           </c:if>
           <c:if test="${delete}">
-            <td>
+            <td class="utilbox">
               <spring:url value="${path}/${item[typeIdFieldName]}" var="delete_form_url" />
               <spring:url value="/resources/images/delete.png" var="delete_image_url" />
               <form:form action="${fn:escapeXml(delete_form_url)}" method="DELETE">
@@ -136,7 +136,7 @@
             </td>
           </c:if>
           <c:if test="${execute}">
-            <td>
+            <td class="utilbox">
               <spring:url value="${path}/${item[typeIdFieldName]}" var="execute_form_url">
                 <spring:param name="action" value="exec"/>
               </spring:url>

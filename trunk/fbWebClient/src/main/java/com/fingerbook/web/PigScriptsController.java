@@ -2,7 +2,9 @@ package com.fingerbook.web;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.UserInfo;
 import com.fingerbook.models.pig.PigScript;
@@ -43,6 +46,8 @@ public class PigScriptsController {
 	
 	public static final String URL_PIG_SCRIPT = "http://localhost:8080/fingerbookRESTM/admin/script/scriptfeed?id={id}";
 	public static final String URL_PIG_SCRIPT_RESULT = "http://localhost:8080/fingerbookRESTM/admin/script/scriptresfeed?id={id}";
+	
+	public static final String URL_PIG_SCRIPT_UPDATE = "http://localhost:8080/fingerbookRESTM/admin/script/updatescript/";
 	
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_SEMIAUTH = "ROLE_SEMIAUTH";
@@ -280,18 +285,12 @@ public class PigScriptsController {
 		PigScriptFeed pigScriptFeed = null;
 		PigScript script = null;
 		Response response = null;
-		String urlStr = null;
+//		String urlStr = null;
 		
     	try {
     		
-    		urlStr = URL_PIG_SCRIPT;
-    		
-    		Map<String, String> map = new HashMap<String, String>();
-            map.put("id", String.valueOf(scriptId));
-            
-            RestTemplate restTemplate = buildRestTemplate(request);
-            pigScriptFeed = restTemplate.getForObject(urlStr, PigScriptFeed.class, map);
-            
+//            pigScriptFeed = restTemplate.getForObject(urlStr, PigScriptFeed.class, map);
+    		pigScriptFeed = loadPigScriptFeed(scriptId, modelMap, request);
     		
     		if(pigScriptFeed != null) {
     			
@@ -320,6 +319,96 @@ public class PigScriptsController {
     	return "pigscripts/show_script";
 		
 	}
+	
+	@RequestMapping(value="/script/{id}", params="action=update", method = RequestMethod.GET)
+	public String scriptActionUpdate(@PathVariable("id") int scriptId, ModelMap modelMap, HttpServletRequest request) {
+		
+		PigScriptFeed pigScriptFeed = null;
+		PigScript script = null;
+		Response response = null;
+//		String urlStr = null;
+		
+    	try {
+    		
+//            pigScriptFeed = restTemplate.getForObject(urlStr, PigScriptFeed.class, map);
+    		pigScriptFeed = loadPigScriptFeed(scriptId, modelMap, request);
+    		
+    		if(pigScriptFeed != null) {
+    			
+    			response = pigScriptFeed.getResponse();
+    			if(response != null) {
+        			//TODO: Nahuel: accion de error
+        			modelMap.put("response", response);
+        			return "listfingerbooks/error_response";
+        		}
+    			
+    			script = pigScriptFeed.getPigScript();
+    			if(script != null) {
+    				System.out.println(script.toString());
+    			}
+    		}
+
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	
+    	modelMap.put("script", script);
+//    	modelMap.put("requiredParams", "ticket_input");
+		
+    	String referer = request.getHeader("Referer");
+    	modelMap.put("referer", referer);
+    	
+    	return "pigscripts/update_script";
+		
+	}
+	
+//	@RequestMapping(value="/script/{id}", params="action=show", method = RequestMethod.GET)
+//	public String scriptActionShow(@PathVariable("id") int scriptId, ModelMap modelMap, HttpServletRequest request) {
+//		
+//		PigScriptFeed pigScriptFeed = null;
+//		PigScript script = null;
+//		Response response = null;
+//		String urlStr = null;
+//		
+//    	try {
+//    		
+//    		urlStr = URL_PIG_SCRIPT;
+//    		
+//    		Map<String, String> map = new HashMap<String, String>();
+//            map.put("id", String.valueOf(scriptId));
+//            
+//            RestTemplate restTemplate = buildRestTemplate(request);
+//            pigScriptFeed = restTemplate.getForObject(urlStr, PigScriptFeed.class, map);
+//            
+//    		
+//    		if(pigScriptFeed != null) {
+//    			
+//    			response = pigScriptFeed.getResponse();
+//    			if(response != null) {
+//        			//TODO: Nahuel: accion de error
+//        			modelMap.put("response", response);
+//        			return "listfingerbooks/error_response";
+//        		}
+//    			
+//    			script = pigScriptFeed.getPigScript();
+//    			if(script != null) {
+//    				System.out.println(script.toString());
+//    			}
+//    		}
+//
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    	
+//    	
+//    	modelMap.put("script", script);
+////    	modelMap.put("requiredParams", "ticket_input");
+//		
+//    	
+//    	return "pigscripts/show_script";
+//		
+//	}
 	
 	@RequestMapping(value="/scriptsres/{id}", method = RequestMethod.GET)
 	public String scriptResultActionShow(@PathVariable("id") int scriptResultId, ModelMap modelMap, HttpServletRequest request) {
@@ -365,6 +454,125 @@ public class PigScriptsController {
 		
     	
     	return "pigscripts/show_script_res";
+		
+	}
+	
+	@RequestMapping(value="/script/update", method = RequestMethod.GET)
+	public String updateScript(ModelMap modelMap, HttpServletRequest request) {
+		
+		Response response = null;
+//		Fingerbook loadfb = null;
+		PigScript script = null;
+		
+//		Long id = null;
+//		String comment = "";
+//		Set<String> tags = new HashSet<String>();
+//		String[] tagsInput = null;
+		
+		int scriptId = -1;
+		String scriptName = "";
+		String scriptDesc = "";
+		String scriptFilePath = "";
+		
+		
+		String urlStr = null;
+		
+    	try {
+    		if(request.getParameter("scriptId") != null) {
+//    			id = Long.parseLong(request.getParameter("fbId"));
+    			scriptId = Integer.parseInt(request.getParameter("scriptId"));
+    		}
+    		if(request.getParameter("name_input") != null) {
+    			scriptName = request.getParameter("name_input");
+    		}
+    		if(request.getParameter("desc_input") != null) {
+    			scriptDesc = request.getParameter("desc_input");
+    		}
+    		if(request.getParameter("path_input") != null) {
+    			scriptFilePath = request.getParameter("path_input");
+    		}
+    		
+    		
+//    		loadfb = new Fingerbook();
+    		script = new PigScript();
+    		
+//    		loadfb.setFingerbookId(id);
+//    		loadfb.setComment(comment);
+//    		loadfb.setTags(tags);
+    		
+    		script.setScriptId(scriptId);
+    		script.setScriptName(scriptName);
+    		script.setScriptDesc(scriptDesc);
+    		script.setScriptFilePath(scriptFilePath);
+    		
+    		urlStr = URL_PIG_SCRIPT_UPDATE;
+    		
+    		RestTemplate restTemplate = buildRestTemplate(request);
+    		response = restTemplate.postForObject(urlStr, script, Response.class);
+    		
+//    		String authMethod = getAuthMethod();
+//    		
+//    		if(authMethod.equalsIgnoreCase(ROLE_ADMIN)) {
+//    			urlStr = URL_UPDATE_ADMIN;
+//    		}
+//    		else if(authMethod.equalsIgnoreCase(ROLE_USER)) {
+//    			urlStr = URL_UPDATE_USER;
+//    		}
+//    		else if(authMethod.equalsIgnoreCase(ROLE_SEMIAUTH)) {
+//    			urlStr = URL_UPDATE_TICKET;
+//    		}
+//    		else {
+//    			urlStr = URL_UPDATE_TICKET;
+//    		}
+//    		
+//    		RestTemplate restTemplate = buildRestTemplate(request, loadfb);
+//    		response = restTemplate.postForObject(urlStr, loadfb, Response.class);
+
+    		if(response != null) {
+    			modelMap.put("response", response);
+    			
+    			if(response.getErrorCode() != null) {
+        			return "listfingerbooks/error_response";
+    			}
+    		}
+
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+//    	return "redirect:" + id;
+    	return "redirect:" + scriptId + "?action=show";
+    }
+	
+	public PigScriptFeed loadPigScriptFeed(int scriptId, ModelMap modelMap, HttpServletRequest request) {
+		
+		PigScriptFeed pigScriptFeed = null;
+		PigScript script = null;
+		Response response = null;
+		String urlStr = null;
+		
+    	try {
+    		
+    		urlStr = URL_PIG_SCRIPT;
+    		
+    		Map<String, String> map = new HashMap<String, String>();
+            map.put("id", String.valueOf(scriptId));
+            
+            RestTemplate restTemplate = buildRestTemplate(request);
+            pigScriptFeed = restTemplate.getForObject(urlStr, PigScriptFeed.class, map);
+            
+
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	
+    	modelMap.put("script", script);
+//    	modelMap.put("requiredParams", "ticket_input");
+		
+    	
+//    	return "pigscripts/show_script";
+    	return pigScriptFeed;
 		
 	}
 

@@ -45,7 +45,7 @@
   			<td>${scriptsResult.errorCode}</td>
   		</tr>
   		<tr>
-  			<td>Duration:</td>
+  			<td>Duration (ms):</td>
   			<td>${scriptsResult.duration}</td>
   		</tr>
   		
