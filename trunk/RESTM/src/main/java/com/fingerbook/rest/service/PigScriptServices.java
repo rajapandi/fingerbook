@@ -72,6 +72,92 @@ public class PigScriptServices {
 		return pigScript;
 		
 	}
+
+	public static int updatePigScript(PigScript pigScript, SessionFactory sessionFactory, Log logger) {
+		
+		int saveRet = -1;
+		Session session = null;
+		
+		if(pigScript != null) {
+			try{
+				session = sessionFactory.openSession();
+				
+				String sql = "UPDATE `pig_script` SET `script_name` = ?, `script_desc` = ?, `script_file_path` = ? WHERE `script_id` = ? ;";
+				
+				Query query1 = session.createSQLQuery(sql);
+				
+				query1.setParameter(0, pigScript.getScriptName(), Hibernate.STRING);
+				query1.setParameter(1, pigScript.getScriptDesc(), Hibernate.STRING);
+				query1.setParameter(2, pigScript.getScriptFilePath(), Hibernate.STRING);
+				
+				query1.setInteger(3, pigScript.getScriptId());
+				
+				saveRet = query1.executeUpdate();
+				
+				session.close();
+				
+			}catch(Exception e){
+				String msg = "updating PigScript failed: " + e.getMessage();
+		    	logger.info(msg);
+				e.printStackTrace();
+				
+			}
+		}
+		
+		return saveRet;
+	}
+	
+//	public static PigScript updatePigScript(PigScript pigScript, SessionFactory sessionFactory, Log logger) {
+//		
+////		PigScript pigScript = null;
+//		List<Object[]> ssScripts = null;
+//		Session session = null;
+//		
+////		pigScript = new PigScript();
+//		
+//		pigScript.setScriptId(scriptId);
+//		
+//		try{
+//			session = sessionFactory.openSession();
+//			
+////			String sql = "select username, password, enabled from users where username = '" + username + "'";
+//			String sql = "SELECT `script_name`, `script_desc`, `script_file_path`, `deleted` FROM `pig_script` WHERE `script_id` = " + scriptId + "";
+//			
+//			
+//			Query query1 = session.createSQLQuery(sql);	
+//			
+//			ssScripts = query1.list();
+//			
+//			if(ssScripts != null && ssScripts.size() > 0) {
+//				
+//				Object[] row = (Object[])ssScripts.get(0);
+//				
+//				String scriptName = (String)row[0];
+//				String scriptDesc = (String)row[1];
+//				String scriptFilePath = (String)row[2];
+//				Date deleted = (Date)row[3];
+//				
+//				pigScript.setScriptName(scriptName);
+//				pigScript.setScriptDesc(scriptDesc);
+//				pigScript.setScriptFilePath(scriptFilePath);
+//				pigScript.setDeleted(deleted);
+//				
+//			}
+//			
+//			session.close();
+//			
+//		}catch(Exception e){
+//			String msg = "Loading PigScript id: " + scriptId + " failed: " + e.getMessage();
+////			Response response = new Response(null, msg);
+//	    	logger.info(msg);
+//			e.printStackTrace();
+//			
+////			return null;
+//		}
+//		
+//		return pigScript;
+//		
+//	}
 	
 	@SuppressWarnings("unchecked")
 	public static List<PigScript> loadAllPigScript(SessionFactory sessionFactory, Log logger) {
@@ -278,7 +364,8 @@ public class PigScriptServices {
 				
 //				query1.setInteger(4, scriptResult.getErrorCode());
 				query1.setParameter(4, scriptResult.getErrorCode(), Hibernate.INTEGER);
-				query1.setParameter(5, scriptResult.getErrorMessage(), Hibernate.TEXT);
+//				query1.setParameter(5, scriptResult.getErrorMessage(), Hibernate.TEXT);
+				query1.setParameter(5, scriptResult.getErrorMessage(), Hibernate.STRING);
 				
 				query1.setLong(6, scriptResult.getDuration());
 				
@@ -301,6 +388,7 @@ public class PigScriptServices {
 		
 		return saveRet;
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public static PigScriptResult loadPigScriptResult(int scriptResultId, boolean loadPigScript, SessionFactory sessionFactory, Log logger) {
