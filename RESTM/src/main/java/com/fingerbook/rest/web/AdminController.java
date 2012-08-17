@@ -16,11 +16,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fingerbook.models.Fingerbook;
 import com.fingerbook.models.Response;
 import com.fingerbook.models.SpringSecurityAuthority;
 import com.fingerbook.models.SpringSecurityUser;
@@ -390,6 +392,67 @@ public class AdminController {
 		}
 		
 		
+    	return response;
+    }
+    
+    /* URL_PIG_SCRIPT_UPDATE */
+    @RequestMapping(value="/script/updatescript", method=RequestMethod.POST)
+    @ResponseBody
+    public Response updatePigScript(@RequestBody PigScript pigScript) {    
+    	
+    	Response response = null;
+    	String msg = null;
+    	int ret = -1;
+    	int scriptId = -1;
+
+    	if(pigScript == null) {
+    		
+    		msg = "Updating pig script failed. Reason: Empty script";
+	    	response = new Response(16, msg);
+	    	
+	    	return response;
+    	}
+    	
+    	scriptId = pigScript.getScriptId();
+    	
+    	if(scriptId < 0) {
+    		
+    		msg = "Updating pig script failed. Reason: Invalid script id: " + scriptId;
+	    	response = new Response(16, msg);
+	    	
+	    	return response;
+    	}
+    	
+    	if(pigScript.getScriptName() == null) {
+    		
+    		msg = "Updating pig script id: " + scriptId + " failed. Reason: Empty name";
+	    	response = new Response(16, msg);
+	    	
+	    	return response;
+    	}
+    	
+    	if(pigScript.getScriptFilePath() == null) {
+    		
+    		msg = "Updating pig script id: " + scriptId + " failed. Reason: Empty file path";
+	    	response = new Response(16, msg);
+	    	
+	    	return response;
+    	}
+    	
+    	ret = PigScriptServices.updatePigScript(pigScript, sessionFactory, logger);
+    	
+    	if(ret > 0) {
+    		
+    		msg = "Updating pig script id: " + scriptId + " success!";
+	    	response = new Response(null, msg);
+	    	
+    	}
+    	else {
+    		
+    		msg = "Updating pig script id: " + scriptId + " failed";
+	    	response = new Response(16, msg);
+    	}
+    	
     	return response;
     }
 	
