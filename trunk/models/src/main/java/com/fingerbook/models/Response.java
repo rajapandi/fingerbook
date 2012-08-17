@@ -19,6 +19,7 @@ public class Response {
 	 * 		13 -  Permission denied for user
 	 * 		14 -  Permission denied for anonymous
 	 * 		15 -  Error executing pig script task
+	 * 		16 -  Error updating pig script
 	 * 		null - Success!
 	 * */
 

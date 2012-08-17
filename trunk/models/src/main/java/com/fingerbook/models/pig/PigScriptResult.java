@@ -8,7 +8,8 @@ public class PigScriptResult implements Serializable {
 	
 	private static final long serialVersionUID = 5616968398809230436L;
 
-	public static String defaultDateFormat = "yyyy-MM-dd";
+//	public static String defaultDateFormat = "yyyy-MM-dd";
+	public static String defaultDateFormat = "yyyy-MM-dd HH:mm:ss";
 
 	protected int scriptResultId;
 //	protected String scriptName;
