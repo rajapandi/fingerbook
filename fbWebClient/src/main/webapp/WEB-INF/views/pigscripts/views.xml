@@ -24,6 +24,9 @@
     <definition extends="default" name="pigscripts/show_script_res">
         <put-attribute name="body" value="/WEB-INF/views/pigscripts/show_script_res.jspx"/>
     </definition>
+    <definition extends="default" name="pigscripts/update_script">
+        <put-attribute name="body" value="/WEB-INF/views/pigscripts/update_script.jspx"/>
+    </definition>
     
     
 </tiles-definitions>

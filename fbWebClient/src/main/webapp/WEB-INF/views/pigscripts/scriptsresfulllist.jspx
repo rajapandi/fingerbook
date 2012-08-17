@@ -7,11 +7,11 @@
 	  
         <table:table_cust_pag page="${page}" size="${size}" maxPages="${maxPages}" typeIdFieldName="scriptResultId" pagPath="${pagPath}" data="${scriptsResults}" id="l_com_fingerbook_models_PigScriptResult" path="/pigscripts/scriptsres" z="" actions="true" update="false" show="true" requiredParams="${requiredParams}">
             <table:column_cust id="c_com_fingerbook_models_PigScriptResult_scriptResultId" property="scriptResultId" z=""/>
-            <table:column_cust id="c_com_fingerbook_models_PigScriptResult_execDate" property="execDate" z="" maxLength="-1"/>
+            <table:column_cust id="c_com_fingerbook_models_PigScriptResult_execDate" property="formattedExecDate" z="" maxLength="-1"/>
             <table:column_cust id="c_com_fingerbook_models_PigScriptResult_scriptId" property="scriptId" z=""/>
         	<table:column_cust id="c_com_fingerbook_models_PigScriptResult_successful" property="successful" z="" maxLength="-1"/>
-        	<table:column_cust id="c_com_fingerbook_models_PigScriptResult_returnMessage" property="returnMessage" z="" maxLength="-1"/>
-        	<table:column_cust id="c_com_fingerbook_models_PigScriptResult_duration" property="duration" z="" maxLength="-1"/>
+<!--         	<table:column_cust id="c_com_fingerbook_models_PigScriptResult_returnMessage" property="returnMessage" z="" maxLength="-1"/> -->
+<!--         	<table:column_cust id="c_com_fingerbook_models_PigScriptResult_duration" property="duration" z="" maxLength="-1"/> -->
         </table:table_cust_pag>
     
   </div>

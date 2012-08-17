@@ -9,7 +9,7 @@
             <table:column_cust id="c_com_fingerbook_models_PigScript_scriptId" property="scriptId" z=""/>
         	<table:column_cust id="c_com_fingerbook_models_PigScript_scriptName" property="scriptName" z="" maxLength="-1"/>
         	<table:column_cust id="c_com_fingerbook_models_PigScript_scriptDesc" property="scriptDesc" z="" maxLength="-1"/>
-        	<table:column_cust id="c_com_fingerbook_models_PigScript_scriptFilePath" property="scriptFilePath" z="" maxLength="-1"/>
+<!--         	<table:column_cust id="c_com_fingerbook_models_PigScript_scriptFilePath" property="scriptFilePath" z="" maxLength="-1"/> -->
         </table:table_cust_pigscripts>
     
   </div>
