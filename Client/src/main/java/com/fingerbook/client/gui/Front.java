@@ -82,10 +82,10 @@ public class Front extends JFrame {
 		/* Set initial stuff */
 		initialize();
 
-		if (resume)
+		if (resume) {
 			/* Load last configuration */
-			populate();
-
+			resume = populate();
+		}
 		setVisible(true);
 
 		/* Ask user if he wants to resume */
@@ -130,10 +130,12 @@ public class Front extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
-	private void populate() {
+	private boolean populate() {
 		/* Get Config Params */
 		configuration = Client.fMan.getLastParams();
 
+		if (configuration.get("cTicket").equals("false") && configuration.get("cLogin").equals("false"))
+			return false;
 		/* Load Config Params */
 		tDir.setText(configuration.get("scanDir")); 		//$NON-NLS-1$
 		if (configuration.get("cTicket").equals("true")) {	//$NON-NLS-1$ //$NON-NLS-2$
@@ -143,6 +145,7 @@ public class Front extends JFrame {
 		}		
 		if (configuration.get("recursive").equals("true"))	//$NON-NLS-1$ //$NON-NLS-2$
 			cRecursive.setSelected(true);
+		return true;
 	}
 
 	public String correctPath(String path) {
