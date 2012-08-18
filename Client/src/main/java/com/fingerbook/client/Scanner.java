@@ -57,6 +57,7 @@ public class Scanner {
 	public Response scanDirectory(Map<String, String> configuration, boolean resume) throws Exception {
 		String actual = null;
 		String comment = null;
+		String tags = null;
 		//TODO: ver si habria que setear el timeout en algun lado o no deberia haber
 		Integer connectionTimeout = 600;
 		Boolean error = false; 
@@ -76,11 +77,12 @@ public class Scanner {
 		//if(resume)
 		//	resp = fiClient.resumeHashTransaction(ticket);
 		//else {
+			tags = configuration.get("tags");
 			comment = configuration.get("comment");
 			if (comment != null)
 				comment = comment.trim();
 			resp = fiClient.startHashTransaction(ticket,
-					getTags(configuration.get("tags")), comment);
+					getTags(tags), comment);
 		//}
 		if (resp == null) {
 			logger.error("Error: null response");
