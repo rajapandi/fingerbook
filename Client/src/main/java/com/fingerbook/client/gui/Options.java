@@ -132,7 +132,7 @@ public class Options extends JDialog{
 	 */
 	private JLabel getLTags() {
 		if (lTags == null)
-			lTags = new JLabel("Tags"); //$NON-NLS-1$
+			lTags = new JLabel("Tags"+"   "+Messages.getString("Options.2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			lTags.setToolTipText(Messages.getString("Options.4")); //$NON-NLS-1$
 
 		return lTags;
