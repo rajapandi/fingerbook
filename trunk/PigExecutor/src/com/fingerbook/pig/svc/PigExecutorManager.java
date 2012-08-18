@@ -71,7 +71,7 @@ public class PigExecutorManager {
 	//            PigStats stats = PigRunner.run( new String[] { "-x", "local", "-file", script, "-logfile", "/home/pampa/Documents/workspace4/PigExecutor/bin" }, null);
 //	            PigStats stats = PigRunner.run( new String[] { "-x", "local", "-file", scriptFilePath, "-logfile", parentPath }, null);
 	            String outputPath = "out_fb_pig_" + System.currentTimeMillis();
-	            PigStats stats = PigRunner.run( new String[] {"-Dpig.additional.jars=/home/pampa/tpf/pigscripts/FBUDFS.jar", "-x", "local", "-param", "outpath=\"" + parentPath + "/" + outputPath + "\"", "-file", scriptFilePath, "-logfile",
+	            PigStats stats = PigRunner.run( new String[] {"-P","/usr/local/pig/conf/pig.properties", "-x", "local", "-param", "outpath=\"" + parentPath + "/" + outputPath + "\"", "-file", scriptFilePath, "-logfile",
 	            		parentPath}, null);
 	            
 	            scriptResult.setReturnCode(stats.getReturnCode());
