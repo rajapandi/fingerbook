@@ -74,9 +74,9 @@ public class Scanner {
 		Fingerbook fb;
 		String transactionId = null;
 
-		//if(resume)
-		//	resp = fiClient.resumeHashTransaction(ticket);
-		//else {
+		if(resume)
+			resp = fiClient.resumeHashTransaction(ticket);
+		else {
 			tags = configuration.get("tags");
 			comment = configuration.get("comment");
 			if (comment != null)
@@ -84,7 +84,7 @@ public class Scanner {
 			
 			resp = fiClient.startHashTransaction(ticket,
 					getTags(tags), comment);
-		//}
+		}
 		if (resp == null) {
 			logger.error("Error: null response");
 			return null;
