@@ -142,6 +142,14 @@ public class AdminController {
 			@RequestParam("enabled") String enabled,
 			Model model) {
     	
+    	// Don-t allow empty password
+    	if(password.isEmpty()) {
+        	String msg = "Empty passwords are not allowed. Please choose a password.";
+    		Response response = new Response(null, msg);
+        	logger.info(msg);	
+    		return response;
+    	}
+    	
     	String msg = "Modifying user: " +  username + " with values: (role, " + role + 
     		") and (enabled, " + enabled + ")";
     	
@@ -251,19 +259,26 @@ public class AdminController {
 			session = sessionFactory.openSession();		
 			String sql = "select username, password, enabled from users where username = '" + username + "'";
 			
+			// Get password
 			Query query1 = session.createSQLQuery(sql);	
-			
-			ssUsers = query1.list();
-					
+			ssUsers = query1.list();	
 			for(int i=0; i<ssUsers.size(); i++) {
-				
 				Object[] row = (Object[])ssUsers.get(i);  
 				user.setId(new Integer(i).toString());
 				user.setUsername((String)row[0]);
 				user.setPassword((String)row[1]);
-				//TODO Hardwired
-				user.setEnabled(true);
+				System.out.println(String.valueOf(row[2]));
+				boolean enabled = String.valueOf(row[2]).equals("true") ? true : false;
+				user.setEnabled(enabled);
 			}
+			
+			// Get role
+			sql = "select username, authority from authorities where username = '" + username + "'";
+			Query query2 = session.createSQLQuery(sql);	
+			ssUsers = query2.list();
+			Object[] row = (Object[])ssUsers.get(0);
+			user.setRole((String)row[1]);
+	
 			
 			session.close();
 			

@@ -8,17 +8,18 @@ public class SpringSecurityUser implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String id;
+	private String userID;
 	private String username;
 	private String password;
+	private String role;
 	private boolean enabled;
 	
 	
 	public String getId() {
-		return id;
+		return userID;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setId(String userID) {
+		this.userID = userID;
 	}
 	public String getUsername() {
 		return username;
@@ -31,6 +32,12 @@ public class SpringSecurityUser implements Serializable {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	public boolean isEnabled() {
 		return enabled;

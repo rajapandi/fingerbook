@@ -14,7 +14,7 @@
 	<h2>Insert user information</h2>
     
     <DIV style="width: 287px">  
-    <form action="deleteUser" method="post">
+    <form action="${appRoot}/deleteUser" method="post">
 	  	Username: <input type="text" name="username" style="float:right" value="${user.username}"/>
 	  	<br /><br />
 	  	<input type="submit" value="Submit" style="float:right"/>
