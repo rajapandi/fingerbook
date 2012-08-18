@@ -51,7 +51,7 @@ public class ModifyUserController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String get(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response) {
-    	return "modifyuser/modifyUserForm";
+    	return "listusers/list";
     }
     
     @RequestMapping
