@@ -231,8 +231,8 @@ public class AdminController {
 				user.setId(new Integer(i).toString());
 				user.setUsername((String)row[0]);
 				user.setPassword((String)row[1]);
-				//TODO Hardwired
-				user.setEnabled(true);
+				boolean enabled = String.valueOf(row[2]).equals("true") ? true : false;
+				user.setEnabled(enabled);
 				
 				users.add(user);
 			}
@@ -278,7 +278,6 @@ public class AdminController {
 				user.setId(new Integer(i).toString());
 				user.setUsername((String)row[0]);
 				user.setPassword((String)row[1]);
-				System.out.println(String.valueOf(row[2]));
 				boolean enabled = String.valueOf(row[2]).equals("true") ? true : false;
 				user.setEnabled(enabled);
 			}
