@@ -617,8 +617,9 @@ public class Front extends JFrame {
 		try {
 			pBar = new ProgressBar(auto, tray);
 			
-			// Delete Tags
+			// Delete previous Tags & Comments
 			configuration.put("tags", null);
+			configuration.put("comment", null);
 		} catch (Exception ex) {
 			logger.error("An unexpected error happened: " + ex.getMessage()); //$NON-NLS-1$
 		}
