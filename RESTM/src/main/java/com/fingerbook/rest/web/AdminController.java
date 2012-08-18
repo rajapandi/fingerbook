@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -72,14 +73,24 @@ public class AdminController {
 			
 			String hashedPassword = FingerbookUtils.toSHA1(password);
 			
-			String sql = "insert into users(username, password, enabled) values ('" + 
-						username + "', '" + hashedPassword + "', true);";
-			String sql2 = "insert into authorities(username, authority) values ('" + 
-						username + "', 'ROLE_" + role + "');";
+			String sql = "insert into users(username, password, enabled) values (?, ?, true);";
+			String sql2 = "insert into authorities(username, authority) values (?, ?);";
 			
-			session.createSQLQuery(sql).executeUpdate();
-			session.createSQLQuery(sql2).executeUpdate();	
+			// Create queries
+			Query query1 = session.createSQLQuery(sql);
+			Query query2 = session.createSQLQuery(sql2);
+						
+			// Set parameters
+			query1.setParameter(0, username, Hibernate.STRING);
+			query1.setParameter(1, hashedPassword, Hibernate.STRING);
+			
+			query2.setParameter(0, username, Hibernate.STRING);
+			query2.setParameter(1, "ROLE_" + role, Hibernate.STRING);	
 	
+			// Execute queries
+			query1.executeUpdate();
+			query2.executeUpdate();
+			
 			session.close();
 			
 		}catch(Exception e){
