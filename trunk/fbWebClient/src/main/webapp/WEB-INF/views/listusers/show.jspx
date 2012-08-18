@@ -14,7 +14,7 @@
   
 	<page:show id="c_com_fingerbook_models_SpringSecurityUser" object="${user}" path="/listUsers" z="">
 	     <field:display field="username" id="c_com_fingerbook_models_SpringSecurityUser_username" object="${user}" z=""/>
-	     <field:display field="password" id="c_com_fingerbook_models_SpringSecurityUser_password" object="${user}" z=""/>
+	     <field:display field="role" id="c_com_fingerbook_models_SpringSecurityUser_role" object="${user}"/>
 	     <field:display field="enabled" id="c_com_fingerbook_models_SpringSecurityUser_enabled" object="${user}" z=""/>
 	</page:show>
   
