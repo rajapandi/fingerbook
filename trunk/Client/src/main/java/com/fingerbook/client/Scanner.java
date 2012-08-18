@@ -81,6 +81,7 @@ public class Scanner {
 			comment = configuration.get("comment");
 			if (comment != null)
 				comment = comment.trim();
+			
 			resp = fiClient.startHashTransaction(ticket,
 					getTags(tags), comment);
 		//}
