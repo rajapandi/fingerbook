@@ -74,6 +74,9 @@ public class Options extends JDialog{
 	private void populate() {
 		if(Front.getConfiguration().get("tags") != null) //$NON-NLS-1$
 			getTTags().setText(Front.getConfiguration().get("tags"));		 //$NON-NLS-1$
+		
+		if(Front.getConfiguration().get("comment") != null) //$NON-NLS-1$
+			getTComments().setText(Front.getConfiguration().get("comment"));		 //$NON-NLS-1$
 	}
 	
 	/**
@@ -213,6 +216,7 @@ public class Options extends JDialog{
 				public void actionPerformed(ActionEvent e) {
 					Set<String> tags = new HashSet<String>(getTags());
 					Front.getConfiguration().put("tags", tags.toString().substring(1, tags.toString().length()-1)); //$NON-NLS-1$
+					Front.getConfiguration().put("comment", tComments.getText()); //$NON-NLS-1$
 					if (getCTray().isSelected())
 						Front.getConfiguration().put("tray","true"); //$NON-NLS-1$ //$NON-NLS-2$
 					else
