@@ -74,7 +74,7 @@
 	</authentication-manager>
 
 	<beans:bean id="accessDeniedHandler" class="com.fingerbook.security.MyAccessDeniedHandler">
-	    <beans:property name="accessDeniedUrl" value="403.html" />
+	    <beans:property name="accessDeniedUrl" value="permissionDenied" />
 	</beans:bean>
 
 </beans:beans>

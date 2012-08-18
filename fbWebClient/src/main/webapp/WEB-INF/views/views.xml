@@ -14,6 +14,10 @@
     <put-attribute name="body" value="/WEB-INF/views/resourceNotFound.jspx"/>
   </definition>
 
+  <definition extends="public" name="permissionDenied">
+    <put-attribute name="body" value="/WEB-INF/views/permissionDenied.jspx"/>
+  </definition>
+
   <definition extends="public" name="uncaughtException">
     <put-attribute name="body" value="/WEB-INF/views/uncaughtException.jspx"/>
   </definition>
