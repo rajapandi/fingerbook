@@ -37,12 +37,15 @@ public class ListUsersController {
     
     // Update
     @RequestMapping(value = "/{username}", params = "form", method = RequestMethod.GET)
-    public String updateForm(@PathVariable("username") String username, ModelMap uiModel) {
+    public String updateForm(@PathVariable("username") String username, ModelMap uiModel, HttpServletRequest request) {
     	
     	SpringSecurityUser user = getUser(username);
     	
 		uiModel.addAttribute("user", user);
         uiModel.addAttribute("itemId", username);
+        
+        String appRoot = request.getContextPath();
+        uiModel.addAttribute("appRoot", appRoot);
         
         return "modifyuser/modifyUserForm";
     }
@@ -55,12 +58,15 @@ public class ListUsersController {
 	   
     // Delete
     @RequestMapping(value = "/{username}", method = RequestMethod.DELETE)
-    public String delete(@PathVariable("username") String username, ModelMap uiModel) {
+    public String delete(@PathVariable("username") String username, ModelMap uiModel, HttpServletRequest request) {
     	
     	SpringSecurityUser user = getUser(username);
     	
 		uiModel.addAttribute("user", user);
         uiModel.addAttribute("itemId", username);
+        
+        String appRoot = request.getContextPath();
+        uiModel.addAttribute("appRoot", appRoot);
         
         return "deleteuser/deleteUserForm";
     }
