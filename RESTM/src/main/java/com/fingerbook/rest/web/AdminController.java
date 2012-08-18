@@ -205,7 +205,7 @@ public class AdminController {
     	
     	List<SpringSecurityUser> users = new Vector<SpringSecurityUser>();
     	List<Object[]> ssUsers = null;
-    	List<SpringSecurityAuthority> ssAuthority = null;
+    	List<Object[]> ssAuthority = null;
 	
     	String msg;
     	Session session = null;
@@ -233,6 +233,9 @@ public class AdminController {
 				user.setPassword((String)row[1]);
 				boolean enabled = String.valueOf(row[2]).equals("true") ? true : false;
 				user.setEnabled(enabled);
+				
+				Object[] rowAuth = (Object[])ssAuthority.get(i);
+				user.setRole((String)rowAuth[1]);
 				
 				users.add(user);
 			}
