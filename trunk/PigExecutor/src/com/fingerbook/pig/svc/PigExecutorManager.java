@@ -2,6 +2,7 @@ package com.fingerbook.pig.svc;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Random;
 
 import org.apache.pig.PigRunner;
 import org.apache.pig.PigRunner.ReturnCode;
@@ -45,7 +46,7 @@ public class PigExecutorManager {
 	            System.out.println("path: " + path);
 				System.out.println("absolutePath: " + absolutePath);
 				System.out.println("canonicalPath: " + canonicalPath);
-	            
+	          
 	            String parentPath = scriptFile.getParentFile().getAbsolutePath();
 				
 				System.out.println("parentPath: " + parentPath);
@@ -69,7 +70,9 @@ public class PigExecutorManager {
 	//            PigStats stats = org.apache.pig.PigRunner.run( new String[] { "-version" }, null);
 	//            PigStats stats = PigRunner.run( new String[] { "-x", "local", "-file", script, "-logfile", "/home/pampa/Documents/workspace4/PigExecutor/bin" }, null);
 //	            PigStats stats = PigRunner.run( new String[] { "-x", "local", "-file", scriptFilePath, "-logfile", parentPath }, null);
-	            PigStats stats = PigRunner.run( new String[] { "-x", "local", "-param", "outpath=\"" + parentPath + "/out_fb_pig\"", "-file", scriptFilePath, "-logfile", parentPath }, null);
+	            String outputPath = "out_fb_pig_" + System.currentTimeMillis();
+	            PigStats stats = PigRunner.run( new String[] {"-Dpig.additional.jars=/home/pampa/tpf/pigscripts/FBUDFS.jar", "-x", "local", "-param", "outpath=\"" + parentPath + "/" + outputPath + "\"", "-file", scriptFilePath, "-logfile",
+	            		parentPath}, null);
 	            
 	            scriptResult.setReturnCode(stats.getReturnCode());
 	            scriptResult.setDuration(stats.getDuration());
@@ -82,13 +85,13 @@ public class PigExecutorManager {
 	            	scriptResult.setErrorCode(stats.getErrorCode());
 	            	scriptResult.setErrorMessage(stats.getErrorMessage());
 	            	
-	            	returnMessage = "MAAL";
+	            	returnMessage = "ERROR: could not run pig script. Please check logs in server";
 	            	
 	//            	System.out.println(stats.getErrorCode() + " " + stats.getErrorMessage());
 	            } else {
 	            	
 	            	scriptResult.setSuccessful(true);
-	            	returnMessage = "BIEEN!";
+	            	returnMessage = "SUCCESS: Pig script was ran successfully.";
 	            }
 	            
 	            scriptResult.setReturnMessage(returnMessage);
