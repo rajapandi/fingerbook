@@ -58,7 +58,7 @@ public class Front extends JFrame {
 	private JLabel lUser = null;
 	private JTextField tUser = null;
 	private JLabel lPass = null;
-	private JPasswordField tPass = null;
+	private JTextField tPass = null;
 
 	private JCheckBox cTicket = null;
 	private JLabel lTicket = null;
@@ -142,7 +142,14 @@ public class Front extends JFrame {
 			cTicket.setSelected(true);
 			tTicket.setEnabled(true);
 			tTicket.setText(configuration.get("ticket"));	//$NON-NLS-1$
-		}		
+		}
+		if (configuration.get("cLogin").equals("true")) {	//$NON-NLS-1$ //$NON-NLS-2$
+			cLogin.setSelected(true);
+			tUser.setEnabled(true);
+			tUser.setText(configuration.get("user"));	//$NON-NLS-1$
+			tPass.setEnabled(true);
+			tPass.setText(configuration.get("pass"));	//$NON-NLS-1$
+		}
 		if (configuration.get("recursive").equals("true"))	//$NON-NLS-1$ //$NON-NLS-2$
 			cRecursive.setSelected(true);
 		return true;
