@@ -161,10 +161,11 @@ public class ResumePMan {
 			for (String s:config.getPaths())
 				paths.append(s + ";");
 			
+			Cypher cypher = new Cypher();
 			/* Save parameters to Configuration Map */
 			configuration.put(CLOGIN, config.getAuth());
 			configuration.put(USER, config.getUser());
-			configuration.put(PASS, config.getPass());
+			configuration.put(PASS, cypher.Decode(config.getPass()));
 			configuration.put(RECURSIVE, config.getRecursive());
 			configuration.put(CTICKET, config.getSemiAuth());
 			configuration.put(TICKET, config.getTicket());
@@ -197,10 +198,11 @@ public class ResumePMan {
 		while (scan.hasNext())
 			paths.add(scan.next());
 		
+		Cypher cypher = new Cypher();
 		/* Set parameters before marshalling */
 		config.setAuth(configuration.get(CLOGIN));
 		config.setUser(configuration.get(USER));
-		config.setPass(configuration.get(PASS));
+		config.setPass(cypher.Encode(configuration.get(PASS)));
 		config.setSemiAuth(configuration.get(CTICKET));
 		config.setTicket(configuration.get(TICKET));
 		config.setRecursive(configuration.get(RECURSIVE));
