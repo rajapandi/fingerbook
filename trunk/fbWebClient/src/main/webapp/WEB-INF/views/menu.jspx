@@ -29,7 +29,7 @@
         <!-- <menu:item id="i_view__listfingerbooksuserform_id" messageCode="global_generic" url="/listfingerbooks/userform" z="qVO8WFrveXBMG2UC3mWUdVRNRHk="/> -->
         <!-- <menu:item id="i_view__listfingerbooksshow_id" messageCode="global_generic" url="/listfingerbooks/show" z="78g6LvsRMUC2tA08DOR7udDuULs="/> -->
         <menu:item id="i_view__listfingerbooksticketform_id" messageCode="global_generic" url="/listfingerbooks/ticketform" z="HPJ9i2VI+KH5WMCuOLPT6VQ3wEQ="/>
-        <!-- <menu:item id="i_view__listfingerbooksuserform_id" messageCode="global_generic" url="/listfingerbooks/userform" z="qVO8WFrveXBMG2UC3mWUdVRNRHk="/>  -->
+        <menu:item id="i_view__listfingerbooksuserform_id" messageCode="global_generic" url="/listfingerbooks/userform" z="qVO8WFrveXBMG2UC3mWUdVRNRHk="/>
         <sec:authorize ifNotGranted="ROLE_ADMIN">
         	<menu:item id="i_view__listmyfingerbooks_id" messageCode="global_generic" url="/listfingerbooks/userlogged" z="user-managed"/>
 		</sec:authorize>
