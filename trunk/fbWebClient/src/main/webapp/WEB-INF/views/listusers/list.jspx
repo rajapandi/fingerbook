@@ -24,11 +24,11 @@
 	-->
   	 
   	<page:list id="pl_com_fingerbook_models_SpringSecurityUser" items="${users}" z="">
-        <table:table typeIdFieldName="username" data="${users}" id="l_com_fingerbook_models_SpringSecurityUser" path="/listUsers" z="" create="true" update="true" delete="true">
+        <table:table_no_pag typeIdFieldName="username" data="${users}" id="l_com_fingerbook_models_SpringSecurityUser" path="/listUsers" z="" create="true" update="true" delete="true">
             <table:column id="c_com_fingerbook_models_SpringSecurityUser_username" property="username" z=""/>
             <table:column id="c_com_fingerbook_models_SpringSecurityUser_role" property="role" z=""/>
         	<table:column id="c_com_fingerbook_models_SpringSecurityUser_enabled" property="enabled" z=""/>
-        </table:table>
+        </table:table_no_pag>
     </page:list>
     
     <!--  
