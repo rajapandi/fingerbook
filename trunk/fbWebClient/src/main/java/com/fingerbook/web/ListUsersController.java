@@ -1,5 +1,6 @@
 package com.fingerbook.web;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,14 +62,31 @@ public class ListUsersController {
     public String delete(@PathVariable("username") String username, ModelMap uiModel, HttpServletRequest request) {
     	
     	SpringSecurityUser user = getUser(username);
+
+    	String result = "\"";
+    	try {
+    		
+    		String authenticatedUser = request.getUserPrincipal().getName();
+    		String authenticatedUserPasswword = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+    		
+    		// Construct parameters
+    	    String parameters = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8");
+    	    
+    		//TODO: HardWired URL
+    		String urlString = "http://localhost:8080/fingerbookRESTM/admin/deleteUser";
+    		
+    		StringBuffer sb = FingerbookWebClientUtils.makeBasicPostRequest(urlString, parameters, 
+    				authenticatedUser, authenticatedUserPasswword);	
+    		
+    		sb.append("\"");
+    		result = sb.toString();
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     	
-		uiModel.addAttribute("user", user);
-        uiModel.addAttribute("itemId", username);
-        
-        String appRoot = request.getContextPath();
-        uiModel.addAttribute("appRoot", appRoot);
-        
-        return "deleteuser/deleteUserForm";
+    	uiModel.put("result", result);
+    	return "deleteuser/index";
     }
 	
     @RequestMapping(method = RequestMethod.GET)
