@@ -694,7 +694,10 @@ public class ListFingerbooksController {
     	return "redirect:" + id;
     }
 	
-
+	@RequestMapping(value="/permissionDenied", method = RequestMethod.GET)
+	public String get(HttpServletRequest request) {
+			return "permissionDenied";
+	}
 	
 	
 	
