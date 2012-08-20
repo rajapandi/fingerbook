@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,8 +124,8 @@ public class Front extends JFrame {
 		this.pack();
 
 		// Set Icon
-		setIconImage(getToolkit().getImage(
-		"src/main/resources/images/thumb.png")); //$NON-NLS-1$
+		URL url = Thread.currentThread().getContextClassLoader().getResource("images/thumb.png");  //$NON-NLS-1$
+		setIconImage(getToolkit().getImage(url)); //$NON-NLS-1$
 
 		// Center window
 		setLocationRelativeTo(null);
@@ -379,8 +380,8 @@ public class Front extends JFrame {
 	 */
 	private JButton getBTicket() {
 		if (bTicket == null) {
-			bTicket = new JButton(new ImageIcon(getToolkit().getImage(
-			"src/main/resources/images/browse2.gif"))); //$NON-NLS-1$
+			URL url = Thread.currentThread().getContextClassLoader().getResource("images/browse2.gif");  //$NON-NLS-1$
+			bTicket = new JButton(new ImageIcon(getToolkit().getImage(url))); //$NON-NLS-1$
 
 			/* When clicked, open JFileChooser */
 			bTicket.addActionListener(new ActionListener() {
@@ -643,9 +644,8 @@ public class Front extends JFrame {
 	private void addSysTrayIcon() {
 		if (SystemTray.isSupported()) {
 			SystemTray tray = SystemTray.getSystemTray();
-			Image image = getToolkit().getImage(
-			"src/main/resources/images/thumbs_up.gif"); //$NON-NLS-1$
-
+			URL url = Thread.currentThread().getContextClassLoader().getResource("images/thumbs_up.gif");  //$NON-NLS-1$
+			Image image = getToolkit().getImage(url);
 			/* If Systray Icon is double clicked, make window(s) visible */
 			MouseListener mouseListener = new MouseListener() {
 				public void mouseClicked(MouseEvent e) {
