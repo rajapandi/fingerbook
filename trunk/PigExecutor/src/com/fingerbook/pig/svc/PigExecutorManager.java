@@ -70,10 +70,17 @@ public class PigExecutorManager {
 	//            PigStats stats = org.apache.pig.PigRunner.run( new String[] { "-version" }, null);
 	//            PigStats stats = PigRunner.run( new String[] { "-x", "local", "-file", script, "-logfile", "/home/pampa/Documents/workspace4/PigExecutor/bin" }, null);
 //	            PigStats stats = PigRunner.run( new String[] { "-x", "local", "-file", scriptFilePath, "-logfile", parentPath }, null);
-	            String outputPath = "out_fb_pig_" + System.currentTimeMillis();
-	            PigStats stats = PigRunner.run( new String[] {"-P","/usr/local/pig/conf/pig.properties", "-x", "local", "-param", "outpath=\"" + parentPath + "/" + outputPath + "\"", "-file", scriptFilePath, "-logfile",
-	            		parentPath}, null);
 	            
+	            //PRINT CLASSPATH
+	            System.out.println("--------CLASSPATH=" + System.getProperty("java.class.path"));
+	            
+	            
+	            String outputPath = "out_fb_pig_" + System.currentTimeMillis();
+//	            PigStats stats = PigRunner.run( new String[] {"-P","/usr/local/pig/conf/pig.properties", "-x", "local", "-param", "outpath=\"" + parentPath + "/" + outputPath + "\"", "-file", scriptFilePath, "-logfile",
+//	            		parentPath}, null);
+	            PigStats stats = PigRunner.run( new String[] {"-P","/usr/local/pig/conf/pig.properties", "-param", "outpath=\"" + parentPath + "/" + outputPath + "\"", "-file", scriptFilePath, "-logfile",
+	            		parentPath}, null);
+
 	            scriptResult.setReturnCode(stats.getReturnCode());
 	            scriptResult.setDuration(stats.getDuration());
 	            
