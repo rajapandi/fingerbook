@@ -4,7 +4,7 @@
   <jsp:output omit-xml-declaration="yes"/>
   
   <div id="matchesinner">
-	  <table:table_cust_pag page="${pages}" size="${sizes}" maxPages="${maxPagess}" typeIdFieldName="fingerbookId" data="${fbMatches}" id="l_com_fingerbook_models_Fingerbook" path="/listfingerbooks" z="" actions="false" update="false" show="false">
+	  <table:table_cust_pag page="${pages}" size="${sizes}" maxPages="${maxPagess}" typeIdFieldName="fingerbookId" data="${fbMatches}" id="l_com_fingerbook_models_Fingerbook" path="/listfingerbooks" z="" actions="true" update="false" show="true">
 	  	<table:column_cust id="c_com_fingerbook_models_Fingerbook_fingerbookId" property="fingerbookId" z=""/>
     	<table:column_cust id="c_com_fingerbook_models_Fingerbook_stamp" property="stampDate" z="" maxLength="-1"/>
     	<table:column_cust id="c_com_fingerbook_models_Fingerbook_tags" z="user-managed" maxLength="-1">

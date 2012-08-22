@@ -12,7 +12,9 @@
     </p>
   </util:panel>
   
-  <spring:url value="http://code.jquery.com/jquery-latest.js" var="jquery_js_url"/>
+  <spring:url value="/resources/images/cargando.gif" var="load_image_url" />
+  
+  <spring:url value="/resources/js/jquery.min.js" var="jquery_js_url"/>
   <script src="${jquery_js_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
   
   <sec:authorize ifNotGranted="ROLE_ADMIN">
@@ -38,6 +40,8 @@
           	   $('#fbsfull .footer a').click(function(e) {
           		   e.preventDefault();
           		   
+          		 $("#fbsfull").empty().html('<img src="${load_image_url}" />');
+          		   
           		   $('#fbsfull').load(this.href + ' #fbsfullinner', function() {
           			   //alert('Load was performed.');
           			   modFbsTable();
@@ -47,6 +51,8 @@
 	      }
 
            $(function() {
+        	   
+        	   $("#fbsfull").empty().html('<img src="${load_image_url}" />');
         	   
         	   $('#fbsfull').load('listfingerbooks/userlogged?table=fbsfulllist' + ' #fbsfullinner', function() {
       			   //alert('Load was performed.');
