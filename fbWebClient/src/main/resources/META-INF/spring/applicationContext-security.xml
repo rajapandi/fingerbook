@@ -21,7 +21,7 @@
         <intercept-url pattern="/listfingerbooks/hashform/**" access="permitAll" />
         <intercept-url pattern="/listfingerbooks/list_by_hash/**" access="permitAll" />
         <intercept-url pattern="/listfingerbooks/hash/**" access="permitAll" />
-        <intercept-url pattern="/listfingerbooks/userform/**" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/listfingerbooks/userform/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
 		<intercept-url pattern="/resources/**" access="permitAll" />
        	<intercept-url pattern="/static/**" access="permitAll" />
        	<intercept-url pattern="/login/**" access="permitAll" />

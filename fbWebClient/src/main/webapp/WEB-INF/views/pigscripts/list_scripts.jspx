@@ -3,7 +3,7 @@
   <jsp:directive.page contentType="text/html;charset=UTF-8"/>
   <jsp:output omit-xml-declaration="yes"/>
   
-  <spring:url value="http://code.jquery.com/jquery-latest.js" var="jquery_js_url"/>
+  <spring:url value="/resources/js/jquery.min.js" var="jquery_js_url"/>
   <script src="${jquery_js_url}" type="text/javascript"><!-- //required for FF3 and Opera --></script>
   
   <h2>Scripts found:</h2>
